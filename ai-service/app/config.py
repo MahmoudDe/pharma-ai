@@ -50,6 +50,11 @@ class Settings(BaseSettings):
     enable_query_expansion: bool = True
     min_vector_score: float = 0.30
 
+    # BM25 + dense hybrid (RRF)
+    enable_bm25_hybrid: bool = True
+    bm25_fetch_k: int = 40
+    hybrid_rrf_k: int = 60
+
     # Cross-encoder reranking (Phase 3)
     enable_cross_encoder_rerank: bool = True
     cross_encoder_model: str = "BAAI/bge-reranker-base"

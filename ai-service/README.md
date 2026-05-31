@@ -47,15 +47,17 @@ cp .env.example .env
 # 3. Start Qdrant (uses ./data/qdrant as the volume)
 docker compose up -d qdrant
 
-# 4. Unified ingest: PDFs -> SQLite formulations + Qdrant chunks (~1-2 minutes)
+# 4. Unified ingest: PDFs + DOCX -> SQLite formulations + Qdrant + BM25 (~1-2 minutes)
 .venv/bin/python -m app.ingestion.run_ingest
+# Existing Qdrant data without BM25 file: .venv/bin/python scripts/rebuild_bm25.py
 
 # 5. (Optional) spaCy model for ingredient normalization
 .venv/bin/python -m spacy download en_core_web_sm
 ```
 
 The unified ingest CLI writes `data/ingested.json` and `data/formulations.db` in one pass.
-Reruns skip unchanged PDFs by SHA-256. Use `--force` after schema or segmentation changes.
+Reruns skip unchanged PDFs/DOCX by SHA-256. Use `--force` after schema or segmentation changes.
+Use `--pdf-only` to skip Word documents.
 
 **Migration note:** Re-ingest assigns deterministic `formulation_id` values. Old random IDs in chat history may no longer resolve.
 
@@ -74,6 +76,11 @@ curl -s http://localhost:9000/health
 curl -s -X POST http://localhost:9000/chat \
   -H 'Content-Type: application/json' \
   -d '{"thread_id":"t1","message":"basic sulfate-free shampoo formula"}'
+
+# Streaming (SSE) — tokens during LLM reasoning
+curl -N -X POST http://localhost:9000/chat/stream \
+  -H 'Content-Type: application/json' \
+  -d '{"thread_id":"t1","message":"Why use CAPB instead of SLS in baby shampoo?"}'
 ```
 
 ## Evaluate RAG without LLM credits

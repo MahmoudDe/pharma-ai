@@ -20,14 +20,14 @@ export function ChatLayout({ historyPanel, leftPanel, rightPanel }: ChatLayoutPr
           }`}
         >
           {hasHistory ? (
-            <section className="glass-panel animate-slide-in-left hidden h-[calc(100vh-1.5rem)] overflow-hidden rounded-2xl lg:flex lg:h-[calc(100vh-3rem)] lg:flex-col">
+            <section className="panel-solid animate-slide-in-left hidden h-[calc(100vh-1.5rem)] overflow-hidden rounded-2xl lg:flex lg:h-[calc(100vh-3rem)] lg:flex-col">
               {historyPanel}
             </section>
           ) : null}
-          <section className="glass-panel animate-scale-in flex h-[calc(100vh-1.5rem)] flex-col overflow-hidden rounded-2xl lg:h-[calc(100vh-3rem)]">
+          <section className="panel-solid animate-scale-in flex h-[calc(100vh-1.5rem)] min-h-0 flex-col overflow-hidden rounded-2xl lg:h-[calc(100vh-3rem)]">
             {leftPanel}
           </section>
-          <aside className="glass-panel animate-slide-in-right flex h-[calc(100vh-1.5rem)] flex-col overflow-hidden rounded-2xl lg:h-[calc(100vh-3rem)]">
+          <aside className="panel-solid animate-slide-in-right flex h-[calc(100vh-1.5rem)] min-h-0 flex-col overflow-hidden rounded-2xl lg:h-[calc(100vh-3rem)]">
             {rightPanel}
           </aside>
         </div>

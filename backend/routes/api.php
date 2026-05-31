@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ChatThreadController;
+use App\Http\Controllers\Api\CorpusController;
+use App\Http\Controllers\Api\FormulationController;
+use App\Http\Controllers\Api\SourceController;
 use App\Http\Controllers\Api\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,9 +36,17 @@ Route::get('/chat/threads/{id}', [ChatThreadController::class, 'show']);
 Route::patch('/chat/threads/{id}', [ChatThreadController::class, 'update']);
 Route::delete('/chat/threads/{id}', [ChatThreadController::class, 'destroy']);
 Route::post('/chat/messages', [ChatController::class, 'messages']);
+Route::post('/chat/messages/stream', [ChatController::class, 'messagesStream']);
+
+Route::get('/corpus/stats', [CorpusController::class, 'stats']);
+Route::get('/formulations', [FormulationController::class, 'index']);
+Route::post('/formulations/search', [FormulationController::class, 'search']);
+Route::get('/formulations/{formulationId}', [FormulationController::class, 'show']);
+Route::get('/sources/{docId}', [SourceController::class, 'show'])->where('docId', '[A-Za-z0-9_\-]+');
 
 Route::post('/warehouse/upload', [WarehouseController::class, 'upload']);
 Route::post('/warehouse/resolve', [WarehouseController::class, 'resolve']);
 Route::get('/warehouse/materials', [WarehouseController::class, 'materials']);
+Route::patch('/warehouse/materials/{materialId}', [WarehouseController::class, 'setAlias']);
 Route::post('/warehouse/discover', [WarehouseController::class, 'discover']);
 Route::get('/warehouse/discover/{uploadId}', [WarehouseController::class, 'discoverResults']);

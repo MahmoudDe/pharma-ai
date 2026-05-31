@@ -15,6 +15,8 @@ from app.config import get_settings
 from app.formulation.store import clear_all_formulations, init_db, upsert_formulation
 from app.ingestion.embed import embed_passages
 from app.ingestion.extract import discover_pdfs, doc_id_from_path, extract_pdf
+from app.ingestion.extract_docx import discover_docx, extract_docx
+from app.retrieval.bm25_index import append_chunks_to_bm25, clear_bm25_index
 from app.ingestion.index import (
     collection_stats,
     ensure_collection,
@@ -64,14 +66,18 @@ def _batched_chunks(chunks, size: int):
         yield batch
 
 
-def ingest_pdf(
+def ingest_document(
     path: Path,
     *,
     batch_size: int = 64,
     sqlite_only: bool = False,
 ) -> tuple[int, int]:
+    suffix = path.suffix.lower()
+    if suffix == ".docx":
+        pages = list(extract_docx(path))
+    else:
+        pages = list(extract_pdf(path))
     settings = get_settings()
-    pages = list(extract_pdf(path))
     logger.info("[%s] %d pages with text", path.name, len(pages))
 
     formulations, chunks = process_pages(
@@ -98,8 +104,18 @@ def ingest_pdf(
         ):
             vectors = embed_passages([c.text for c in batch], batch_size=batch_size)
             upsert_chunks(batch, vectors)
+        append_chunks_to_bm25(chunks)
 
     return len(formulations), len(chunks)
+
+
+def ingest_pdf(
+    path: Path,
+    *,
+    batch_size: int = 64,
+    sqlite_only: bool = False,
+) -> tuple[int, int]:
+    return ingest_document(path, batch_size=batch_size, sqlite_only=sqlite_only)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -109,9 +125,14 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     parser = argparse.ArgumentParser(
-        description="Unified ingest: PDFs -> SQLite formulations + Qdrant chunks.",
+        description="Unified ingest: PDFs/DOCX -> SQLite formulations + Qdrant chunks.",
     )
     parser.add_argument("--docs", default=None, help="Path to docs directory.")
+    parser.add_argument(
+        "--pdf-only",
+        action="store_true",
+        help="Skip DOCX files (PDF only).",
+    )
     parser.add_argument(
         "--force",
         action="store_true",
@@ -132,6 +153,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.force:
         clear_all_formulations()
+        clear_bm25_index()
     if not args.sqlite_only:
         if args.force:
             reset_collection()
@@ -140,20 +162,26 @@ def main(argv: list[str] | None = None) -> int:
     manifest = _load_manifest()
 
     pdfs = discover_pdfs(docs_dir)
-    if not pdfs:
-        logger.warning("No PDFs found in %s", docs_dir)
+    docx_files = [] if args.pdf_only else discover_docx(docs_dir)
+    sources: list[tuple[Path, str]] = [(p, "pdf") for p in pdfs] + [
+        (p, "docx") for p in docx_files
+    ]
+    if not sources:
+        logger.warning("No PDF/DOCX files found in %s", docs_dir)
         return 0
 
     total_chunks = 0
     total_formulas = 0
-    for pdf in pdfs:
-        doc_id = doc_id_from_path(pdf)
-        digest = _file_hash(pdf)
+    for source_path, kind in sources:
+        doc_id = doc_id_from_path(source_path)
+        digest = _file_hash(source_path)
         if not args.force and manifest.get(doc_id, {}).get("sha256") == digest:
-            logger.info("[%s] unchanged, skipping (use --force)", pdf.name)
+            logger.info("[%s] unchanged, skipping (use --force)", source_path.name)
             continue
 
-        n_formulas, n_chunks = ingest_pdf(pdf, sqlite_only=args.sqlite_only)
+        n_formulas, n_chunks = ingest_document(
+            source_path, sqlite_only=args.sqlite_only
+        )
         if n_formulas:
             import sqlite3
             from app.formulation.store import DB_PATH
@@ -174,12 +202,13 @@ def main(argv: list[str] | None = None) -> int:
             conn.close()
             logger.info(
                 "[%s] avg ingredients per formula: %.1f",
-                pdf.name,
+                source_path.name,
                 avg_ing or 0,
             )
         manifest[doc_id] = {
             "doc_id": doc_id,
-            "filename": pdf.name,
+            "filename": source_path.name,
+            "kind": kind,
             "sha256": digest,
             "formulations": n_formulas,
             "chunks": n_chunks,

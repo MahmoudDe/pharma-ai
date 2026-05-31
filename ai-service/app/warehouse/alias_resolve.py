@@ -7,8 +7,10 @@ import re
 
 from app.config import get_settings
 from app.formulation.normalize import normalize_ingredient_name
+from app.warehouse.matching import canonical_key
 from app.reasoning.llm import _client
 from app.warehouse import warehouse_store
+from app.warehouse.arabic_aliases import has_arabic, resolve_arabic_alias
 from app.warehouse.corpus_index import corpus_ingredient_names
 from app.warehouse.schemas import ResolveResponse, WarehouseMaterialRow
 
@@ -19,6 +21,8 @@ _WATER_NAMES = frozenset({"water", "aqua", "purified water", "deionized water"})
 
 
 def _rules_canonical(raw: str) -> tuple[str, float] | None:
+    if has_arabic(raw):
+        return None
     norm = normalize_ingredient_name(raw)
     if not norm:
         return None
@@ -45,8 +49,7 @@ def _fuzzy_canonical(raw: str, threshold: int) -> tuple[str, float] | None:
     norm, score, _ = match
     if score < threshold:
         return None
-    display = next((c[0] for c in corpus if c[1] == norm), norm)
-    return display, min(0.92, score / 100.0)
+    return norm, min(0.92, score / 100.0)
 
 
 def _llm_batch_resolve(names: list[str]) -> dict[str, tuple[str, float]]:
@@ -56,16 +59,23 @@ def _llm_batch_resolve(names: list[str]) -> dict[str, tuple[str, float]]:
 
     client = _client()
     prompt = (
-        "Map each warehouse/trade material name to the closest INCI or cosmetic "
-        "ingredient name used in formulation books. Return JSON object "
+        "Map each warehouse/trade material name (Arabic transliteration or English) to the "
+        "closest standard INCI / cosmetic ingredient name used in formulation books. "
+        "Return JSON object "
         '{"mappings": [{"input": "...", "canonical": "...", "confidence": 0.0-1.0}]}'
-        f" for: {json.dumps(names[: settings.warehouse_llm_batch_size])}"
+        f" for: {json.dumps(names[: settings.warehouse_llm_batch_size], ensure_ascii=False)}"
     )
     try:
         resp = client.chat.completions.create(
             model=settings.llm_model,
             messages=[
-                {"role": "system", "content": "You map trade names to standard cosmetic ingredient names."},
+                {
+                    "role": "system",
+                    "content": (
+                        "You map Arabic transliterated trade names and English trade names "
+                        "to standard INCI ingredient names in English."
+                    ),
+                },
                 {"role": "user", "content": prompt},
             ],
             temperature=0.1,
@@ -94,17 +104,29 @@ def resolve_upload(upload_id: str | None = None) -> ResolveResponse:
         raise ValueError("No warehouse upload found.")
 
     warehouse_store.clear_aliases_for_upload(uid)
+    warehouse_store.clear_discover_cache(uid)
     materials = warehouse_store.list_materials(uid)
     unresolved: list[tuple[int, str]] = []
 
     for mat in materials:
-        hit = _rules_canonical(mat.raw_name)
+        hit = None
         source = "rules"
+        if has_arabic(mat.raw_name):
+            hit = resolve_arabic_alias(mat.raw_name)
+            source = "arabic"
+        if not hit:
+            hit = _rules_canonical(mat.raw_name)
+            source = "rules"
         if not hit:
             hit = _fuzzy_canonical(mat.raw_name, settings.warehouse_fuzzy_threshold)
             source = "corpus"
         if hit:
-            warehouse_store.save_alias(mat.id, hit[0], source, hit[1])
+            warehouse_store.save_alias(
+                mat.id,
+                canonical_key(hit[0]),
+                source,
+                hit[1],
+            )
         else:
             unresolved.append((mat.id, mat.raw_name))
 
@@ -115,7 +137,7 @@ def resolve_upload(upload_id: str | None = None) -> ResolveResponse:
             key = raw.lower()
             if key in llm_map:
                 can, conf = llm_map[key]
-                warehouse_store.save_alias(mid, can, "llm", conf)
+                warehouse_store.save_alias(mid, canonical_key(can), "llm", conf)
 
     rows: list[WarehouseMaterialRow] = []
     resolved = 0

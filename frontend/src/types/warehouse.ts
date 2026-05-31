@@ -1,4 +1,4 @@
-export type AliasSource = "rules" | "corpus" | "llm" | "unresolved";
+export type AliasSource = "rules" | "corpus" | "llm" | "manual" | "arabic" | "unresolved";
 
 export interface WarehouseMaterialRow {
   id: number;

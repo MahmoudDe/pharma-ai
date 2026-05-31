@@ -15,7 +15,9 @@ from app.warehouse.schemas import (
     DiscoverResponse,
     ResolveRequest,
     ResolveResponse,
+    SetAliasRequest,
     UploadResponse,
+    WarehouseMaterialRow,
 )
 
 
@@ -69,42 +71,54 @@ def resolve_materials(body: ResolveRequest = Body(default_factory=ResolveRequest
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
+def _material_row(mat, settings) -> WarehouseMaterialRow:
+    aliases = warehouse_store.get_aliases(mat.id)
+    if aliases:
+        a = aliases[0]
+        return WarehouseMaterialRow(
+            id=mat.id,
+            raw_name=mat.raw_name,
+            sku=mat.sku,
+            qty=mat.qty,
+            canonical_name=a.canonical_name,
+            alias_source=a.source,  # type: ignore[arg-type]
+            confidence=a.confidence,
+            needs_review=a.confidence < settings.warehouse_review_threshold
+            and a.source != "manual",
+        )
+    return WarehouseMaterialRow(
+        id=mat.id,
+        raw_name=mat.raw_name,
+        sku=mat.sku,
+        qty=mat.qty,
+        needs_review=True,
+    )
+
+
+@router.patch("/materials/{material_id}", response_model=WarehouseMaterialRow)
+def set_material_alias(material_id: int, body: SetAliasRequest) -> WarehouseMaterialRow:
+    settings = get_settings()
+    mat = warehouse_store.get_material(material_id)
+    if mat is None:
+        raise HTTPException(status_code=404, detail="Material not found.")
+    canonical = body.canonical_name.strip()
+    if not canonical:
+        raise HTTPException(status_code=400, detail="canonical_name is required.")
+    warehouse_store.save_alias(material_id, canonical, "manual", 1.0)
+    warehouse_store.clear_discover_cache(mat.upload_id)
+    updated = warehouse_store.get_material(material_id)
+    assert updated is not None
+    return _material_row(updated, settings)
+
+
 @router.get("/materials")
 def list_materials(upload_id: str | None = None) -> dict:
-    from app.warehouse.schemas import WarehouseMaterialRow
-
     settings = get_settings()
     uid = upload_id or warehouse_store.get_active_upload_id()
     if not uid:
         raise HTTPException(status_code=404, detail="No warehouse upload found.")
 
-    rows: list[WarehouseMaterialRow] = []
-    for mat in warehouse_store.list_materials(uid):
-        aliases = warehouse_store.get_aliases(mat.id)
-        if aliases:
-            a = aliases[0]
-            rows.append(
-                WarehouseMaterialRow(
-                    id=mat.id,
-                    raw_name=mat.raw_name,
-                    sku=mat.sku,
-                    qty=mat.qty,
-                    canonical_name=a.canonical_name,
-                    alias_source=a.source,  # type: ignore[arg-type]
-                    confidence=a.confidence,
-                    needs_review=a.confidence < settings.warehouse_review_threshold,
-                )
-            )
-        else:
-            rows.append(
-                WarehouseMaterialRow(
-                    id=mat.id,
-                    raw_name=mat.raw_name,
-                    sku=mat.sku,
-                    qty=mat.qty,
-                    needs_review=True,
-                )
-            )
+    rows = [_material_row(mat, settings) for mat in warehouse_store.list_materials(uid)]
     return {"upload_id": uid, "materials": [r.model_dump() for r in rows]}
 
 

@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
-AliasSource = Literal["rules", "corpus", "llm", "unresolved"]
+AliasSource = Literal["rules", "corpus", "llm", "manual", "arabic", "unresolved"]
 
 
 class WarehouseMaterialRow(BaseModel):
@@ -24,6 +24,10 @@ class UploadResponse(BaseModel):
     filename: str
     row_count: int
     preview: list[dict[str, str | float | None]]
+
+
+class SetAliasRequest(BaseModel):
+    canonical_name: str = Field(min_length=1, max_length=200)
 
 
 class ResolveRequest(BaseModel):

@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { AppColors } from "@/constants/AppColors";
-import { t } from "@/lib/i18n";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import type { TranslationKey } from "@/lib/i18n";
 import type { ChatMessage } from "@/types/chat";
 
 const SHOW_DEBUG = process.env.NEXT_PUBLIC_SHOW_DEBUG === "true";
@@ -14,11 +15,11 @@ interface ChatThreadProps {
   onSuggestionClick?: (suggestion: string) => void;
 }
 
-const EMPTY_STATE_SUGGESTIONS = [
-  () => t("prompts.sulfateFree"),
-  () => t("prompts.compareBaby"),
-  () => t("prompts.capbVsSls"),
-  () => t("prompts.handCream"),
+const EMPTY_STATE_KEYS: TranslationKey[] = [
+  "prompts.sulfateFree",
+  "prompts.compareBaby",
+  "prompts.capbVsSls",
+  "prompts.handCream",
 ];
 
 function toLocalTime(isoValue: string) {
@@ -31,12 +32,8 @@ function toLocalTime(isoValue: string) {
 
 function AssistantAvatar() {
   return (
-    <div
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-sm"
-      style={{ background: AppColors.softGradient }}
-      aria-hidden
-    >
-      <Image src="/logo.png" alt="" width={24} height={24} className="h-5 w-5 object-contain" />
+    <div className="logo-container logo-container--sm" aria-hidden>
+      <Image src="/logo.png" alt="" width={24} height={24} className="h-full w-full object-contain" />
     </div>
   );
 }
@@ -52,6 +49,7 @@ function TypingDots() {
 }
 
 export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThreadProps) {
+  const { t } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const hasMessages = messages.length > 0;
 
@@ -71,12 +69,9 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
 
   if (!hasMessages) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-8 p-8 text-center">
-        <div
-          className="animate-float flex h-20 w-20 items-center justify-center rounded-3xl shadow-lg"
-          style={{ background: AppColors.softGradient, boxShadow: "var(--shadow-glow)" }}
-        >
-          <Image src="/logo.png" alt="" width={48} height={48} className="h-11 w-11 object-contain" />
+      <div className="flex h-full min-h-0 flex-1 flex-col items-center justify-center gap-8 p-8 text-center">
+        <div className="logo-container logo-container-lg">
+          <Image src="/logo.png" alt="" width={56} height={56} className="h-full w-full object-contain" />
         </div>
         <div className="animate-fade-in-up max-w-md" style={{ animationDelay: "80ms" }}>
           <h2 className="text-xl font-bold tracking-tight text-text-primary">
@@ -88,14 +83,14 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
         </div>
         {onSuggestionClick ? (
           <div className="stagger-children grid w-full max-w-xl gap-3 sm:grid-cols-2">
-            {EMPTY_STATE_SUGGESTIONS.map((labelFn) => {
-              const suggestion = labelFn();
+            {EMPTY_STATE_KEYS.map((key) => {
+              const suggestion = t(key);
               return (
                 <button
-                  key={suggestion}
+                  key={key}
                   type="button"
                   onClick={() => onSuggestionClick(suggestion)}
-                  className="hover-lift group rounded-2xl border border-border/80 bg-surface/90 px-4 py-3.5 text-left text-sm text-text-primary"
+                  className="hover-lift group rounded-2xl border border-border bg-surface px-4 py-3.5 text-start text-sm text-text-primary shadow-sm"
                 >
                   <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-secondary opacity-80">
                     {t("chat.tryPrompt")}
@@ -114,6 +109,8 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
     <div
       ref={containerRef}
       className="min-h-0 flex-1 overflow-y-auto scroll-smooth px-4 py-6 lg:px-6"
+      role="log"
+      aria-live="polite"
     >
       <div className="mx-auto max-w-3xl space-y-5">
         {sortedMessages.map((message) => {
@@ -123,7 +120,7 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
             return (
               <div key={message.id} className="message-enter-user flex justify-end">
                 <div
-                  className="max-w-[88%] rounded-2xl rounded-br-sm px-4 py-3 text-sm text-white shadow-md lg:max-w-[78%]"
+                  className="max-w-[88%] rounded-2xl rounded-ee-sm px-4 py-3 text-sm text-white shadow-md lg:max-w-[78%]"
                   style={{ background: AppColors.buttonGradient }}
                 >
                   <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
@@ -138,7 +135,7 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
           return (
             <div key={message.id} className="message-enter-assistant flex justify-start gap-3">
               <AssistantAvatar />
-              <div className="max-w-[88%] rounded-2xl rounded-bl-sm border border-border/80 bg-surface/95 px-4 py-3 text-sm text-text-primary shadow-sm backdrop-blur-sm lg:max-w-[78%]">
+              <div className="max-w-[88%] rounded-2xl rounded-es-sm border border-border bg-surface px-4 py-3 text-sm text-text-primary shadow-sm lg:max-w-[78%]">
                 <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
                 {SHOW_DEBUG && message.route ? (
                   <p className="mt-2 rounded-lg bg-background/80 px-2 py-1 font-mono text-[10px] text-text-secondary">
@@ -153,10 +150,11 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
             </div>
           );
         })}
-        {isLoading ? (
+        {isLoading &&
+        !sortedMessages.some((m) => m.role === "assistant" && m.content.length > 0) ? (
           <div className="animate-fade-in flex justify-start gap-3">
             <AssistantAvatar />
-            <div className="flex items-center gap-3 rounded-2xl rounded-bl-sm border border-border/80 bg-surface/95 px-4 py-3 text-sm text-text-secondary shadow-sm">
+            <div className="flex items-center gap-3 rounded-2xl rounded-es-sm border border-border bg-surface px-4 py-3 text-sm text-text-secondary shadow-sm">
               <TypingDots />
               <span className="font-medium">{t("chat.thinking")}</span>
             </div>

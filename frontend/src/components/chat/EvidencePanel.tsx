@@ -1,4 +1,7 @@
-import { t } from "@/lib/i18n";
+"use client";
+
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { sourcePdfUrl } from "@/lib/sources";
 import type { CitedEvidence } from "@/types/chat";
 
 interface EvidencePanelProps {
@@ -12,7 +15,7 @@ const CONFIDENCE_STYLES: Record<string, string> = {
   unknown: "border-border bg-background text-text-secondary",
 };
 
-function ConfidenceBadge({ value }: { value?: CitedEvidence["confidence"] }) {
+function ConfidenceBadge({ value, label }: { value?: CitedEvidence["confidence"]; label: string }) {
   const key = value ?? "unknown";
   const className = CONFIDENCE_STYLES[key] ?? CONFIDENCE_STYLES.unknown;
   return (
@@ -20,21 +23,33 @@ function ConfidenceBadge({ value }: { value?: CitedEvidence["confidence"] }) {
       className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${className}`}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {key}
+      {label}
     </span>
   );
 }
 
-function PageBadges({ item }: { item: CitedEvidence }) {
+function PageBadges({
+  item,
+  openLabel,
+}: {
+  item: CitedEvidence;
+  openLabel: string;
+}) {
   const pdfPage = item.pdf_page ?? item.page;
   const bookPage = item.printed_page;
-  if (!pdfPage && !bookPage) return null;
+  const href = pdfPage ? sourcePdfUrl(item.document_id, pdfPage) : sourcePdfUrl(item.document_id);
+
   return (
     <div className="flex shrink-0 flex-col items-end gap-1">
       {pdfPage ? (
-        <span className="rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-text-secondary">
-          PDF p.{pdfPage}
-        </span>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-md border border-secondary/40 bg-secondary/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-secondary transition hover:underline"
+        >
+          {openLabel} {pdfPage}
+        </a>
       ) : null}
       {bookPage ? (
         <span className="rounded-md border border-secondary/30 bg-secondary/10 px-1.5 py-0.5 font-mono text-[10px] text-text-primary">
@@ -46,8 +61,10 @@ function PageBadges({ item }: { item: CitedEvidence }) {
 }
 
 export function EvidencePanel({ evidence }: EvidencePanelProps) {
+  const { t } = useLocale();
+
   return (
-    <section className="flex min-h-0 flex-col rounded-2xl border border-border/80 bg-background/60 p-4 backdrop-blur-sm">
+    <section className="flex min-h-0 flex-col rounded-2xl border border-border bg-surface p-4 shadow-sm">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-bold text-text-primary">{t("evidence.title")}</h2>
         {evidence.length > 0 ? (
@@ -72,20 +89,23 @@ export function EvidencePanel({ evidence }: EvidencePanelProps) {
                 <p className="line-clamp-2 flex-1 text-xs font-semibold uppercase tracking-wide text-text-secondary">
                   {item.document_id}
                 </p>
-                <PageBadges item={item} />
+                <PageBadges item={item} openLabel={t("evidence.openPdf")} />
               </div>
               <p className="mt-2 line-clamp-5 whitespace-pre-wrap leading-relaxed text-text-primary">
                 “{item.quote}”
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <ConfidenceBadge value={item.confidence} />
+                <ConfidenceBadge value={item.confidence} label={item.confidence ?? "unknown"} />
                 {item.quote_verified === true ? (
                   <span className="rounded-md border border-success/30 bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success">
-                    Verified
+                    {t("evidence.verified")}
                   </span>
                 ) : item.quote_verified === false ? (
-                  <span className="rounded-md border border-warning/30 bg-warning/10 px-2 py-0.5 text-[10px] font-medium text-warning">
-                    Unverified
+                  <span
+                    className="rounded-md border border-warning/30 bg-warning/10 px-2 py-0.5 text-[10px] font-medium text-warning"
+                    title={t("evidence.unverifiedHint")}
+                  >
+                    {t("evidence.unverified")}
                   </span>
                 ) : null}
               </div>

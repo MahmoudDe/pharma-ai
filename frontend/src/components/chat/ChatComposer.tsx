@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, KeyboardEvent } from "react";
+import { FormEvent, KeyboardEvent, useEffect, useRef } from "react";
 import { AppColors } from "@/constants/AppColors";
-import { t } from "@/lib/i18n";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 interface ChatComposerProps {
   value: string;
@@ -40,7 +40,16 @@ export function ChatComposer({
   errorMessage,
   onRetry,
 }: ChatComposerProps) {
+  const { t } = useLocale();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const submitDisabled = disabled || !value.trim();
+
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
+  }, [value]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,11 +65,11 @@ export function ChatComposer({
   };
 
   return (
-    <div className="relative z-10 border-t border-border/60 bg-surface/80 p-3 backdrop-blur-md lg:p-4">
+    <div className="chat-composer-bar relative z-10 shrink-0 p-3 lg:p-4">
       {errorMessage ? (
-        <div className="animate-fade-in-down mb-3 rounded-2xl border border-error/30 bg-error/10 p-3 text-sm text-error">
+        <div className="mb-3 rounded-xl border border-error/30 bg-error/10 p-3 text-sm text-error">
           <div className="flex items-start justify-between gap-3">
-            <p className="flex-1">{errorMessage}</p>
+            <p className="flex-1 text-start">{errorMessage}</p>
             {onRetry ? (
               <button
                 type="button"
@@ -73,22 +82,24 @@ export function ChatComposer({
           </div>
         </div>
       ) : null}
-      <form onSubmit={handleSubmit}>
-        <div className="flex items-end gap-2 rounded-2xl border border-border/80 bg-background/60 px-3 py-2 shadow-sm transition-all duration-300 focus-within:border-secondary/50 focus-within:shadow-[var(--shadow-glow)] focus-within:ring-2 focus-within:ring-accent/20">
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="flex w-full items-end gap-2 rounded-xl border border-border bg-surface p-2 shadow-sm focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/20">
           <textarea
+            ref={textareaRef}
             value={value}
             onChange={(event) => onChange(event.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t("composer.placeholder")}
             rows={1}
-            className="max-h-40 min-h-[44px] flex-1 resize-none border-0 bg-transparent py-2.5 text-sm leading-relaxed text-text-primary outline-none placeholder:text-text-secondary"
+            dir="auto"
+            className="min-h-[44px] max-h-40 min-w-0 flex-1 resize-none border-0 bg-transparent py-2.5 ps-2 pe-1 text-start text-sm leading-relaxed text-text-primary outline-none placeholder:text-text-secondary"
             disabled={disabled}
           />
           <button
             type="submit"
             disabled={submitDisabled}
             aria-label={t("composer.send")}
-            className="btn-primary flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-4 text-sm font-semibold text-white shadow-md disabled:cursor-not-allowed disabled:opacity-40"
+            className="btn-primary flex h-10 shrink-0 items-center gap-1.5 rounded-lg px-4 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
             style={{
               background: submitDisabled ? AppColors.textSecondary : AppColors.buttonGradient,
             }}
@@ -97,12 +108,12 @@ export function ChatComposer({
             <span className="hidden sm:inline">{t("composer.send")}</span>
           </button>
         </div>
-        <p className="mt-2 px-1 text-[11px] text-text-secondary">
-          <kbd className="rounded-md border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px]">
+        <p className="mt-2 px-1 text-start text-[11px] text-text-secondary">
+          <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px]">
             Enter
           </kbd>
           <span> send · </span>
-          <kbd className="rounded-md border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px]">
+          <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 font-mono text-[10px]">
             Shift+Enter
           </kbd>
           <span> new line</span>

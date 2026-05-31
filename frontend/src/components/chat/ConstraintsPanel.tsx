@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { t } from "@/lib/i18n";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { StructuredBrief } from "@/types/chat";
 
 interface ConstraintsPanelProps {
@@ -18,6 +18,7 @@ function splitList(value: string): string[] | undefined {
 }
 
 export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const hasValues =
     Boolean(brief.product_type) ||
@@ -25,7 +26,7 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
     (brief.preferred_ingredients?.length ?? 0) > 0;
 
   return (
-    <section className="relative z-10 border-b border-border/60 bg-background/40 px-4 py-2 lg:px-6">
+    <section className="panel-muted-band relative z-10 shrink-0 px-4 py-2 lg:px-6">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

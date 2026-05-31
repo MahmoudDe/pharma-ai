@@ -181,6 +181,75 @@ def _build_filter(intent: QueryIntent, *, formula_only: bool = False) -> qm.Filt
     return qm.Filter(must=must or None, should=should or None)
 
 
+def _chunk_fusion_key(chunk: RetrievedChunk) -> str:
+    if chunk.formulation_id:
+        return f"formula:{chunk.formulation_id}"
+    return f"{chunk.doc_id}:{chunk.pdf_page}:{chunk.chunk_index}"
+
+
+def _bm25_to_chunk(record, score: float) -> RetrievedChunk:
+    products = record.product_types or []
+    return RetrievedChunk(
+        doc_id=record.doc_id,
+        doc_title=record.doc_title,
+        pdf_page=record.pdf_page,
+        printed_page=record.printed_page,
+        chunk_index=record.chunk_index,
+        text=record.text,
+        score=score,
+        chunk_type=record.chunk_type,
+        section_title=record.section_title,
+        product_types=list(products),
+        text_hash=record.text_hash,
+        formulation_id=record.formulation_id,
+        ingredient_count=record.ingredient_count,
+        extraction_confidence=record.extraction_confidence,
+    )
+
+
+def _rrf_fuse(
+    dense_hits: list[RetrievedChunk],
+    sparse_hits: list[RetrievedChunk],
+    *,
+    k: int,
+) -> list[RetrievedChunk]:
+    """Reciprocal rank fusion of dense (Qdrant) and sparse (BM25) lists."""
+    scores: dict[str, float] = {}
+    by_key: dict[str, RetrievedChunk] = {}
+
+    for rank, hit in enumerate(dense_hits):
+        key = _chunk_fusion_key(hit)
+        scores[key] = scores.get(key, 0.0) + 1.0 / (k + rank + 1)
+        by_key[key] = hit
+
+    for rank, hit in enumerate(sparse_hits):
+        key = _chunk_fusion_key(hit)
+        scores[key] = scores.get(key, 0.0) + 1.0 / (k + rank + 1)
+        if key not in by_key or hit.score > by_key[key].score:
+            by_key[key] = hit
+
+    fused = sorted(by_key.values(), key=lambda h: scores[_chunk_fusion_key(h)], reverse=True)
+    if not fused:
+        return dense_hits
+    max_rrf = max(scores.values()) or 1.0
+    for hit in fused:
+        hit.score = scores[_chunk_fusion_key(hit)] / max_rrf
+    return fused
+
+
+def _bm25_search(query: str, *, top_k: int) -> list[RetrievedChunk]:
+    from app.retrieval.bm25_index import get_bm25_index
+
+    index = get_bm25_index()
+    if not index.records:
+        return []
+    raw = index.search(query, top_k=top_k)
+    if not raw:
+        return []
+    max_score = max(score for _, score in raw) or 1.0
+    return [_bm25_to_chunk(rec, score / max_score) for rec, score in raw]
+
+
 def _dedup_hits(hits: list[RetrievedChunk]) -> list[RetrievedChunk]:
     seen: dict[tuple, RetrievedChunk] = {}
     for hit in hits:
@@ -392,6 +461,13 @@ def search(
 
     results = _inject_structured_formula_chunks(results, query, intent)
     results = _dedup_hits(results)
+
+    if settings.enable_bm25_hybrid:
+        sparse = _bm25_search(query, top_k=settings.bm25_fetch_k)
+        if sparse:
+            results = _rrf_fuse(results, sparse, k=settings.hybrid_rrf_k)
+            results = _dedup_hits(results)
+
     results = _rerank(results, query, intent)
     results = results[:top_k]
 

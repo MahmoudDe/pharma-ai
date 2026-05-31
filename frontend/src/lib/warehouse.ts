@@ -51,6 +51,22 @@ export async function resolveWarehouse(uploadId?: string): Promise<ResolveRespon
   return body as ResolveResponse;
 }
 
+export async function setMaterialAlias(
+  materialId: number,
+  canonicalName: string,
+): Promise<import("@/types/warehouse").WarehouseMaterialRow> {
+  const response = await fetch(`${BACKEND_URL}/api/warehouse/materials/${materialId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ canonical_name: canonicalName }),
+  });
+  const body = await parseJson(response);
+  if (!response.ok) {
+    throw buildApiError(response.status, body);
+  }
+  return body as import("@/types/warehouse").WarehouseMaterialRow;
+}
+
 export async function discoverProducts(
   uploadId: string,
   minCoverage = 50,

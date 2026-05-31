@@ -41,7 +41,7 @@ cp .env.local.example .env.local
 
 ## Run all three (dev)
 
-In three terminals from the project root:
+See [`scripts/dev.sh`](scripts/dev.sh) for a printable checklist. In three terminals from the project root:
 
 ```bash
 # Terminal 1: AI service
@@ -67,6 +67,15 @@ see which formulas from the books you can make:
 3. **Analyze materials** → **Discover products**
 
 Requires ingested `formulations.db` and optional `LLM_API_KEY` for unresolved trade names.
+
+### Corpus dashboard & PDF citations
+
+- **Corpus stats:** <http://localhost:3000/corpus> (formulation count, Qdrant points, dependency health, source PDF list).
+- **Open book at page:** citation cards in chat link to `GET /api/sources/{doc_id}?page=N` (proxied from `docs/*.pdf`).
+
+### Language
+
+Use the **EN / AR** toggle in the header; Arabic enables RTL (`dir="rtl"`) via `frontend/src/locales/ar.json`.
 
 ## Data flow on a single chat turn
 

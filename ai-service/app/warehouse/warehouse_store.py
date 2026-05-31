@@ -143,6 +143,24 @@ def list_materials(upload_id: str | None = None) -> list[MaterialRow]:
     ]
 
 
+def get_material(material_id: int) -> MaterialRow | None:
+    init_db()
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT id, upload_id, raw_name, sku, qty FROM warehouse_materials WHERE id = ?",
+            (material_id,),
+        ).fetchone()
+    if not row:
+        return None
+    return MaterialRow(
+        id=int(row["id"]),
+        upload_id=str(row["upload_id"]),
+        raw_name=str(row["raw_name"]),
+        sku=row["sku"],
+        qty=row["qty"],
+    )
+
+
 def clear_aliases_for_upload(upload_id: str) -> None:
     init_db()
     with _connect() as conn:
@@ -159,6 +177,9 @@ def clear_aliases_for_upload(upload_id: str) -> None:
 
 
 def save_alias(material_id: int, canonical: str, source: str, confidence: float) -> None:
+    from app.warehouse.matching import canonical_key
+
+    canonical = canonical_key(canonical)
     init_db()
     with _connect() as conn:
         conn.execute(
@@ -181,7 +202,7 @@ def save_alias(material_id: int, canonical: str, source: str, confidence: float)
             INSERT INTO material_matches (warehouse_material_id, matched_ingredient_norm, formulation_corpus_hit)
             VALUES (?, ?, 1)
             """,
-            (material_id, canonical.lower()),
+            (material_id, canonical),
         )
         conn.commit()
 
@@ -209,18 +230,18 @@ def get_aliases(material_id: int) -> list[AliasRow]:
 
 
 def get_canonical_inventory(upload_id: str) -> set[str]:
-    """Resolved canonical names for discovery."""
+    """Resolved canonical names for discovery (normalized keys)."""
+    from app.warehouse.matching import canonical_key
+
     inv: set[str] = set()
     for mat in list_materials(upload_id):
         aliases = get_aliases(mat.id)
         if aliases:
-            inv.add(aliases[0].canonical_name.lower())
+            inv.add(canonical_key(aliases[0].canonical_name))
         else:
-            from app.formulation.normalize import normalize_ingredient_name
-
-            n = normalize_ingredient_name(mat.raw_name)
+            n = canonical_key(mat.raw_name)
             if n:
-                inv.add(n.lower())
+                inv.add(n)
     return inv
 
 
@@ -235,6 +256,13 @@ def cache_discover(upload_id: str, payload: dict) -> None:
             """,
             (upload_id, json.dumps(payload), now),
         )
+        conn.commit()
+
+
+def clear_discover_cache(upload_id: str) -> None:
+    init_db()
+    with _connect() as conn:
+        conn.execute("DELETE FROM discover_cache WHERE upload_id = ?", (upload_id,))
         conn.commit()
 
 

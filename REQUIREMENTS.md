@@ -45,7 +45,7 @@ flowchart LR
 | FR-ING-09 | Persist structured formulations in SQLite (`data/formulations.db`) | ✅ |
 | FR-ING-10 | Scheduled / cron-based re-ingest when new books are added | 🟡 (`scripts/cron_ingest.sh` + example crontab; no hosted scheduler) |
 | FR-ING-11 | OCR for scanned PDFs (image-only books) | 🔲 |
-| FR-ING-12 | Ingest DOCX, XLSX, and web sources | 🔲 |
+| FR-ING-12 | Ingest DOCX, XLSX, and web sources | 🟡 (DOCX via unified ingest; XLSX/web 🔲) |
 | FR-ING-13 | Multi-tenant document libraries per organization | 🔲 |
 | FR-ING-14 | Versioning and audit trail for document updates | 🔲 |
 
@@ -76,9 +76,9 @@ flowchart LR
 | FR-RET-06 | Query expansion via cheap LLM when vector retrieval is weak | ✅ |
 | FR-RET-07 | Transparent failure message when no grounded sources found | ✅ |
 | FR-RET-08 | Debug retrieval endpoint for developers (`GET /debug/retrieve`) | ✅ |
-| FR-RET-09 | Hybrid BM25 + dense retrieval | 🔲 |
+| FR-RET-09 | Hybrid BM25 + dense retrieval | ✅ |
 | FR-RET-10 | Persistent query rewriting / conversation-aware retrieval | 🔲 |
-| FR-RET-11 | Multilingual retrieval (Arabic queries on English books) | 🔲 |
+| FR-RET-11 | Multilingual retrieval (Arabic queries on English books) | ✅ |
 
 ### 2.4 Chat & reasoning
 
@@ -96,7 +96,7 @@ flowchart LR
 | FR-CHAT-10 | Expose routing metadata: `route`, `llm_used`, `search_confidence`, `fallback_stage` | ✅ |
 | FR-CHAT-11 | Swappable LLM via OpenAI-compatible API (OpenRouter default) | ✅ |
 | FR-CHAT-12 | Accept `structured_brief` (product type, banned/preferred ingredients, batch size, cost target) | ✅ |
-| FR-CHAT-13 | Streaming token responses (SSE) | 🔲 |
+| FR-CHAT-13 | Streaming token responses (SSE) | ✅ |
 | FR-CHAT-14 | User feedback on answers (thumbs up/down) for eval loops | 🔲 |
 | FR-CHAT-15 | Regenerate / edit last turn | 🔲 |
 
@@ -105,12 +105,12 @@ flowchart LR
 | ID | Requirement | Status |
 |----|-------------|--------|
 | FR-TOOL-01 | Suggested next steps rendered in UI and clickable to pre-fill composer | ✅ |
-| FR-TOOL-02 | Batch size calculator from formula percentages | 🔲 |
+| FR-TOOL-02 | Batch size calculator from formula percentages | ✅ |
 | FR-TOOL-03 | Ingredient substitution suggestions with compatibility notes | 🔲 |
 | FR-TOOL-04 | Cost estimator from ingredient price list | 🔲 |
 | FR-TOOL-05 | Regulatory / INCI / banned-substance checks per market | 🔲 |
-| FR-TOOL-06 | Export formula to PDF/Excel | 🔲 |
-| FR-TOOL-07 | Compare two formulas side-by-side in UI (beyond chat text) | 🔲 |
+| FR-TOOL-06 | Export formula to PDF/Excel | 🟡 (CSV export in chat/library) |
+| FR-TOOL-07 | Compare two formulas side-by-side in UI (beyond chat text) | ✅ |
 
 ### 2.6 Frontend (Next.js)
 
@@ -126,9 +126,10 @@ flowchart LR
 | FR-UI-08 | Responsive layout (mobile stack, desktop three-column with history) | ✅ |
 | FR-UI-09 | Retry failed message send | ✅ |
 | FR-UI-10 | Structured brief form (product type, constraints) before send | ✅ |
-| FR-UI-11 | Arabic / English UI with translation files | 🟡 (`en.json` / `ar.json` stubs) |
-| FR-UI-12 | RTL layout for Arabic | 🔲 |
-| FR-UI-13 | Admin dashboard for ingest status and corpus stats | 🔲 |
+| FR-UI-11 | Arabic / English UI with translation files | ✅ |
+| FR-UI-12 | RTL layout for Arabic | ✅ |
+| FR-UI-13 | Admin dashboard for ingest status and corpus stats | ✅ (`/corpus`) |
+| FR-UI-14 | Open source PDF at cited page from evidence panel | ✅ |
 
 ### 2.7 Backend (Laravel)
 
@@ -155,7 +156,8 @@ flowchart LR
 |----|-------------|--------|
 | FR-WH-01 | Upload manufacturer inventory CSV/XLSX | ✅ |
 | FR-WH-02 | Auto-detect material name column; optional SKU/qty | ✅ |
-| FR-WH-03 | Resolve trade names: rules → corpus fuzzy → LLM batch | ✅ |
+| FR-WH-02a | Arabic inventory sheets (e.g. عمود **البيان**); skip دفعة/رصيد rows; merge duplicates | ✅ |
+| FR-WH-03 | Resolve trade names: Arabic dictionary → rules → corpus fuzzy → LLM batch | ✅ |
 | FR-WH-04 | Flag low-confidence aliases for review | ✅ |
 | FR-WH-05 | Discover book formulas ranked by ingredient coverage % | ✅ |
 | FR-WH-06 | Tiers: makeable (≥95%), partial (≥50%), with missing list | ✅ |
@@ -164,7 +166,7 @@ flowchart LR
 | FR-WH-09 | Warehouse UI at `/warehouse` with analyze + discover flow | ✅ |
 | FR-WH-10 | Persist structured formulas on chat reload | ✅ |
 | FR-WH-11 | Per-user / multi-upload warehouse history | 🔲 |
-| FR-WH-12 | Manual alias override in UI | 🔲 |
+| FR-WH-12 | Manual alias override in UI | ✅ |
 
 ### 2.9 AI service operations
 

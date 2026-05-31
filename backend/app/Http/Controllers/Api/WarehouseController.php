@@ -57,6 +57,18 @@ class WarehouseController extends Controller
         return $this->proxyGet("{$this->aiBaseUrl()}/warehouse/materials", $request->query());
     }
 
+    public function setAlias(Request $request, int $materialId): JsonResponse
+    {
+        $request->validate([
+            'canonical_name' => ['required', 'string', 'min:1', 'max:200'],
+        ]);
+
+        return $this->proxyPatch(
+            "{$this->aiBaseUrl()}/warehouse/materials/{$materialId}",
+            $request->only('canonical_name'),
+        );
+    }
+
     public function discover(Request $request): JsonResponse
     {
         return $this->proxyPost("{$this->aiBaseUrl()}/warehouse/discover", $request->all());
@@ -103,6 +115,21 @@ class WarehouseController extends Controller
 
         try {
             $response = Http::timeout(60)->acceptJson()->get($url, $query);
+
+            return response()->json($response->json() ?? [], $response->status());
+        } catch (Throwable $e) {
+            return response()->json(['message' => $e->getMessage()], 502);
+        }
+    }
+
+    private function proxyPatch(string $url, array $body): JsonResponse
+    {
+        if ($this->aiBaseUrl() === '') {
+            return response()->json(['message' => 'AI_SERVICE_URL is not configured.'], 503);
+        }
+
+        try {
+            $response = Http::timeout(60)->acceptJson()->asJson()->patch($url, $body);
 
             return response()->json($response->json() ?? [], $response->status());
         } catch (Throwable $e) {

@@ -109,9 +109,106 @@ export async function deleteChatThread(threadId: string): Promise<void> {
   }
 }
 
+function parseSseBlock(block: string): { event: string; data: string } | null {
+  let event = "message";
+  let data = "";
+  for (const line of block.split("\n")) {
+    if (line.startsWith("event: ")) {
+      event = line.slice(7).trim();
+    } else if (line.startsWith("data: ")) {
+      data += line.slice(6);
+    }
+  }
+  if (!data && event === "message") {
+    return null;
+  }
+  return { event, data };
+}
+
+export async function sendChatTurnStream(
+  payload: ChatTurnRequest,
+  handlers: {
+    onToken: (delta: string) => void;
+    onError?: (message: string) => void;
+  },
+  signal?: AbortSignal,
+): Promise<ChatTurnResponse> {
+  const response = await fetch(`${BACKEND_URL}/api/chat/messages/stream`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
+    body: JSON.stringify(payload),
+    signal,
+  });
+
+  if (!response.ok) {
+    const body = await parseJsonResponse(response);
+    throw buildApiError(response.status, body);
+  }
+
+  if (!response.body) {
+    throw new Error("Streaming not supported in this browser.");
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let finalResponse: ChatTurnResponse | null = null;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    buffer += decoder.decode(value, { stream: true });
+
+    let boundary = buffer.indexOf("\n\n");
+    while (boundary !== -1) {
+      const block = buffer.slice(0, boundary);
+      buffer = buffer.slice(boundary + 2);
+      const frame = parseSseBlock(block);
+      if (frame) {
+        if (frame.event === "token") {
+          try {
+            const parsed = JSON.parse(frame.data) as { delta?: string };
+            if (parsed.delta) {
+              handlers.onToken(parsed.delta);
+            }
+          } catch {
+            /* ignore malformed token frames */
+          }
+        } else if (frame.event === "error") {
+          try {
+            const parsed = JSON.parse(frame.data) as { message?: string };
+            handlers.onError?.(parsed.message ?? "Stream failed");
+          } catch {
+            handlers.onError?.("Stream failed");
+          }
+        } else if (frame.event === "done") {
+          finalResponse = JSON.parse(frame.data) as ChatTurnResponse;
+        }
+      }
+      boundary = buffer.indexOf("\n\n");
+    }
+  }
+
+  if (!finalResponse || !("assistant_message" in finalResponse)) {
+    throw new Error("Stream ended without a complete response.");
+  }
+
+  return finalResponse;
+}
+
 export async function sendChatTurn(
   payload: ChatTurnRequest,
+  options?: { stream?: boolean; onToken?: (delta: string) => void; signal?: AbortSignal },
 ): Promise<ChatTurnResponse> {
+  if (options?.stream && options.onToken) {
+    return sendChatTurnStream(
+      payload,
+      { onToken: options.onToken },
+      options.signal,
+    );
+  }
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
 

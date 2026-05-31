@@ -1,7 +1,7 @@
 "use client";
 
 import { AppColors } from "@/constants/AppColors";
-import { t } from "@/lib/i18n";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { ChatThreadSummary } from "@/types/chat";
 
 interface ChatHistorySidebarProps {
@@ -36,6 +36,8 @@ export function ChatHistorySidebar({
   onDeleteThread,
   onRenameThread,
 }: ChatHistorySidebarProps) {
+  const { t } = useLocale();
+
   return (
     <aside className="flex h-full min-h-0 w-full flex-col">
       <div className="border-b border-border/60 px-4 py-4">

@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { AppColors } from "@/constants/AppColors";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { t } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/i18n/LanguageToggle";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
-export type AppRoute = "chat" | "warehouse";
+export type AppRoute = "chat" | "warehouse" | "formulations" | "corpus";
 
 interface AppHeaderProps {
   active: AppRoute;
@@ -38,34 +38,27 @@ function NavPill({
 }
 
 export function AppHeader({ active, statusSlot }: AppHeaderProps) {
+  const { t } = useLocale();
+
   return (
-    <header className="glass-header animate-fade-in-down relative z-10 flex shrink-0 items-center justify-between gap-3 border-b border-border/80 px-4 py-3 lg:px-6 lg:py-4">
-      <div className="flex min-w-0 items-center gap-3">
-        <div
-          className="animate-float flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-sm"
-          style={{ background: AppColors.softGradient }}
-        >
-          <Image
-            src="/logo.png"
-            alt=""
-            width={28}
-            height={28}
-            className="h-7 w-7 object-contain"
-          />
-        </div>
-        <div className="min-w-0">
-          <h1 className="truncate text-base font-bold tracking-tight text-text-primary">
-            {t("app.title")}
-          </h1>
-          <p className="truncate text-xs text-text-secondary">{t("app.subtitle")}</p>
-        </div>
+    <header className="glass-header app-header animate-fade-in-down relative z-10">
+      <div className="min-w-0 leading-tight">
+        <h1 className="truncate text-[0.9375rem] font-bold text-text-primary">{t("app.title")}</h1>
+        <p className="truncate text-[0.6875rem] text-text-secondary">{t("app.subtitle")}</p>
       </div>
-      <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-        <nav className="flex items-center gap-1 rounded-xl border border-border/80 bg-background/60 p-1">
+      <div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5 sm:gap-2">
+        <nav className="flex items-center gap-1 rounded-xl border border-border bg-[var(--panel-muted)] p-1">
           <NavPill href="/chat" label={t("nav.chat")} active={active === "chat"} />
+          <NavPill
+            href="/formulations"
+            label={t("nav.formulations")}
+            active={active === "formulations"}
+          />
           <NavPill href="/warehouse" label={t("nav.warehouse")} active={active === "warehouse"} />
+          <NavPill href="/corpus" label={t("nav.corpus")} active={active === "corpus"} />
         </nav>
         {statusSlot}
+        <LanguageToggle />
         <ThemeToggle />
       </div>
     </header>

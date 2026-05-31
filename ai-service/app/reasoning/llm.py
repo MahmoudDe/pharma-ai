@@ -5,6 +5,7 @@ import json
 import logging
 from dataclasses import dataclass, field
 from functools import lru_cache
+from collections.abc import Callable
 from typing import Literal
 
 from openai import OpenAI
@@ -140,3 +141,46 @@ def reason(*, system_prompt: str, context_block: str, user_message: str) -> LLMR
 
     raw = completion.choices[0].message.content or "{}"
     return _parse(raw)
+
+
+def reason_stream(
+    *,
+    system_prompt: str,
+    context_block: str,
+    user_message: str,
+    on_token: Callable[[str], None],
+) -> LLMResponse:
+    """Stream plain-text answer tokens; citations are built from retrieval chunks."""
+    settings = get_settings()
+    client = _client()
+    user_content = f"{context_block}\n\nUSER QUESTION:\n{user_message}"
+    stream_prompt = (
+        f"{system_prompt}\n\n"
+        "Respond in clear prose only. Do not use JSON or markdown code fences."
+    )
+
+    logger.info(
+        "Streaming LLM model=%s, ctx_chars=%d",
+        settings.llm_model,
+        len(context_block),
+    )
+    completion = client.chat.completions.create(
+        model=settings.llm_model,
+        temperature=0,
+        stream=True,
+        messages=[
+            {"role": "system", "content": stream_prompt},
+            {"role": "user", "content": user_content},
+        ],
+    )
+
+    parts: list[str] = []
+    for event in completion:
+        delta = event.choices[0].delta.content or ""
+        if not delta:
+            continue
+        parts.append(delta)
+        on_token(delta)
+
+    answer = "".join(parts).strip()
+    return LLMResponse(answer=answer or "I could not synthesise an answer from the sources.", citations=[])

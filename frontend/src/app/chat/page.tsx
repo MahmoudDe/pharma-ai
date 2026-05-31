@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { ChatComposer } from "@/components/chat/ChatComposer";
@@ -11,6 +11,7 @@ import { ChatThread } from "@/components/chat/ChatThread";
 import { ConstraintsPanel } from "@/components/chat/ConstraintsPanel";
 import { EvidencePanel } from "@/components/chat/EvidencePanel";
 import { StructuredFormulaPanel } from "@/components/chat/StructuredFormulaPanel";
+import { FormulaComparePanel } from "@/components/formula/FormulaComparePanel";
 import { SuggestedActionsPanel } from "@/components/chat/SuggestedActionsPanel";
 import { fetchBackendHealth, fetchBackendReadiness } from "@/lib/backend";
 import {
@@ -21,12 +22,17 @@ import {
   sendChatTurn,
   updateChatThreadTitle,
 } from "@/lib/chat";
-import { t } from "@/lib/i18n";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import {
+  getStoredActiveThreadId,
+  setStoredActiveThreadId,
+} from "@/lib/chat-session";
 import type {
   ChatMessage,
   ChatThreadMessage,
   ChatThreadSummary,
   ChatTurnRequest,
+  ChatTurnResponse,
   CitedEvidence,
   StructuredBrief,
   StructuredFormulationView,
@@ -35,6 +41,9 @@ import type {
 
 type BackendStatus = "checking" | "ok" | "down";
 type CorpusStatus = "unknown" | "ready" | "degraded";
+
+/** One bootstrap per full page load (avoids duplicate threads in React Strict Mode). */
+let hasBootstrappedChat = false;
 
 function createMessage(
   role: "user" | "assistant",
@@ -95,8 +104,11 @@ function latestAssistantPanels(messages: ChatMessage[]): {
 }
 
 function ChatPageContent() {
+  const { t } = useLocale();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [threadId, setThreadId] = useState<string | null>(null);
+  const [isInitializing, setIsInitializing] = useState(true);
   const [threads, setThreads] = useState<ChatThreadSummary[]>([]);
   const [isLoadingThreads, setIsLoadingThreads] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -123,24 +135,40 @@ function ChatPageContent() {
     }
   }, []);
 
+  const applyThreadDetail = useCallback((detail: Awaited<ReturnType<typeof fetchChatThread>>) => {
+    const mapped = detail.messages.map(mapStoredMessage);
+    const panels = latestAssistantPanels(mapped);
+    setThreadId(detail.id);
+    setStoredActiveThreadId(detail.id);
+    router.replace(`/chat?thread=${detail.id}`, { scroll: false });
+    setMessages(mapped);
+    setLatestEvidence(panels.evidence);
+    setLatestStructured(panels.structured);
+    setLatestStructuredList(panels.structuredList);
+    setLatestActions(panels.actions);
+  }, [router]);
+
   const startNewChat = useCallback(async () => {
     setErrorMessage(null);
     setLastFailedMessage(null);
     setMessages([]);
     setLatestEvidence([]);
     setLatestStructured(null);
+    setLatestStructuredList([]);
     setLatestActions([]);
     setMessageInput("");
     try {
       const id = await createChatThread();
       setThreadId(id);
+      setStoredActiveThreadId(id);
+      router.replace(`/chat?thread=${id}`, { scroll: false });
       await refreshThreads();
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to create a new chat.";
       setErrorMessage(message);
     }
-  }, [refreshThreads]);
+  }, [refreshThreads, router]);
 
   useEffect(() => {
     fetchBackendHealth()
@@ -153,9 +181,57 @@ function ChatPageContent() {
   }, []);
 
   useEffect(() => {
-    void refreshThreads();
-    void startNewChat();
-  }, [refreshThreads, startNewChat]);
+    if (hasBootstrappedChat) return;
+    hasBootstrappedChat = true;
+
+    let cancelled = false;
+
+    async function bootstrap() {
+      setIsLoadingThreads(true);
+      setIsInitializing(true);
+      try {
+        const list = await fetchChatThreads();
+        if (cancelled) return;
+        setThreads(list);
+
+        const fromUrl = searchParams.get("thread");
+        const stored = getStoredActiveThreadId();
+        const preferred = fromUrl || stored;
+        const existing =
+          preferred && list.some((th) => th.id === preferred) ? preferred : list[0]?.id ?? null;
+
+        if (existing) {
+          const detail = await fetchChatThread(existing);
+          if (cancelled) return;
+          applyThreadDetail(detail);
+        } else {
+          const id = await createChatThread();
+          if (cancelled) return;
+          setThreadId(id);
+          setStoredActiveThreadId(id);
+          router.replace(`/chat?thread=${id}`, { scroll: false });
+          const refreshed = await fetchChatThreads();
+          if (!cancelled) setThreads(refreshed);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setErrorMessage(
+            error instanceof Error ? error.message : "Failed to load chat.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingThreads(false);
+          setIsInitializing(false);
+        }
+      }
+    }
+
+    void bootstrap();
+    return () => {
+      cancelled = true;
+    };
+  }, [applyThreadDetail, router, searchParams]);
 
   useEffect(() => {
     const prompt = searchParams.get("prompt");
@@ -173,15 +249,9 @@ function ChatPageContent() {
     setIsLoading(true);
     try {
       const detail = await fetchChatThread(id);
-      const mapped = detail.messages.map(mapStoredMessage);
-      const panels = latestAssistantPanels(mapped);
-      setThreadId(detail.id);
-      setMessages(mapped);
-      setLatestEvidence(panels.evidence);
-      setLatestStructured(panels.structured);
-      setLatestStructuredList(panels.structuredList);
-      setLatestActions(panels.actions);
+      applyThreadDetail(detail);
       setMessageInput("");
+      await refreshThreads();
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to load chat history.";
@@ -191,12 +261,49 @@ function ChatPageContent() {
     }
   };
 
+  const applyAssistantResponse = (response: ChatTurnResponse, assistantId?: string) => {
+    const structuredList =
+      response.structured_formulations && response.structured_formulations.length > 0
+        ? response.structured_formulations
+        : response.structured_formulation
+          ? [response.structured_formulation]
+          : [];
+    const extras = {
+      citedEvidence: response.cited_evidence ?? [],
+      suggestedActions: response.suggested_next_actions ?? [],
+      structuredFormulation: structuredList[0] ?? null,
+      structuredFormulations: structuredList,
+      route: response.route,
+      llmUsed: response.llm_used,
+      searchConfidence: response.search_confidence,
+    };
+    if (assistantId) {
+      setMessages((previous) =>
+        previous.map((m) =>
+          m.id === assistantId
+            ? { ...m, content: response.assistant_message, ...extras }
+            : m,
+        ),
+      );
+    } else {
+      setMessages((previous) => [
+        ...previous,
+        createMessage("assistant", response.assistant_message, extras),
+      ]);
+    }
+    setLatestEvidence(response.cited_evidence ?? []);
+    setLatestStructuredList(structuredList);
+    setLatestStructured(structuredList[0] ?? null);
+    setLatestActions(response.suggested_next_actions ?? []);
+  };
+
   const executeTurn = async (rawMessage: string) => {
     if (!threadId) {
       return;
     }
     const userMessage = createMessage("user", rawMessage);
-    setMessages((previous) => [...previous, userMessage]);
+    const streamAssistant = createMessage("assistant", "");
+    setMessages((previous) => [...previous, userMessage, streamAssistant]);
     setIsLoading(true);
     setErrorMessage(null);
     setLastFailedMessage(null);
@@ -213,27 +320,17 @@ function ChatPageContent() {
     };
 
     try {
-      const response = await sendChatTurn(payload);
-      const structuredList =
-        response.structured_formulations && response.structured_formulations.length > 0
-          ? response.structured_formulations
-          : response.structured_formulation
-            ? [response.structured_formulation]
-            : [];
-      const assistantMessage = createMessage("assistant", response.assistant_message, {
-        citedEvidence: response.cited_evidence ?? [],
-        suggestedActions: response.suggested_next_actions ?? [],
-        structuredFormulation: structuredList[0] ?? null,
-        structuredFormulations: structuredList,
-        route: response.route,
-        llmUsed: response.llm_used,
-        searchConfidence: response.search_confidence,
+      const response = await sendChatTurn(payload, {
+        stream: true,
+        onToken: (delta) => {
+          setMessages((previous) =>
+            previous.map((m) =>
+              m.id === streamAssistant.id ? { ...m, content: m.content + delta } : m,
+            ),
+          );
+        },
       });
-      setMessages((previous) => [...previous, assistantMessage]);
-      setLatestEvidence(response.cited_evidence ?? []);
-      setLatestStructuredList(structuredList);
-      setLatestStructured(structuredList[0] ?? null);
-      setLatestActions(response.suggested_next_actions ?? []);
+      applyAssistantResponse(response, streamAssistant.id);
       setMessageInput("");
       await refreshThreads();
     } catch (error) {
@@ -241,7 +338,9 @@ function ChatPageContent() {
         error instanceof Error ? error.message : "Failed to send chat message.";
       setErrorMessage(message);
       setLastFailedMessage(rawMessage);
-      setMessages((previous) => previous.filter((m) => m.id !== userMessage.id));
+      setMessages((previous) =>
+        previous.filter((m) => m.id !== userMessage.id && m.id !== streamAssistant.id),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -293,10 +392,16 @@ function ChatPageContent() {
   const handleDeleteThread = async (id: string) => {
     try {
       await deleteChatThread(id);
+      const list = await fetchChatThreads();
+      setThreads(list);
       if (id === threadId) {
-        await startNewChat();
+        const next = list[0]?.id;
+        if (next) {
+          await loadThread(next);
+        } else {
+          await startNewChat();
+        }
       }
-      await refreshThreads();
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Delete failed");
     }
@@ -325,7 +430,7 @@ function ChatPageContent() {
         />
       }
       leftPanel={
-        <>
+        <div className="flex min-h-0 flex-1 flex-col">
           <AppHeader
             active="chat"
             statusSlot={
@@ -337,27 +442,32 @@ function ChatPageContent() {
             }
           />
           <ConstraintsPanel brief={structuredBrief} onChange={setStructuredBrief} />
-          <ChatThread
-            messages={messages}
-            isLoading={isLoading}
-            onSuggestionClick={handleSuggestionClick}
-          />
+          <div className="chat-canvas flex min-h-0 flex-1 flex-col border-y border-border">
+            <ChatThread
+              messages={messages}
+              isLoading={isLoading || isInitializing}
+              onSuggestionClick={handleSuggestionClick}
+            />
+          </div>
           <ChatComposer
             value={messageInput}
             onChange={setMessageInput}
             onSubmit={handleSubmit}
-            disabled={isLoading || !threadId}
+            disabled={isLoading || isInitializing || !threadId}
             errorMessage={errorMessage}
             onRetry={lastFailedMessage ? handleRetry : undefined}
           />
-        </>
+        </div>
       }
       rightPanel={
-        <div className="stagger-children flex h-full min-h-0 flex-col gap-4 overflow-y-auto p-4 lg:p-6">
+        <div className="stagger-children flex h-full min-h-0 flex-col gap-4 overflow-y-auto bg-[var(--chat-canvas)] p-4 lg:p-6">
           <StructuredFormulaPanel
             formulation={latestStructured}
             formulations={latestStructuredList}
           />
+          {latestStructuredList.length >= 2 ? (
+            <FormulaComparePanel formulations={latestStructuredList} />
+          ) : null}
           <EvidencePanel evidence={latestEvidence} />
           <SuggestedActionsPanel
             actions={latestActions}

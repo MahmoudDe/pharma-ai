@@ -7,6 +7,7 @@ use App\Models\ChatMessage;
 use App\Models\ChatThread;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -113,6 +114,145 @@ class ChatController extends Controller
             return response()->json(
                 ['message' => $exception->getMessage() ?: 'AI service is unreachable. Please try again.'],
                 $status,
+            );
+        }
+    }
+
+    /**
+     * Stream a chat turn via SSE from the AI service; persist messages when complete.
+     */
+    public function messagesStream(Request $request): StreamedResponse|JsonResponse
+    {
+        $validated = $request->validate([
+            'thread_id' => ['required', 'string', 'uuid'],
+            'message' => ['required', 'string'],
+            'structured_brief' => ['sometimes', 'array'],
+        ]);
+
+        $baseUrl = rtrim((string) config('services.ai.url'), '/');
+        $timeout = (int) config('services.ai.timeout', 120);
+
+        if ($baseUrl === '') {
+            return response()->json(
+                ['message' => 'AI_SERVICE_URL is not configured.'],
+                503,
+            );
+        }
+
+        try {
+            $thread = ChatThread::query()->firstOrCreate(
+                ['id' => $validated['thread_id']],
+            );
+
+            if ($thread->title === null) {
+                $thread->title = Str::limit($validated['message'], 60);
+                $thread->save();
+            }
+
+            ChatMessage::query()->create([
+                'thread_id' => $thread->id,
+                'role' => 'user',
+                'content' => $validated['message'],
+                'created_at' => now(),
+            ]);
+
+            return response()->stream(
+                function () use ($validated, $baseUrl, $timeout, $thread): void {
+                    $donePayload = null;
+
+                    try {
+                        $response = Http::withOptions(['stream' => true])
+                            ->timeout($timeout)
+                            ->withHeaders(['Accept' => 'text/event-stream'])
+                            ->asJson()
+                            ->post("{$baseUrl}/chat/stream", $validated);
+
+                        if ($response->failed()) {
+                            $detail = $response->json('detail') ?? 'AI service returned an error.';
+                            echo "event: error\ndata: ".json_encode(['message' => $detail])."\n\n";
+                            if (function_exists('ob_flush')) {
+                                @ob_flush();
+                            }
+                            flush();
+
+                            return;
+                        }
+
+                        $body = $response->toPsrResponse()->getBody();
+                        $carry = '';
+
+                        while (! $body->eof()) {
+                            $chunk = $body->read(2048);
+                            if ($chunk === '') {
+                                continue;
+                            }
+
+                            echo $chunk;
+                            if (function_exists('ob_flush')) {
+                                @ob_flush();
+                            }
+                            flush();
+
+                            $carry .= $chunk;
+                            while (($pos = strpos($carry, "\n\n")) !== false) {
+                                $block = substr($carry, 0, $pos);
+                                $carry = substr($carry, $pos + 2);
+                                if (str_contains($block, 'event: done')) {
+                                    foreach (explode("\n", $block) as $line) {
+                                        if (str_starts_with($line, 'data: ')) {
+                                            $donePayload = json_decode(substr($line, 6), true);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Throwable $exception) {
+                        Log::warning('AI stream failed', [
+                            'error' => $exception->getMessage(),
+                            'thread_id' => $validated['thread_id'],
+                        ]);
+                        echo 'event: error'."\ndata: ".json_encode([
+                            'message' => $this->aiConnectionMessage($exception),
+                        ])."\n\n";
+                        if (function_exists('ob_flush')) {
+                            @ob_flush();
+                        }
+                        flush();
+
+                        return;
+                    }
+
+                    if (is_array($donePayload)) {
+                        ChatMessage::query()->create([
+                            'thread_id' => $thread->id,
+                            'role' => 'assistant',
+                            'content' => (string) ($donePayload['assistant_message'] ?? ''),
+                            'cited_evidence' => $donePayload['cited_evidence'] ?? null,
+                            'suggested_next_actions' => $donePayload['suggested_next_actions'] ?? null,
+                            'structured_formulation' => $donePayload['structured_formulation'] ?? null,
+                            'structured_formulations' => $donePayload['structured_formulations'] ?? null,
+                            'created_at' => now(),
+                        ]);
+                        $thread->touch();
+                    }
+                },
+                200,
+                [
+                    'Content-Type' => 'text/event-stream',
+                    'Cache-Control' => 'no-cache',
+                    'Connection' => 'keep-alive',
+                    'X-Accel-Buffering' => 'no',
+                ],
+            );
+        } catch (Throwable $exception) {
+            Log::warning('Chat stream setup failed', [
+                'error' => $exception->getMessage(),
+                'thread_id' => $validated['thread_id'] ?? null,
+            ]);
+
+            return response()->json(
+                ['message' => $exception->getMessage() ?: 'AI service is unreachable. Please try again.'],
+                502,
             );
         }
     }

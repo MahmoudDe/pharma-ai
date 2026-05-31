@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Literal
 
@@ -9,7 +10,7 @@ from app.config import get_settings
 from app.formulation.schemas import FormulationRecord
 from app.formulation.search import StructuredSearchResult, structured_search
 from app.formulation.store import get_formulation
-from app.reasoning.llm import reason
+from app.reasoning.llm import reason, reason_stream
 from app.reasoning.prompt import SYSTEM_PROMPT, format_context, format_structured_formulations
 from app.reasoning.query_expand import expand_query
 from app.reasoning.templates import (
@@ -25,6 +26,7 @@ from app.retrieval.intent import (
     classify_query,
     parse_query_intent,
 )
+from app.retrieval.arabic_query import english_search_query
 from app.retrieval.search import RetrievedChunk, search
 from app.schemas import (
     ChatTurnRequest,
@@ -157,17 +159,26 @@ def _run_llm_path(
     *,
     fallback_stage: FallbackStage = "none",
     search_confidence: float | None = None,
+    on_token: Callable[[str], None] | None = None,
 ) -> RoutedResponse:
     context_block = format_context(chunks)
     structured_block = format_structured_formulations(structured)
     if structured_block:
         context_block = f"{context_block}\n\n{structured_block}"
 
-    llm_result = reason(
-        system_prompt=SYSTEM_PROMPT,
-        context_block=context_block,
-        user_message=query,
-    )
+    if on_token is not None:
+        llm_result = reason_stream(
+            system_prompt=SYSTEM_PROMPT,
+            context_block=context_block,
+            user_message=query,
+            on_token=on_token,
+        )
+    else:
+        llm_result = reason(
+            system_prompt=SYSTEM_PROMPT,
+            context_block=context_block,
+            user_message=query,
+        )
     validated = validate_response(llm_result, chunks)
     answer = validated.answer or "I could not synthesise an answer from the sources."
 
@@ -194,7 +205,11 @@ def _vector_search_ok(chunks: list[RetrievedChunk]) -> bool:
     return bool(chunks) and chunks[0].score >= settings.min_vector_score
 
 
-def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
+def route_chat(
+    payload: ChatTurnRequest,
+    *,
+    on_token: Callable[[str], None] | None = None,
+) -> RoutedResponse:
     query = payload.message.strip()
     if not query:
         return RoutedResponse(
@@ -207,14 +222,15 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
         )
 
     settings = get_settings()
-    classification = classify_query(query)
+    search_query = english_search_query(query)
+    classification = classify_query(search_query)
     route = classification.route
     intent = merge_intent_with_brief(classification.intent, payload.structured_brief)
 
-    logger.info("Route=%s query=%r", route, query[:80])
+    logger.info("Route=%s query=%r search=%r", route, query[:80], search_query[:80])
 
     if route == "reasoning":
-        chunks = search(query, top_k=TOP_K, intent=intent)
+        chunks = search(search_query, top_k=TOP_K, intent=intent)
         structured = _hydrate_chunks(chunks)
         if not _vector_search_ok(chunks) and not structured:
             return RoutedResponse(
@@ -232,12 +248,18 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
                 fallback_stage="failed",
             )
         return _run_llm_path(
-            query, chunks, structured, "reasoning", payload, fallback_stage="none"
+            query,
+            chunks,
+            structured,
+            "reasoning",
+            payload,
+            fallback_stage="none",
+            on_token=on_token,
         )
 
     limit = 5 if route == "compare" else 3
     struct_result = structured_search(
-        query, intent, limit=limit, brief=payload.structured_brief
+        search_query, intent, limit=limit, brief=payload.structured_brief
     )
     structured_records = apply_brief_filters(
         [m.record for m in struct_result.matches],
@@ -270,7 +292,7 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
             llm_used=False,
         )
 
-    chunks = search(query, top_k=TOP_K, intent=intent)
+    chunks = search(search_query, top_k=TOP_K, intent=intent)
     hydrated = _hydrate_chunks(chunks)
     if not structured_records:
         structured_records = hydrated
@@ -285,6 +307,7 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
                 payload,
                 fallback_stage="none",
                 search_confidence=struct_result.top_confidence,
+                on_token=on_token,
             )
         msg = format_lookup_response(structured_records)
         if chunks:
@@ -317,6 +340,7 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
                 payload,
                 fallback_stage="vector",
                 search_confidence=struct_result.top_confidence,
+                on_token=on_token,
             )
         titles = [
             (c.section_title or c.text[:60].replace("\n", " "))
@@ -344,7 +368,7 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
 
     if settings.enable_query_expansion:
         fallback_stage = "expanded"
-        for alt in expand_query(query)[1:]:
+        for alt in expand_query(search_query)[1:]:
             alt_intent = merge_intent_with_brief(
                 parse_query_intent(alt), payload.structured_brief
             )

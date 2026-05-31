@@ -18,6 +18,13 @@
   --shadow-soft: 0 4px 24px rgba(15, 23, 42, 0.06);
   --shadow-panel: 0 12px 40px rgba(15, 23, 42, 0.08);
   --shadow-glow: 0 0 0 1px rgba(124, 74, 220, 0.12), 0 8px 32px rgba(124, 74, 220, 0.15);
+  --chat-canvas: #ffffff;
+  --chat-composer: #ffffff;
+  --panel-muted: #eef1f7;
+  --logo-bg: #f3effb;
+  --logo-border: #d8cff0;
+  --logo-radius: 10px;
+  --logo-shadow: 0 1px 3px rgba(9, 9, 107, 0.07);
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -32,6 +39,12 @@
   --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.35);
   --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.45);
   --shadow-glow: 0 0 0 1px rgba(124, 74, 220, 0.25), 0 8px 32px rgba(78, 216, 245, 0.12);
+  --chat-canvas: #0f172a;
+  --chat-composer: #111827;
+  --panel-muted: #1a2332;
+  --logo-bg: #252040;
+  --logo-border: #3f3868;
+  --logo-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +58,12 @@
     --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.35);
     --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.45);
     --shadow-glow: 0 0 0 1px rgba(124, 74, 220, 0.25), 0 8px 32px rgba(78, 216, 245, 0.12);
+    --chat-canvas: #0f172a;
+    --chat-composer: #111827;
+    --panel-muted: #1a2332;
+    --logo-bg: #252040;
+    --logo-border: #3f3868;
+    --logo-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   }
 }
 
@@ -63,13 +82,21 @@
   --color-warning: var(--warning);
   --color-error: var(--error);
   --font-sans: var(--font-app-sans);
+  --font-arabic: var(--font-app-arabic);
   --font-mono: var(--font-app-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-app-sans), "Inter", "Segoe UI", sans-serif;
+  font-family: var(--font-app-sans), "Manrope", "Segoe UI", sans-serif;
+}
+
+html[lang="ar"] body {
+  font-family: var(--font-app-arabic), "IBM Plex Sans Arabic", "Noto Sans Arabic", sans-serif;
+  font-feature-settings: "liga" 1, "calt" 1;
+  line-height: 1.65;
+  letter-spacing: 0;
 }
 
 /* Ambient mesh background */
@@ -118,19 +145,83 @@ body {
   }
 }
 
-/* Panel glass */
+/* Panels */
 .glass-panel {
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--surface);
   box-shadow: var(--shadow-panel);
-  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  border: 1px solid var(--border);
+}
+
+.panel-solid {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+
+.chat-canvas {
+  background: var(--chat-canvas);
+}
+
+.chat-composer-bar {
+  background: var(--chat-composer);
+  border-top: 1px solid var(--border);
+}
+
+.panel-muted-band {
+  background: var(--panel-muted);
+  border-bottom: 1px solid var(--border);
 }
 
 .glass-header {
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.app-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  min-height: 3.5rem;
+}
+
+@media (min-width: 1024px) {
+  .app-header {
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Logo frame — theme-aware, softly rounded */
+.logo-container {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background: var(--logo-bg);
+  border: 1px solid var(--logo-border);
+  border-radius: var(--logo-radius);
+  box-shadow: var(--logo-shadow);
+}
+
+.logo-container--header {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.4375rem;
+}
+
+.logo-container--sm {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.375rem;
+}
+
+.logo-container-lg {
+  width: 4.5rem;
+  height: 4.5rem;
+  padding: 0.75rem;
+  border-radius: 12px;
 }
 
 /* Animations */

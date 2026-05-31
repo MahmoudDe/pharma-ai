@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AppColors } from "@/constants/AppColors";
 import { fetchBackendHealth, fetchBackendReadiness } from "@/lib/backend";
-import { t } from "@/lib/i18n";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 export default function Home() {
+  const { t } = useLocale();
   const [status, setStatus] = useState("…");
   const [ready, setReady] = useState(false);
 
@@ -76,10 +77,22 @@ export default function Home() {
             {t("home.openChat")}
           </Link>
           <Link
+            href="/formulations"
+            className="hover-lift inline-flex rounded-xl border border-border bg-surface/80 px-6 py-3 text-sm font-semibold text-text-primary"
+          >
+            {t("home.openLibrary")}
+          </Link>
+          <Link
             href="/warehouse"
             className="hover-lift inline-flex rounded-xl border border-border bg-surface/80 px-6 py-3 text-sm font-semibold text-text-primary"
           >
             {t("home.openWarehouse")}
+          </Link>
+          <Link
+            href="/corpus"
+            className="hover-lift inline-flex rounded-xl border border-border bg-surface/80 px-6 py-3 text-sm font-semibold text-text-primary"
+          >
+            {t("nav.corpus")}
           </Link>
         </div>
       </main>

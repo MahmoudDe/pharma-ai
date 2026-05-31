@@ -5,17 +5,14 @@ import { useCallback, useState } from "react";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Spinner } from "@/components/ui/Spinner";
 import { AppColors } from "@/constants/AppColors";
-import { t } from "@/lib/i18n";
-import { discoverProducts, resolveWarehouse, uploadWarehouseFile } from "@/lib/warehouse";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { discoverProducts, resolveWarehouse, setMaterialAlias, uploadWarehouseFile } from "@/lib/warehouse";
+import { sourcePdfUrl } from "@/lib/sources";
 import type { DiscoverProductResult, ResolveResponse, UploadResponse } from "@/types/warehouse";
 
 type Step = 1 | 2 | 3;
 
-const STEPS: { n: Step; label: string }[] = [
-  { n: 1, label: "Upload" },
-  { n: 2, label: "Resolve" },
-  { n: 3, label: "Discover" },
-];
+const STEP_KEYS = ["warehouse.stepUpload", "warehouse.stepResolve", "warehouse.stepDiscover"] as const;
 
 function tierStyle(tier: string) {
   if (tier === "makeable") return "text-success border-success/30 bg-success/10";
@@ -23,12 +20,60 @@ function tierStyle(tier: string) {
   return "text-text-secondary border-border bg-background";
 }
 
+function MaterialAliasEditor({
+  materialId,
+  initial,
+  onSaved,
+}: {
+  materialId: number;
+  initial: string;
+  onSaved: (canonical: string) => void;
+}) {
+  const { t } = useLocale();
+  const [value, setValue] = useState(initial);
+  const [busy, setBusy] = useState(false);
+
+  return (
+    <form
+      className="mt-1 flex flex-wrap gap-1"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!value.trim()) return;
+        setBusy(true);
+        setMaterialAlias(materialId, value.trim())
+          .then((row) => {
+            onSaved(row.canonical_name ?? value.trim());
+          })
+          .catch(() => {})
+          .finally(() => setBusy(false));
+      }}
+    >
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="min-w-[8rem] flex-1 rounded border border-border bg-background px-2 py-0.5 text-xs"
+        placeholder={t("warehouse.overrideAlias")}
+      />
+      <button
+        type="submit"
+        disabled={busy}
+        className="rounded border border-secondary/40 px-2 py-0.5 text-[10px] font-semibold text-secondary"
+      >
+        {t("warehouse.saveAlias")}
+      </button>
+    </form>
+  );
+}
+
 export default function WarehousePage() {
+  const { t } = useLocale();
   const [step, setStep] = useState<Step>(1);
   const [upload, setUpload] = useState<UploadResponse | null>(null);
   const [resolve, setResolve] = useState<ResolveResponse | null>(null);
   const [products, setProducts] = useState<DiscoverProductResult[]>([]);
-  const [minCoverage, setMinCoverage] = useState(50);
+  const [minCoverage, setMinCoverage] = useState(70);
+  const [tierFilter, setTierFilter] = useState<"all" | "makeable" | "partial">("all");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -79,9 +124,15 @@ export default function WarehousePage() {
     }
   };
 
+  const filteredProducts = products.filter((p) => {
+    if (tierFilter === "makeable") return p.tier === "makeable";
+    if (tierFilter === "partial") return p.tier === "makeable" || p.tier === "partial";
+    return true;
+  });
+
   const exportCsv = () => {
     const header = "name,coverage_pct,tier,doc_id,pdf_page,missing\n";
-    const rows = products.map(
+    const rows = filteredProducts.map(
       (p) =>
         `"${p.name.replace(/"/g, '""')}",${p.coverage_pct},${p.tier},${p.doc_id},${p.pdf_page},"${p.missing_ingredients.join("; ")}"`,
     );
@@ -97,7 +148,7 @@ export default function WarehousePage() {
   return (
     <div className="app-mesh-bg min-h-screen">
       <div className="relative z-10 mx-auto max-w-5xl px-4 py-6 lg:px-8 lg:py-10">
-        <div className="glass-panel animate-scale-in overflow-hidden rounded-3xl">
+        <div className="panel-solid animate-scale-in overflow-hidden rounded-3xl">
           <AppHeader active="warehouse" />
 
           <div className="border-b border-border/60 px-6 py-6 lg:px-8">
@@ -109,7 +160,9 @@ export default function WarehousePage() {
             </p>
 
             <ol className="mt-6 flex flex-wrap gap-2">
-              {STEPS.map(({ n, label }) => {
+              {STEP_KEYS.map((key, idx) => {
+                const n = (idx + 1) as Step;
+                const label = t(key);
                 const done = step > n;
                 const active = step === n;
                 return (
@@ -182,6 +235,7 @@ export default function WarehousePage() {
                     <p className="mt-3 text-sm font-medium text-text-primary">
                       {t("warehouse.dropHint")}
                     </p>
+                    <p className="mt-1 text-xs text-text-secondary">{t("warehouse.arabicHint")}</p>
                   </>
                 )}
               </label>
@@ -210,7 +264,7 @@ export default function WarehousePage() {
                   {t("warehouse.discover")}
                 </button>
                 <label className="flex items-center gap-2 text-xs text-text-secondary">
-                  Min coverage
+                  {t("warehouse.minCoverage")}
                   <input
                     type="number"
                     min={0}
@@ -228,15 +282,18 @@ export default function WarehousePage() {
               <section className="animate-fade-in-up rounded-2xl border border-border/80 bg-background/50 p-6">
                 <h3 className="text-sm font-bold text-text-primary">{t("warehouse.materials")}</h3>
                 <p className="mt-1 text-xs text-text-secondary">
-                  Resolved {resolve.resolved} · Review {resolve.needs_review}
+                  {t("warehouse.resolvedSummary", {
+                    resolved: resolve.resolved,
+                    review: resolve.needs_review,
+                  })}
                 </p>
-                <div className="mt-4 max-h-56 overflow-auto rounded-xl border border-border/60">
-                  <table className="w-full text-left text-xs">
+                <div className="mt-4 max-h-72 overflow-auto rounded-xl border border-border/60">
+                  <table className="w-full text-start text-xs">
                     <thead className="sticky top-0 bg-surface/95 text-text-secondary">
                       <tr>
-                        <th className="px-3 py-2 font-semibold">Raw</th>
-                        <th className="px-3 py-2 font-semibold">Canonical</th>
-                        <th className="px-3 py-2 font-semibold">Conf.</th>
+                        <th className="px-3 py-2 font-semibold">{t("warehouse.tableRaw")}</th>
+                        <th className="px-3 py-2 font-semibold">{t("warehouse.tableCanonical")}</th>
+                        <th className="px-3 py-2 font-semibold">{t("warehouse.tableConfidence")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -246,6 +303,34 @@ export default function WarehousePage() {
                           <td className="px-3 py-2 text-text-secondary">
                             {m.canonical_name ?? "—"}
                             {m.needs_review ? " ⚠" : ""}
+                            {m.needs_review ? (
+                              <MaterialAliasEditor
+                                materialId={m.id}
+                                initial={m.canonical_name ?? m.raw_name}
+                                onSaved={(canonical) => {
+                                  setProducts([]);
+                                  setResolve((prev) =>
+                                    prev
+                                      ? {
+                                          ...prev,
+                                          materials: prev.materials.map((row) =>
+                                            row.id === m.id
+                                              ? {
+                                                  ...row,
+                                                  canonical_name: canonical,
+                                                  needs_review: false,
+                                                  confidence: 1,
+                                                  alias_source: "manual",
+                                                }
+                                              : row,
+                                          ),
+                                          needs_review: Math.max(0, prev.needs_review - 1),
+                                        }
+                                      : prev,
+                                  );
+                                }}
+                              />
+                            ) : null}
                           </td>
                           <td className="px-3 py-2">
                             {m.confidence != null ? `${(m.confidence * 100).toFixed(0)}%` : "—"}
@@ -258,20 +343,53 @@ export default function WarehousePage() {
               </section>
             ) : null}
 
+            {resolve && products.length === 0 && step >= 2 && !busy ? (
+              <p className="rounded-2xl border border-border/80 bg-background/50 px-4 py-3 text-sm text-text-secondary">
+                {t("warehouse.noProducts")}
+              </p>
+            ) : null}
+
             {products.length > 0 ? (
               <section className="animate-fade-in-up rounded-2xl border border-border/80 bg-background/50 p-6">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="text-sm font-bold text-text-primary">{t("warehouse.products")}</h3>
-                  <button
-                    type="button"
-                    onClick={exportCsv}
-                    className="text-xs font-semibold text-secondary underline-offset-2 hover:underline"
-                  >
-                    {t("warehouse.export")}
-                  </button>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="text-sm font-bold text-text-primary">
+                    {t("warehouse.products")} ({filteredProducts.length})
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {(["all", "makeable", "partial"] as const).map((key) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setTierFilter(key)}
+                        className={`rounded-lg border px-2.5 py-1 text-[10px] font-semibold ${
+                          tierFilter === key
+                            ? "border-secondary/50 bg-secondary/10 text-text-primary"
+                            : "border-border text-text-secondary"
+                        }`}
+                      >
+                        {t(
+                          key === "all"
+                            ? "warehouse.filterAll"
+                            : key === "makeable"
+                              ? "warehouse.filterMakeable"
+                              : "warehouse.filterPartial",
+                        )}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={exportCsv}
+                      className="text-xs font-semibold text-secondary underline-offset-2 hover:underline"
+                    >
+                      {t("warehouse.export")}
+                    </button>
+                  </div>
                 </div>
                 <ul className="stagger-children mt-4 space-y-3">
-                  {products.map((p) => (
+                  {filteredProducts.map((p) => {
+                    const matched = p.matched_ingredients.filter((i) => i.matched).length;
+                    const total = p.matched_ingredients.length;
+                    return (
                     <li
                       key={p.formulation_id}
                       className="hover-lift rounded-2xl border border-border/80 bg-surface/90 p-4"
@@ -285,13 +403,25 @@ export default function WarehousePage() {
                         </span>
                       </div>
                       <p className="mt-1 text-xs text-text-secondary">
-                        {p.doc_id} · PDF p.{p.pdf_page}
+                        <a
+                          href={sourcePdfUrl(p.doc_id, p.pdf_page)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-semibold text-secondary hover:underline"
+                        >
+                          {p.doc_id} · {t("evidence.openPdf")}
+                          {p.pdf_page}
+                        </a>
                         {p.printed_page != null ? ` · Book p.${p.printed_page}` : ""}
+                      </p>
+                      <p className="mt-1 text-xs text-text-secondary">
+                        {t("warehouse.matchedIngredients", { matched, total })}
+                        {p.product_types.length > 0 ? ` · ${p.product_types.join(", ")}` : ""}
                       </p>
                       {p.missing_ingredients.length > 0 ? (
                         <p className="mt-2 text-xs text-warning">
-                          Missing: {p.missing_ingredients.slice(0, 5).join(", ")}
-                          {p.missing_ingredients.length > 5 ? "…" : ""}
+                          Missing: {p.missing_ingredients.slice(0, 6).join(", ")}
+                          {p.missing_ingredients.length > 6 ? "…" : ""}
                         </p>
                       ) : null}
                       <Link
@@ -301,7 +431,8 @@ export default function WarehousePage() {
                         {t("warehouse.openChat")} →
                       </Link>
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               </section>
             ) : null}
