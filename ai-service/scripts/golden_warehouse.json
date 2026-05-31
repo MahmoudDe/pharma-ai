@@ -1,0 +1,6 @@
+{
+  "description": "Warehouse discovery smoke expectations (requires formulations.db from ingest).",
+  "materials": ["water", "glycerin", "cocamidopropyl betaine", "sodium laureth sulfate"],
+  "min_coverage": 40,
+  "expect_product_types_contains": ["shampoo"]
+}

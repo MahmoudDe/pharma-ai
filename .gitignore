@@ -21,3 +21,4 @@ Thumbs.db
 
 # Unrelated local files in docs (source books are PDF/DOC)
 docs/*.xlsx
+docs/*.docx

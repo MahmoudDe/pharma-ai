@@ -13,3 +13,6 @@ openai>=1.50,<2
 numpy>=2.0,<3
 tqdm>=4.66
 spacy>=3.7,<4
+pandas>=2.2,<3
+openpyxl>=3.1,<4
+rapidfuzz>=3.9,<4

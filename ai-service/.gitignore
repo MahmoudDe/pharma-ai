@@ -5,6 +5,8 @@ __pycache__/
 data/qdrant/
 data/ingested.json
 data/formulations.db
+data/warehouse.db
+data/warehouse/
 data/hf-cache/
 .DS_Store
 *.egg-info/

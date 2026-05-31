@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { AppColors } from "@/constants/AppColors";
+import { formulaToMarkdown } from "@/lib/formulaMarkdown";
+import { t } from "@/lib/i18n";
 import type { StructuredFormulationView } from "@/types/chat";
 
 interface StructuredFormulaPanelProps {
@@ -76,9 +79,26 @@ function FormulaCard({ formulation }: { formulation: StructuredFormulationView }
 }
 
 function PanelHeader({ formulation }: { formulation: StructuredFormulationView }) {
+  const [copied, setCopied] = useState(false);
+
+  const onCopy = async () => {
+    await navigator.clipboard.writeText(formulaToMarkdown(formulation));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div>
-      <h2 className="text-sm font-semibold text-text-primary">Structured formula</h2>
+      <div className="flex items-start justify-between gap-2">
+        <h2 className="text-sm font-semibold text-text-primary">Structured formula</h2>
+        <button
+          type="button"
+          onClick={() => void onCopy()}
+          className="shrink-0 text-xs font-medium text-secondary hover:underline"
+        >
+          {copied ? t("formula.copied") : t("formula.copy")}
+        </button>
+      </div>
       <p className="mt-1 text-xs text-text-secondary">{formulation.name}</p>
       <p className="mt-1 text-[10px] text-text-secondary">
         Extracted · confidence {(formulation.confidence * 100).toFixed(0)}% · PDF p.

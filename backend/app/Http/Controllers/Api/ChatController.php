@@ -86,6 +86,8 @@ class ChatController extends Controller
                     'content' => (string) ($body['assistant_message'] ?? ''),
                     'cited_evidence' => $body['cited_evidence'] ?? null,
                     'suggested_next_actions' => $body['suggested_next_actions'] ?? null,
+                    'structured_formulation' => $body['structured_formulation'] ?? null,
+                    'structured_formulations' => $body['structured_formulations'] ?? null,
                     'created_at' => now(),
                 ]);
 

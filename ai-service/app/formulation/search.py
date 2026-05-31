@@ -7,7 +7,14 @@ from typing import Literal
 
 from app.formulation.schemas import FormulationRecord
 from app.formulation.store import list_formulations
+from app.reasoning.brief import (
+    apply_brief_filters,
+    merge_intent_with_brief,
+    normalize_brief_terms,
+    preferred_ingredient_score,
+)
 from app.retrieval.intent import QueryIntent
+from app.schemas import StructuredBrief
 
 RouteHint = Literal["direct", "hybrid", "fallback"]
 
@@ -102,6 +109,8 @@ def score_formulation(
     record: FormulationRecord,
     intent: QueryIntent,
     query: str,
+    *,
+    brief: StructuredBrief | None = None,
 ) -> RankedFormulation:
     breakdown: dict[str, float] = {}
     required = intent.product_types
@@ -125,6 +134,9 @@ def score_formulation(
         breakdown["source_quality"] = 5.0
 
     breakdown["name_bonus"] = _name_bonus(record, intent, query)
+    if brief:
+        preferred = normalize_brief_terms(brief.preferred_ingredients)
+        breakdown["preferred_ingredients"] = preferred_ingredient_score(record, preferred)
 
     if _query_hand_cream(query):
         name_lower = record.name.lower()
@@ -151,7 +163,9 @@ def structured_search(
     intent: QueryIntent,
     *,
     limit: int = 5,
+    brief: StructuredBrief | None = None,
 ) -> StructuredSearchResult:
+    intent = merge_intent_with_brief(intent, brief)
     filter_types = _filter_types_for_intent(intent)
     candidates = list_formulations(product_types=filter_types, limit=limit * 12)
 
@@ -164,7 +178,7 @@ def structured_search(
     for rec in candidates:
         if len(rec.ingredients) < 2:
             continue
-        r = score_formulation(rec, intent, query)
+        r = score_formulation(rec, intent, query, brief=brief)
         key = rec.name.lower()[:80]
         prev = seen_names.get(key)
         if prev is None or len(rec.ingredients) > len(prev.record.ingredients):
@@ -196,6 +210,11 @@ def structured_search(
             ),
         )
 
+    ranked = ranked[: limit * 2]
+    if brief:
+        filtered_records = apply_brief_filters([r.record for r in ranked], brief)
+        allowed_ids = {r.id for r in filtered_records}
+        ranked = [r for r in ranked if r.record.id in allowed_ids]
     ranked = ranked[:limit]
 
     from app.config import get_settings

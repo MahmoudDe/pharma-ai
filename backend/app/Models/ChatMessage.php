@@ -22,12 +22,16 @@ class ChatMessage extends Model
         'content',
         'cited_evidence',
         'suggested_next_actions',
+        'structured_formulation',
+        'structured_formulations',
         'created_at',
     ];
 
     protected $casts = [
         'cited_evidence' => 'array',
         'suggested_next_actions' => 'array',
+        'structured_formulation' => 'array',
+        'structured_formulations' => 'array',
         'created_at' => 'datetime',
     ];
 

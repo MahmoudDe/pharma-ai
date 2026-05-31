@@ -33,6 +33,11 @@ export interface ChatMessage {
   createdAt: string;
   citedEvidence?: CitedEvidence[];
   suggestedActions?: SuggestedNextAction[];
+  structuredFormulation?: StructuredFormulationView | null;
+  structuredFormulations?: StructuredFormulationView[];
+  route?: QueryRoute;
+  llmUsed?: boolean;
+  searchConfidence?: number | null;
 }
 
 export interface ChatTurnRequest {
@@ -96,6 +101,8 @@ export interface ChatThreadMessage {
   created_at: string;
   cited_evidence?: CitedEvidence[];
   suggested_next_actions?: SuggestedNextAction[];
+  structured_formulation?: StructuredFormulationView | null;
+  structured_formulations?: StructuredFormulationView[];
 }
 
 export interface ChatThreadDetail {

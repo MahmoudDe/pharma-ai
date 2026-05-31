@@ -58,6 +58,14 @@ class Settings(BaseSettings):
     rerank_vector_weight: float = 0.18
     rerank_heuristic_weight: float = 0.10
 
+    # Warehouse inventory
+    warehouse_max_rows: int = 2000
+    warehouse_max_upload_bytes: int = 5_242_880
+    warehouse_fuzzy_threshold: int = 82
+    warehouse_llm_batch_size: int = 25
+    warehouse_review_threshold: float = 0.7
+    warehouse_makeable_coverage: float = 95.0
+
 
 @lru_cache
 def get_settings() -> Settings:

@@ -218,14 +218,14 @@ points at. To swap providers, set three env vars and restart — no code changes
 OpenRouter is the recommended default because it lets you switch between all
 the hosted models with one env var change.
 
-## Out of scope for the MVP
+## Planned later
 
-These are deferred from the original phased plan and will return in later milestones:
+See [../REQUIREMENTS.md](../REQUIREMENTS.md) for the full list. Highlights still open:
 
-- Structured formula parser (Phase 2 of the original write-up).
-- PostgreSQL formula table + SQL pre-filter for product type / banned ingredients.
-- Reranking, hybrid BM25+vector, query rewriting.
-- Batch calculator, ingredient substitution, cost estimator, regulatory checks.
-- Auth on the Laravel proxy and thread persistence.
-- OCR for scanned PDFs (the current 3 books are text PDFs).
+- PostgreSQL formula store + SQL pre-filters (banned ingredients, cost).
+- Hybrid BM25+vector, conversation-aware retrieval.
+- `structured_brief` wired into search (API field exists today).
+- Batch calculator, substitution, cost estimator, regulatory checks.
+- Auth on the Laravel proxy; per-user thread isolation.
+- OCR for scanned PDFs.
 

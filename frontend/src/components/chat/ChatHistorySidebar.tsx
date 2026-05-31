@@ -1,6 +1,7 @@
 "use client";
 
 import { AppColors } from "@/constants/AppColors";
+import { t } from "@/lib/i18n";
 import type { ChatThreadSummary } from "@/types/chat";
 
 interface ChatHistorySidebarProps {
@@ -9,6 +10,8 @@ interface ChatHistorySidebarProps {
   isLoadingThreads: boolean;
   onSelectThread: (threadId: string) => void;
   onNewChat: () => void;
+  onDeleteThread?: (threadId: string) => void;
+  onRenameThread?: (threadId: string, title: string) => void;
 }
 
 function formatRelativeTime(iso: string | null): string {
@@ -42,6 +45,8 @@ export function ChatHistorySidebar({
   isLoadingThreads,
   onSelectThread,
   onNewChat,
+  onDeleteThread,
+  onRenameThread,
 }: ChatHistorySidebarProps) {
   return (
     <aside className="flex h-full min-h-0 w-full flex-col border-r border-border bg-surface">
@@ -52,7 +57,7 @@ export function ChatHistorySidebar({
         className="mx-3 mb-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
         style={{ background: AppColors.buttonGradient }}
       >
-        New chat
+        {t("thread.newChat")}
       </button>
       <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
         {isLoadingThreads ? (
@@ -64,11 +69,11 @@ export function ChatHistorySidebar({
             {threads.map((thread) => {
               const isActive = thread.id === activeThreadId;
               return (
-                <li key={thread.id}>
+                <li key={thread.id} className="group relative">
                   <button
                     type="button"
                     onClick={() => onSelectThread(thread.id)}
-                    className={`w-full rounded-lg px-3 py-2.5 text-left transition ${
+                    className={`w-full rounded-lg px-3 py-2.5 pr-16 text-left transition ${
                       isActive
                         ? "border border-border bg-background shadow-sm"
                         : "hover:bg-background/80"
@@ -96,6 +101,37 @@ export function ChatHistorySidebar({
                       {formatRelativeTime(thread.updated_at)}
                     </p>
                   </button>
+                  <div className="absolute right-1 top-2 flex gap-0.5 opacity-0 transition group-hover:opacity-100">
+                    {onRenameThread ? (
+                      <button
+                        type="button"
+                        title={t("thread.rename")}
+                        className="rounded px-1.5 py-0.5 text-[10px] text-text-secondary hover:bg-background"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const next = window.prompt("Thread title", thread.title);
+                          if (next?.trim()) onRenameThread(thread.id, next.trim());
+                        }}
+                      >
+                        ✎
+                      </button>
+                    ) : null}
+                    {onDeleteThread ? (
+                      <button
+                        type="button"
+                        title={t("thread.delete")}
+                        className="rounded px-1.5 py-0.5 text-[10px] text-error hover:bg-background"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(t("thread.deleteConfirm"))) {
+                            onDeleteThread(thread.id);
+                          }
+                        }}
+                      >
+                        ×
+                      </button>
+                    ) : null}
+                  </div>
                 </li>
               );
             })}

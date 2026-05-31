@@ -1,33 +1,40 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { ChatComposer } from "@/components/chat/ChatComposer";
 import { ChatHistorySidebar } from "@/components/chat/ChatHistorySidebar";
 import { ChatLayout } from "@/components/chat/ChatLayout";
 import { ChatThread } from "@/components/chat/ChatThread";
+import { ConstraintsPanel } from "@/components/chat/ConstraintsPanel";
 import { EvidencePanel } from "@/components/chat/EvidencePanel";
 import { StructuredFormulaPanel } from "@/components/chat/StructuredFormulaPanel";
 import { SuggestedActionsPanel } from "@/components/chat/SuggestedActionsPanel";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { fetchBackendHealth } from "@/lib/backend";
+import { fetchBackendHealth, fetchBackendReadiness } from "@/lib/backend";
 import {
   createChatThread,
+  deleteChatThread,
   fetchChatThread,
   fetchChatThreads,
   sendChatTurn,
+  updateChatThreadTitle,
 } from "@/lib/chat";
+import { t } from "@/lib/i18n";
 import type {
   ChatMessage,
   ChatThreadMessage,
   ChatThreadSummary,
   ChatTurnRequest,
   CitedEvidence,
+  StructuredBrief,
   StructuredFormulationView,
   SuggestedNextAction,
 } from "@/types/chat";
 
 type BackendStatus = "checking" | "ok" | "down";
+type CorpusStatus = "unknown" | "ready" | "degraded";
 
 function createMessage(
   role: "user" | "assistant",
@@ -45,28 +52,46 @@ function createMessage(
 }
 
 function mapStoredMessage(message: ChatThreadMessage): ChatMessage {
+  const structuredList =
+    message.structured_formulations && message.structured_formulations.length > 0
+      ? message.structured_formulations
+      : message.structured_formulation
+        ? [message.structured_formulation]
+        : [];
   return createMessage(message.role, message.content, {
     id: message.id,
     createdAt: message.created_at,
     citedEvidence: message.cited_evidence,
     suggestedActions: message.suggested_next_actions,
+    structuredFormulation: structuredList[0] ?? null,
+    structuredFormulations: structuredList,
   });
 }
 
-function latestAssistantEvidence(messages: ChatMessage[]): {
+function latestAssistantPanels(messages: ChatMessage[]): {
   evidence: CitedEvidence[];
   actions: SuggestedNextAction[];
+  structured: StructuredFormulationView | null;
+  structuredList: StructuredFormulationView[];
 } {
   for (let i = messages.length - 1; i >= 0; i -= 1) {
     const message = messages[i];
     if (message.role === "assistant") {
+      const structuredList =
+        message.structuredFormulations && message.structuredFormulations.length > 0
+          ? message.structuredFormulations
+          : message.structuredFormulation
+            ? [message.structuredFormulation]
+            : [];
       return {
         evidence: message.citedEvidence ?? [],
         actions: message.suggestedActions ?? [],
+        structured: structuredList[0] ?? null,
+        structuredList,
       };
     }
   }
-  return { evidence: [], actions: [] };
+  return { evidence: [], actions: [], structured: null, structuredList: [] };
 }
 
 const STATUS_PILL: Record<BackendStatus, { label: string; dot: string; text: string }> = {
@@ -101,6 +126,8 @@ export default function ChatPage() {
   const [latestStructuredList, setLatestStructuredList] = useState<StructuredFormulationView[]>([]);
   const [latestActions, setLatestActions] = useState<SuggestedNextAction[]>([]);
   const [backendStatus, setBackendStatus] = useState<BackendStatus>("checking");
+  const [corpusStatus, setCorpusStatus] = useState<CorpusStatus>("unknown");
+  const [structuredBrief, setStructuredBrief] = useState<StructuredBrief>({});
 
   const refreshThreads = useCallback(async () => {
     try {
@@ -134,8 +161,15 @@ export default function ChatPage() {
 
   useEffect(() => {
     fetchBackendHealth()
-      .then(() => setBackendStatus("ok"))
-      .catch(() => setBackendStatus("down"));
+      .then(() => {
+        setBackendStatus("ok");
+        return fetchBackendReadiness();
+      })
+      .then((ready) => setCorpusStatus(ready.ready ? "ready" : "degraded"))
+      .catch(() => {
+        setBackendStatus("down");
+        setCorpusStatus("unknown");
+      });
   }, []);
 
   useEffect(() => {
@@ -153,12 +187,13 @@ export default function ChatPage() {
     try {
       const detail = await fetchChatThread(id);
       const mapped = detail.messages.map(mapStoredMessage);
-      const { evidence, actions } = latestAssistantEvidence(mapped);
+      const panels = latestAssistantPanels(mapped);
       setThreadId(detail.id);
       setMessages(mapped);
-      setLatestEvidence(evidence);
-      setLatestStructured(null);
-      setLatestActions(actions);
+      setLatestEvidence(panels.evidence);
+      setLatestStructured(panels.structured);
+      setLatestStructuredList(panels.structuredList);
+      setLatestActions(panels.actions);
       setMessageInput("");
     } catch (error) {
       const message =
@@ -179,25 +214,36 @@ export default function ChatPage() {
     setErrorMessage(null);
     setLastFailedMessage(null);
 
+    const hasBrief =
+      structuredBrief.product_type ||
+      (structuredBrief.banned_ingredients?.length ?? 0) > 0 ||
+      (structuredBrief.preferred_ingredients?.length ?? 0) > 0;
+
     const payload: ChatTurnRequest = {
       thread_id: threadId,
       message: rawMessage,
+      ...(hasBrief ? { structured_brief: structuredBrief } : {}),
     };
 
     try {
       const response = await sendChatTurn(payload);
-      const assistantMessage = createMessage("assistant", response.assistant_message, {
-        citedEvidence: response.cited_evidence ?? [],
-        suggestedActions: response.suggested_next_actions ?? [],
-      });
-      setMessages((previous) => [...previous, assistantMessage]);
-      setLatestEvidence(response.cited_evidence ?? []);
       const structuredList =
         response.structured_formulations && response.structured_formulations.length > 0
           ? response.structured_formulations
           : response.structured_formulation
             ? [response.structured_formulation]
             : [];
+      const assistantMessage = createMessage("assistant", response.assistant_message, {
+        citedEvidence: response.cited_evidence ?? [],
+        suggestedActions: response.suggested_next_actions ?? [],
+        structuredFormulation: structuredList[0] ?? null,
+        structuredFormulations: structuredList,
+        route: response.route,
+        llmUsed: response.llm_used,
+        searchConfidence: response.search_confidence,
+      });
+      setMessages((previous) => [...previous, assistantMessage]);
+      setLatestEvidence(response.cited_evidence ?? []);
       setLatestStructuredList(structuredList);
       setLatestStructured(structuredList[0] ?? null);
       setLatestActions(response.suggested_next_actions ?? []);
@@ -238,6 +284,35 @@ export default function ChatPage() {
   };
 
   const status = STATUS_PILL[backendStatus];
+  const corpusLabel =
+    backendStatus !== "ok"
+      ? status.label
+      : corpusStatus === "ready"
+        ? t("status.corpusReady")
+        : corpusStatus === "degraded"
+          ? t("status.corpusDegraded")
+          : status.label;
+
+  const handleDeleteThread = async (id: string) => {
+    try {
+      await deleteChatThread(id);
+      if (id === threadId) {
+        await startNewChat();
+      }
+      await refreshThreads();
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Delete failed");
+    }
+  };
+
+  const handleRenameThread = async (id: string, title: string) => {
+    try {
+      await updateChatThreadTitle(id, title);
+      await refreshThreads();
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "Rename failed");
+    }
+  };
 
   return (
     <ChatLayout
@@ -248,6 +323,8 @@ export default function ChatPage() {
           isLoadingThreads={isLoadingThreads}
           onSelectThread={(id) => void loadThread(id)}
           onNewChat={() => void startNewChat()}
+          onDeleteThread={(id) => void handleDeleteThread(id)}
+          onRenameThread={(id, title) => void handleRenameThread(id, title)}
         />
       }
       leftPanel={
@@ -264,25 +341,32 @@ export default function ChatPage() {
                 />
               </div>
               <div>
-                <h1 className="text-base font-semibold text-text-primary">Pharma AI</h1>
-                <p className="text-xs text-text-secondary">Reference-grounded formulation assistant</p>
+                <h1 className="text-base font-semibold text-text-primary">{t("app.title")}</h1>
+                <p className="text-xs text-text-secondary">{t("app.subtitle")}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <Link
+                href="/warehouse"
+                className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-background"
+              >
+                {t("nav.warehouse")}
+              </Link>
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium ${status.text}`}
                 title={threadId ? `thread: ${threadId}` : undefined}
               >
                 <span
-                  className={`h-1.5 w-1.5 rounded-full ${status.dot} ${
-                    backendStatus === "checking" ? "animate-pulse" : ""
-                  }`}
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    corpusStatus === "ready" ? "bg-success" : status.dot
+                  } ${backendStatus === "checking" ? "animate-pulse" : ""}`}
                 />
-                {status.label}
+                {corpusLabel}
               </span>
               <ThemeToggle />
             </div>
           </header>
+          <ConstraintsPanel brief={structuredBrief} onChange={setStructuredBrief} />
           <ChatThread
             messages={messages}
             isLoading={isLoading}

@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import chat, debug, formulations, health
+from app.api import chat, debug, formulations, health, warehouse
 from app.config import get_settings
 
 
@@ -32,6 +32,7 @@ def create_app() -> FastAPI:
     app.include_router(chat.router)
     app.include_router(debug.router)
     app.include_router(formulations.router)
+    app.include_router(warehouse.router)
 
     logging.getLogger(__name__).info(
         "ai-service booted (qdrant=%s, embed=%s, llm=%s @ %s)",

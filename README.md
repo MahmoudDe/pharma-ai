@@ -1,7 +1,11 @@
 # Pharma AI
 
 Three services that together turn cosmetic formulation books into source-cited
-chat answers:
+chat answers.
+
+**Requirements (functional, non-functional, and planned work):** see **[REQUIREMENTS.md](REQUIREMENTS.md)**.
+
+---
 
 | Service | Port | What it does | Folder |
 |---------|------|--------------|--------|
@@ -52,6 +56,17 @@ cd frontend && npm run dev
 
 Then open <http://localhost:3000/chat> and ask, for example, "Give me a basic
 sulfate-free shampoo formula".
+
+### Warehouse (what can we make?)
+
+Upload your manufacturer material list (CSV/Excel), resolve ingredient aliases, and
+see which formulas from the books you can make:
+
+1. Open <http://localhost:3000/warehouse>
+2. Upload a file (see [`docs/examples/warehouse_sample.csv`](docs/examples/warehouse_sample.csv))
+3. **Analyze materials** → **Discover products**
+
+Requires ingested `formulations.db` and optional `LLM_API_KEY` for unresolved trade names.
 
 ## Data flow on a single chat turn
 

@@ -341,11 +341,12 @@ def search(
     fetch_k: int | None = None,
     formula_only: bool = False,
     product_type: str | None = None,
+    intent: QueryIntent | None = None,
 ) -> list[RetrievedChunk]:
     if not query or not query.strip():
         return []
 
-    intent = parse_query_intent(query)
+    intent = intent or parse_query_intent(query)
     if product_type:
         if product_type not in intent.product_types:
             intent.product_types.append(product_type)

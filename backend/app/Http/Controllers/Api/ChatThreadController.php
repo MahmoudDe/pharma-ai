@@ -59,6 +59,8 @@ class ChatThreadController extends Controller
                 'created_at' => $message->created_at?->toIso8601String(),
                 'cited_evidence' => $message->cited_evidence,
                 'suggested_next_actions' => $message->suggested_next_actions,
+                'structured_formulation' => $message->structured_formulation,
+                'structured_formulations' => $message->structured_formulations,
             ]);
 
         return response()->json([
@@ -67,5 +69,38 @@ class ChatThreadController extends Controller
             'updated_at' => $thread->updated_at?->toIso8601String(),
             'messages' => $messages,
         ]);
+    }
+
+    public function update(\Illuminate\Http\Request $request, string $id): JsonResponse
+    {
+        $thread = ChatThread::query()->find($id);
+        if ($thread === null) {
+            return response()->json(['message' => 'Thread not found.'], 404);
+        }
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:120'],
+        ]);
+
+        $thread->title = $validated['title'];
+        $thread->save();
+
+        return response()->json([
+            'id' => $thread->id,
+            'title' => $thread->title,
+            'updated_at' => $thread->updated_at?->toIso8601String(),
+        ]);
+    }
+
+    public function destroy(string $id): JsonResponse
+    {
+        $thread = ChatThread::query()->find($id);
+        if ($thread === null) {
+            return response()->json(['message' => 'Thread not found.'], 404);
+        }
+
+        $thread->delete();
+
+        return response()->json(null, 204);
     }
 }

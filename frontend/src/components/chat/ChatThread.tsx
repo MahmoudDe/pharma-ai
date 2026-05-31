@@ -3,7 +3,10 @@
 import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { AppColors } from "@/constants/AppColors";
+import { t } from "@/lib/i18n";
 import type { ChatMessage } from "@/types/chat";
+
+const SHOW_DEBUG = process.env.NEXT_PUBLIC_SHOW_DEBUG === "true";
 
 const LOGO_CONTAINER_CLASS = "flex items-center justify-center rounded-full";
 
@@ -14,10 +17,10 @@ interface ChatThreadProps {
 }
 
 const EMPTY_STATE_SUGGESTIONS = [
-  "Give me a basic sulfate-free shampoo formula.",
-  "What surfactants are typical in a baby shampoo?",
-  "Suggest a lightweight hand cream for oily skin.",
-  "Compare cocamidopropyl betaine vs decyl glucoside.",
+  () => t("prompts.sulfateFree"),
+  () => t("prompts.compareBaby"),
+  () => t("prompts.capbVsSls"),
+  () => t("prompts.handCream"),
 ];
 
 function toLocalTime(isoValue: string) {
@@ -93,7 +96,9 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
         </div>
         {onSuggestionClick ? (
           <div className="grid w-full max-w-lg gap-2 sm:grid-cols-2">
-            {EMPTY_STATE_SUGGESTIONS.map((suggestion) => (
+            {EMPTY_STATE_SUGGESTIONS.map((labelFn) => {
+              const suggestion = labelFn();
+              return (
               <button
                 key={suggestion}
                 type="button"
@@ -102,7 +107,8 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
               >
                 {suggestion}
               </button>
-            ))}
+            );
+            })}
           </div>
         ) : null}
       </div>
@@ -139,6 +145,12 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
               <AssistantAvatar />
               <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-border bg-surface px-4 py-3 text-sm text-text-primary shadow-sm lg:max-w-[75%]">
                 <p className="whitespace-pre-wrap">{message.content}</p>
+                {SHOW_DEBUG && message.route ? (
+                  <p className="mt-2 font-mono text-[10px] text-text-secondary">
+                    route={message.route} llm={String(message.llmUsed)} conf=
+                    {message.searchConfidence ?? "—"}
+                  </p>
+                ) : null}
                 <p className="mt-2 text-[11px] uppercase tracking-wide text-text-secondary">
                   {toLocalTime(message.createdAt)}
                 </p>

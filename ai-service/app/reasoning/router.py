@@ -17,6 +17,7 @@ from app.reasoning.templates import (
     format_lookup_response,
     format_transparent_failure,
 )
+from app.reasoning.brief import apply_brief_filters, merge_intent_with_brief
 from app.reasoning.validate import validate_response
 from app.retrieval.intent import (
     QueryClassification,
@@ -208,12 +209,12 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
     settings = get_settings()
     classification = classify_query(query)
     route = classification.route
-    intent = classification.intent
+    intent = merge_intent_with_brief(classification.intent, payload.structured_brief)
 
     logger.info("Route=%s query=%r", route, query[:80])
 
     if route == "reasoning":
-        chunks = search(query, top_k=TOP_K)
+        chunks = search(query, top_k=TOP_K, intent=intent)
         structured = _hydrate_chunks(chunks)
         if not _vector_search_ok(chunks) and not structured:
             return RoutedResponse(
@@ -235,8 +236,13 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
         )
 
     limit = 5 if route == "compare" else 3
-    struct_result = structured_search(query, intent, limit=limit)
-    structured_records = [m.record for m in struct_result.matches]
+    struct_result = structured_search(
+        query, intent, limit=limit, brief=payload.structured_brief
+    )
+    structured_records = apply_brief_filters(
+        [m.record for m in struct_result.matches],
+        payload.structured_brief,
+    )
     fallback_stage: FallbackStage = "none"
 
     if (
@@ -264,7 +270,7 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
             llm_used=False,
         )
 
-    chunks = search(query, top_k=TOP_K)
+    chunks = search(query, top_k=TOP_K, intent=intent)
     hydrated = _hydrate_chunks(chunks)
     if not structured_records:
         structured_records = hydrated
@@ -339,16 +345,24 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
     if settings.enable_query_expansion:
         fallback_stage = "expanded"
         for alt in expand_query(query)[1:]:
-            struct_alt = structured_search(alt, parse_query_intent(alt), limit=limit)
+            alt_intent = merge_intent_with_brief(
+                parse_query_intent(alt), payload.structured_brief
+            )
+            struct_alt = structured_search(
+                alt, alt_intent, limit=limit, brief=payload.structured_brief
+            )
             if struct_alt.matches:
-                recs = [m.record for m in struct_alt.matches]
+                recs = apply_brief_filters(
+                    [m.record for m in struct_alt.matches],
+                    payload.structured_brief,
+                )
                 return RoutedResponse(
                     response=_build_response(
                         message=format_lookup_response(recs),
                         route=route,
                         llm_used=False,
                         structured_records=recs,
-                        chunks=search(alt, top_k=TOP_K),
+                        chunks=search(alt, top_k=TOP_K, intent=alt_intent),
                         search_confidence=struct_alt.top_confidence,
                         fallback_stage="expanded",
                         payload=payload,
@@ -356,7 +370,7 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
                     classification=classification,
                     fallback_stage="expanded",
                 )
-            chunks_alt = search(alt, top_k=TOP_K)
+            chunks_alt = search(alt, top_k=TOP_K, intent=alt_intent)
             if _vector_search_ok(chunks_alt):
                 return RoutedResponse(
                     response=_build_response(
@@ -379,7 +393,10 @@ def route_chat(payload: ChatTurnRequest) -> RoutedResponse:
                 )
 
     fallback_stage = "failed"
-    partial = list_formulations_fallback(structured_records, intent)
+    partial = apply_brief_filters(
+        list_formulations_fallback(structured_records, intent),
+        payload.structured_brief,
+    )
     return RoutedResponse(
         response=_build_response(
             message=format_transparent_failure(

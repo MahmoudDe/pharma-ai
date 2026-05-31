@@ -81,6 +81,34 @@ export async function fetchChatThread(threadId: string): Promise<ChatThreadDetai
   return body as ChatThreadDetail;
 }
 
+export async function updateChatThreadTitle(threadId: string, title: string): Promise<void> {
+  const response = await fetch(`${BACKEND_URL}/api/chat/threads/${threadId}`, {
+    method: "PATCH",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title }),
+  });
+
+  if (!response.ok) {
+    const body = await parseJsonResponse(response);
+    throw buildApiError(response.status, body);
+  }
+}
+
+export async function deleteChatThread(threadId: string): Promise<void> {
+  const response = await fetch(`${BACKEND_URL}/api/chat/threads/${threadId}`, {
+    method: "DELETE",
+    headers: { Accept: "application/json" },
+  });
+
+  if (!response.ok && response.status !== 204) {
+    const body = await parseJsonResponse(response);
+    throw buildApiError(response.status, body);
+  }
+}
+
 export async function sendChatTurn(
   payload: ChatTurnRequest,
 ): Promise<ChatTurnResponse> {
