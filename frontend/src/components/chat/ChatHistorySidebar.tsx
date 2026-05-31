@@ -15,27 +15,15 @@ interface ChatHistorySidebarProps {
 }
 
 function formatRelativeTime(iso: string | null): string {
-  if (!iso) {
-    return "";
-  }
+  if (!iso) return "";
   const date = new Date(iso);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) {
-    return "Just now";
-  }
-  if (diffMins < 60) {
-    return `${diffMins}m ago`;
-  }
+  const diffMins = Math.floor((Date.now() - date.getTime()) / 60000);
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m`;
   const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) {
-    return `${diffHours}h ago`;
-  }
+  if (diffHours < 24) return `${diffHours}h`;
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 7) {
-    return `${diffDays}d ago`;
-  }
+  if (diffDays < 7) return `${diffDays}d`;
   return date.toLocaleDateString();
 }
 
@@ -49,64 +37,76 @@ export function ChatHistorySidebar({
   onRenameThread,
 }: ChatHistorySidebarProps) {
   return (
-    <aside className="flex h-full min-h-0 w-full flex-col border-r border-border bg-surface">
-      <SidebarHeader />
+    <aside className="flex h-full min-h-0 w-full flex-col">
+      <div className="border-b border-border/60 px-4 py-4">
+        <h2 className="text-sm font-bold text-text-primary">{t("history.title")}</h2>
+        <p className="text-xs text-text-secondary">{t("history.subtitle")}</p>
+      </div>
       <button
         type="button"
         onClick={onNewChat}
-        className="mx-3 mb-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
+        className="btn-primary mx-3 mb-3 mt-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-white shadow-md"
         style={{ background: AppColors.buttonGradient }}
       >
-        {t("thread.newChat")}
+        + {t("thread.newChat")}
       </button>
-      <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-3">
+      <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-4">
         {isLoadingThreads ? (
-          <p className="px-2 py-2 text-xs text-text-secondary">Loading history…</p>
+          <p className="animate-pulse px-3 py-2 text-xs text-text-secondary">
+            {t("history.loading")}
+          </p>
         ) : threads.length === 0 ? (
-          <p className="px-2 py-2 text-xs text-text-secondary">No past chats yet.</p>
+          <p className="px-3 py-2 text-xs text-text-secondary">{t("history.empty")}</p>
         ) : (
-          <ul className="space-y-1">
-            {threads.map((thread) => {
+          <ul className="space-y-1.5">
+            {threads.map((thread, index) => {
               const isActive = thread.id === activeThreadId;
               return (
-                <li key={thread.id} className="group relative">
+                <li
+                  key={thread.id}
+                  className="group relative animate-fade-in-up"
+                  style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
+                >
                   <button
                     type="button"
                     onClick={() => onSelectThread(thread.id)}
-                    className={`w-full rounded-lg px-3 py-2.5 pr-16 text-left transition ${
+                    className={`w-full rounded-xl px-3 py-3 pr-14 text-left transition-all duration-300 ${
                       isActive
-                        ? "border border-border bg-background shadow-sm"
-                        : "hover:bg-background/80"
+                        ? "border border-secondary/40 bg-background shadow-md"
+                        : "border border-transparent hover:border-border/60 hover:bg-background/70"
                     }`}
                     style={
                       isActive
                         ? {
-                            borderColor: AppColors.secondary,
-                            boxShadow: `0 0 0 1px ${AppColors.secondary}22`,
+                            boxShadow: "var(--shadow-glow)",
                           }
                         : undefined
                     }
                   >
-                    <p
-                      className={`truncate text-sm font-medium ${
-                        isActive ? "text-text-primary" : "text-text-primary/90"
-                      }`}
-                    >
+                    {isActive ? (
+                      <span
+                        className="absolute left-0 top-3 bottom-3 w-1 rounded-r-full"
+                        style={{ background: AppColors.buttonGradient }}
+                      />
+                    ) : null}
+                    <p className="truncate text-sm font-semibold text-text-primary">
                       {thread.title}
                     </p>
                     {thread.preview ? (
-                      <p className="mt-0.5 truncate text-xs text-text-secondary">{thread.preview}</p>
+                      <p className="mt-0.5 truncate text-xs text-text-secondary">
+                        {thread.preview}
+                      </p>
                     ) : null}
-                    <p className="mt-1 text-[10px] text-text-secondary">
+                    <p className="mt-1.5 text-[10px] font-medium text-text-secondary/80">
                       {formatRelativeTime(thread.updated_at)}
                     </p>
                   </button>
-                  <div className="absolute right-1 top-2 flex gap-0.5 opacity-0 transition group-hover:opacity-100">
+                  <div className="absolute right-2 top-2.5 flex gap-0.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                     {onRenameThread ? (
                       <button
                         type="button"
                         title={t("thread.rename")}
-                        className="rounded px-1.5 py-0.5 text-[10px] text-text-secondary hover:bg-background"
+                        className="rounded-lg px-1.5 py-1 text-[10px] text-text-secondary transition hover:bg-background hover:text-secondary"
                         onClick={(e) => {
                           e.stopPropagation();
                           const next = window.prompt("Thread title", thread.title);
@@ -120,7 +120,7 @@ export function ChatHistorySidebar({
                       <button
                         type="button"
                         title={t("thread.delete")}
-                        className="rounded px-1.5 py-0.5 text-[10px] text-error hover:bg-background"
+                        className="rounded-lg px-1.5 py-1 text-[10px] text-error transition hover:bg-error/10"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (window.confirm(t("thread.deleteConfirm"))) {
@@ -139,14 +139,5 @@ export function ChatHistorySidebar({
         )}
       </div>
     </aside>
-  );
-}
-
-function SidebarHeader() {
-  return (
-    <div className="border-b border-border px-4 py-3">
-      <h2 className="text-sm font-semibold text-text-primary">History</h2>
-      <p className="text-xs text-text-secondary">Past conversations</p>
-    </div>
   );
 }

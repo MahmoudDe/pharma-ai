@@ -2,7 +2,7 @@
 
 /* Light theme (default) */
 :root {
-  --background: #f8fafc;
+  --background: #f4f6fb;
   --foreground: #1e293b;
   --primary: #09096b;
   --secondary: #7c4adc;
@@ -15,27 +15,36 @@
   --success: #22c55e;
   --warning: #f59e0b;
   --error: #ef4444;
+  --shadow-soft: 0 4px 24px rgba(15, 23, 42, 0.06);
+  --shadow-panel: 0 12px 40px rgba(15, 23, 42, 0.08);
+  --shadow-glow: 0 0 0 1px rgba(124, 74, 220, 0.12), 0 8px 32px rgba(124, 74, 220, 0.15);
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Manual dark override: applied when <html class="dark"> is set */
 :root.dark {
-  --background: #0f172a;
+  --background: #0b1120;
   --foreground: #f8fafc;
   --surface: #111827;
   --border: #334155;
   --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
+  --text-secondary: #94a3b8;
+  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.35);
+  --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 0 1px rgba(124, 74, 220, 0.25), 0 8px 32px rgba(78, 216, 245, 0.12);
 }
 
-/* System preference (only honoured when neither .light nor .dark is set manually) */
 @media (prefers-color-scheme: dark) {
   :root:not(.light):not(.dark) {
-    --background: #0f172a;
+    --background: #0b1120;
     --foreground: #f8fafc;
     --surface: #111827;
     --border: #334155;
     --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
+    --text-secondary: #94a3b8;
+    --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.35);
+    --shadow-panel: 0 12px 40px rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 0 0 1px rgba(124, 74, 220, 0.25), 0 8px 32px rgba(78, 216, 245, 0.12);
   }
 }
 
@@ -61,4 +70,309 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-app-sans), "Inter", "Segoe UI", sans-serif;
+}
+
+/* Ambient mesh background */
+.app-mesh-bg {
+  position: relative;
+  background-color: var(--background);
+}
+
+.app-mesh-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(124, 74, 220, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(78, 216, 245, 0.14), transparent 50%),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(9, 9, 107, 0.08), transparent 60%);
+  animation: mesh-drift 18s ease-in-out infinite alternate;
+}
+
+:root.dark .app-mesh-bg::before {
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(124, 74, 220, 0.22), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(78, 216, 245, 0.1), transparent 50%),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(9, 9, 107, 0.2), transparent 60%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not(.dark) .app-mesh-bg::before {
+    background:
+      radial-gradient(ellipse 80% 50% at 10% -10%, rgba(124, 74, 220, 0.22), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 90% 0%, rgba(78, 216, 245, 0.1), transparent 50%),
+      radial-gradient(ellipse 50% 30% at 50% 100%, rgba(9, 9, 107, 0.2), transparent 60%);
+  }
+}
+
+@keyframes mesh-drift {
+  from {
+    opacity: 0.85;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.02) translateY(-1%);
+  }
+}
+
+/* Panel glass */
+.glass-panel {
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-panel);
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.glass-header {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(124, 74, 220, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(124, 74, 220, 0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s var(--ease-out-expo) both;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s var(--ease-out-expo) both;
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.45s var(--ease-out-expo) both;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.45s var(--ease-out-expo) both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s var(--ease-out-expo) both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s var(--ease-out-expo) both;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(124, 74, 220, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.stagger-children > * {
+  animation: fade-in-up 0.45s var(--ease-out-expo) both;
+}
+
+.stagger-children > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger-children > *:nth-child(2) {
+  animation-delay: 55ms;
+}
+.stagger-children > *:nth-child(3) {
+  animation-delay: 110ms;
+}
+.stagger-children > *:nth-child(4) {
+  animation-delay: 165ms;
+}
+.stagger-children > *:nth-child(5) {
+  animation-delay: 220ms;
+}
+.stagger-children > *:nth-child(6) {
+  animation-delay: 275ms;
+}
+.stagger-children > *:nth-child(7) {
+  animation-delay: 330ms;
+}
+.stagger-children > *:nth-child(8) {
+  animation-delay: 385ms;
+}
+
+.message-enter-user {
+  animation: slide-in-right 0.4s var(--ease-out-expo) both;
+}
+
+.message-enter-assistant {
+  animation: slide-in-left 0.45s var(--ease-out-expo) both;
+}
+
+.hover-lift {
+  transition:
+    transform 0.25s var(--ease-out-expo),
+    box-shadow 0.25s var(--ease-out-expo),
+    border-color 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-primary {
+  transition:
+    transform 0.2s var(--ease-spring),
+    box-shadow 0.25s ease,
+    opacity 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.nav-pill-active {
+  box-shadow: var(--shadow-glow);
+}
+
+.upload-zone {
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    transform 0.3s var(--ease-out-expo);
+}
+
+.upload-zone:hover,
+.upload-zone:focus-within {
+  border-color: color-mix(in srgb, var(--secondary) 55%, transparent);
+  background: color-mix(in srgb, var(--secondary) 6%, var(--surface));
+  transform: scale(1.01);
+}
+
+.constraints-expand {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s var(--ease-out-expo);
+}
+
+.constraints-expand.open {
+  grid-template-rows: 1fr;
+}
+
+.constraints-expand > div {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .app-mesh-bg::before {
+    animation: none;
+  }
 }

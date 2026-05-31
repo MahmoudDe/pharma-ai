@@ -8,8 +8,6 @@ import type { ChatMessage } from "@/types/chat";
 
 const SHOW_DEBUG = process.env.NEXT_PUBLIC_SHOW_DEBUG === "true";
 
-const LOGO_CONTAINER_CLASS = "flex items-center justify-center rounded-full";
-
 interface ChatThreadProps {
   messages: ChatMessage[];
   isLoading: boolean;
@@ -33,24 +31,22 @@ function toLocalTime(isoValue: string) {
 
 function AssistantAvatar() {
   return (
-    <div className={`${LOGO_CONTAINER_CLASS} h-8 w-8 shrink-0`} aria-hidden>
-      <Image
-        src="/logo.png"
-        alt=""
-        width={24}
-        height={24}
-        className="h-5 w-5 object-contain"
-      />
+    <div
+      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-sm"
+      style={{ background: AppColors.softGradient }}
+      aria-hidden
+    >
+      <Image src="/logo.png" alt="" width={24} height={24} className="h-5 w-5 object-contain" />
     </div>
   );
 }
 
 function TypingDots() {
   return (
-    <span className="inline-flex items-center gap-1" aria-label="Assistant is typing">
-      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-secondary [animation-delay:-0.3s]" />
-      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-secondary [animation-delay:-0.15s]" />
-      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-secondary" />
+    <span className="inline-flex items-center gap-1.5" aria-label="Assistant is typing">
+      <span className="h-2 w-2 animate-bounce rounded-full bg-secondary [animation-delay:-0.3s]" />
+      <span className="h-2 w-2 animate-bounce rounded-full bg-accent [animation-delay:-0.15s]" />
+      <span className="h-2 w-2 animate-bounce rounded-full bg-secondary" />
     </span>
   );
 }
@@ -68,46 +64,45 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
   );
 
   useEffect(() => {
-    if (!containerRef.current) {
-      return;
-    }
-    containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    const el = containerRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   }, [sortedMessages, isLoading]);
 
   if (!hasMessages) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-6 p-6 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl">
-          <Image
-            src="/logo.png"
-            alt=""
-            width={40}
-            height={40}
-            className="h-9 w-9 object-contain"
-          />
+      <div className="flex h-full flex-col items-center justify-center gap-8 p-8 text-center">
+        <div
+          className="animate-float flex h-20 w-20 items-center justify-center rounded-3xl shadow-lg"
+          style={{ background: AppColors.softGradient, boxShadow: "var(--shadow-glow)" }}
+        >
+          <Image src="/logo.png" alt="" width={48} height={48} className="h-11 w-11 object-contain" />
         </div>
-        <div>
-          <h2 className="text-lg font-semibold text-text-primary">
-            Ask about a cosmetic formulation
+        <div className="animate-fade-in-up max-w-md" style={{ animationDelay: "80ms" }}>
+          <h2 className="text-xl font-bold tracking-tight text-text-primary">
+            {t("chat.emptyTitle")}
           </h2>
-          <p className="mt-1 max-w-md text-sm text-text-secondary">
-            Answers are grounded in the indexed formulation books and include page-level citations.
+          <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+            {t("chat.emptySubtitle")}
           </p>
         </div>
         {onSuggestionClick ? (
-          <div className="grid w-full max-w-lg gap-2 sm:grid-cols-2">
+          <div className="stagger-children grid w-full max-w-xl gap-3 sm:grid-cols-2">
             {EMPTY_STATE_SUGGESTIONS.map((labelFn) => {
               const suggestion = labelFn();
               return (
-              <button
-                key={suggestion}
-                type="button"
-                onClick={() => onSuggestionClick(suggestion)}
-                className="rounded-xl border border-border bg-surface px-4 py-3 text-left text-sm text-text-primary transition hover:border-secondary/60 hover:bg-secondary/5"
-              >
-                {suggestion}
-              </button>
-            );
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => onSuggestionClick(suggestion)}
+                  className="hover-lift group rounded-2xl border border-border/80 bg-surface/90 px-4 py-3.5 text-left text-sm text-text-primary"
+                >
+                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-secondary opacity-80">
+                    {t("chat.tryPrompt")}
+                  </span>
+                  {suggestion}
+                </button>
+              );
             })}
           </div>
         ) : null}
@@ -118,21 +113,21 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
   return (
     <div
       ref={containerRef}
-      className="min-h-0 flex-1 overflow-y-auto bg-background/40 px-4 py-5 lg:px-6"
+      className="min-h-0 flex-1 overflow-y-auto scroll-smooth px-4 py-6 lg:px-6"
     >
-      <div className="space-y-4">
+      <div className="mx-auto max-w-3xl space-y-5">
         {sortedMessages.map((message) => {
           const isUser = message.role === "user";
 
           if (isUser) {
             return (
-              <div key={message.id} className="flex justify-end">
+              <div key={message.id} className="message-enter-user flex justify-end">
                 <div
-                  className="max-w-[85%] rounded-2xl rounded-br-md px-4 py-3 text-sm text-white shadow-sm lg:max-w-[75%]"
+                  className="max-w-[88%] rounded-2xl rounded-br-sm px-4 py-3 text-sm text-white shadow-md lg:max-w-[78%]"
                   style={{ background: AppColors.buttonGradient }}
                 >
-                  <p className="whitespace-pre-wrap">{message.content}</p>
-                  <p className="mt-2 text-[11px] uppercase tracking-wide text-white/70">
+                  <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                  <p className="mt-2 text-[10px] font-medium uppercase tracking-wider text-white/60">
                     {toLocalTime(message.createdAt)}
                   </p>
                 </div>
@@ -141,17 +136,17 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
           }
 
           return (
-            <div key={message.id} className="flex justify-start gap-2">
+            <div key={message.id} className="message-enter-assistant flex justify-start gap-3">
               <AssistantAvatar />
-              <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-border bg-surface px-4 py-3 text-sm text-text-primary shadow-sm lg:max-w-[75%]">
-                <p className="whitespace-pre-wrap">{message.content}</p>
+              <div className="max-w-[88%] rounded-2xl rounded-bl-sm border border-border/80 bg-surface/95 px-4 py-3 text-sm text-text-primary shadow-sm backdrop-blur-sm lg:max-w-[78%]">
+                <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
                 {SHOW_DEBUG && message.route ? (
-                  <p className="mt-2 font-mono text-[10px] text-text-secondary">
-                    route={message.route} llm={String(message.llmUsed)} conf=
+                  <p className="mt-2 rounded-lg bg-background/80 px-2 py-1 font-mono text-[10px] text-text-secondary">
+                    route={message.route} · llm={String(message.llmUsed)} · conf=
                     {message.searchConfidence ?? "—"}
                   </p>
                 ) : null}
-                <p className="mt-2 text-[11px] uppercase tracking-wide text-text-secondary">
+                <p className="mt-2 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                   {toLocalTime(message.createdAt)}
                 </p>
               </div>
@@ -159,11 +154,11 @@ export function ChatThread({ messages, isLoading, onSuggestionClick }: ChatThrea
           );
         })}
         {isLoading ? (
-          <div className="flex justify-start gap-2">
+          <div className="animate-fade-in flex justify-start gap-3">
             <AssistantAvatar />
-            <div className="flex items-center gap-2 rounded-2xl rounded-bl-md border border-border bg-surface px-4 py-3 text-sm text-text-secondary shadow-sm">
+            <div className="flex items-center gap-3 rounded-2xl rounded-bl-sm border border-border/80 bg-surface/95 px-4 py-3 text-sm text-text-secondary shadow-sm">
               <TypingDots />
-              <span>Thinking…</span>
+              <span className="font-medium">{t("chat.thinking")}</span>
             </div>
           </div>
         ) : null}

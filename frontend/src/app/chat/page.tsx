@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { AppHeader } from "@/components/ui/AppHeader";
+import { StatusPill } from "@/components/ui/StatusPill";
 import { ChatComposer } from "@/components/chat/ChatComposer";
 import { ChatHistorySidebar } from "@/components/chat/ChatHistorySidebar";
 import { ChatLayout } from "@/components/chat/ChatLayout";
@@ -11,7 +12,6 @@ import { ConstraintsPanel } from "@/components/chat/ConstraintsPanel";
 import { EvidencePanel } from "@/components/chat/EvidencePanel";
 import { StructuredFormulaPanel } from "@/components/chat/StructuredFormulaPanel";
 import { SuggestedActionsPanel } from "@/components/chat/SuggestedActionsPanel";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { fetchBackendHealth, fetchBackendReadiness } from "@/lib/backend";
 import {
   createChatThread,
@@ -94,25 +94,8 @@ function latestAssistantPanels(messages: ChatMessage[]): {
   return { evidence: [], actions: [], structured: null, structuredList: [] };
 }
 
-const STATUS_PILL: Record<BackendStatus, { label: string; dot: string; text: string }> = {
-  checking: {
-    label: "Checking backend…",
-    dot: "bg-warning",
-    text: "text-warning",
-  },
-  ok: {
-    label: "Backend online",
-    dot: "bg-success",
-    text: "text-success",
-  },
-  down: {
-    label: "Backend unreachable",
-    dot: "bg-error",
-    text: "text-error",
-  },
-};
-
-export default function ChatPage() {
+function ChatPageContent() {
+  const searchParams = useSearchParams();
   const [threadId, setThreadId] = useState<string | null>(null);
   const [threads, setThreads] = useState<ChatThreadSummary[]>([]);
   const [isLoadingThreads, setIsLoadingThreads] = useState(true);
@@ -161,21 +144,25 @@ export default function ChatPage() {
 
   useEffect(() => {
     fetchBackendHealth()
-      .then(() => {
-        setBackendStatus("ok");
-        return fetchBackendReadiness();
-      })
+      .then(() => setBackendStatus("ok"))
+      .catch(() => setBackendStatus("down"));
+
+    fetchBackendReadiness()
       .then((ready) => setCorpusStatus(ready.ready ? "ready" : "degraded"))
-      .catch(() => {
-        setBackendStatus("down");
-        setCorpusStatus("unknown");
-      });
+      .catch(() => setCorpusStatus("degraded"));
   }, []);
 
   useEffect(() => {
     void refreshThreads();
     void startNewChat();
   }, [refreshThreads, startNewChat]);
+
+  useEffect(() => {
+    const prompt = searchParams.get("prompt");
+    if (prompt) {
+      setMessageInput(prompt);
+    }
+  }, [searchParams]);
 
   const loadThread = async (id: string) => {
     if (id === threadId || isLoading) {
@@ -283,15 +270,25 @@ export default function ChatPage() {
     setMessageInput(action.label);
   };
 
-  const status = STATUS_PILL[backendStatus];
-  const corpusLabel =
-    backendStatus !== "ok"
-      ? status.label
-      : corpusStatus === "ready"
-        ? t("status.corpusReady")
+  const statusLabel =
+    backendStatus === "checking"
+      ? t("status.checking")
+      : backendStatus === "down"
+        ? t("status.backendDown")
+        : corpusStatus === "ready"
+          ? t("status.corpusReady")
+          : corpusStatus === "degraded"
+            ? t("status.corpusDegraded")
+            : t("status.backendOnline");
+
+  const statusVariant: "checking" | "ok" | "warning" | "error" =
+    backendStatus === "checking"
+      ? "checking"
+      : backendStatus === "down"
+        ? "error"
         : corpusStatus === "degraded"
-          ? t("status.corpusDegraded")
-          : status.label;
+          ? "warning"
+          : "ok";
 
   const handleDeleteThread = async (id: string) => {
     try {
@@ -329,43 +326,16 @@ export default function ChatPage() {
       }
       leftPanel={
         <>
-          <header className="flex items-center justify-between gap-3 border-b border-border bg-surface px-4 py-3 lg:px-6 lg:py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl">
-                <Image
-                  src="/logo.png"
-                  alt=""
-                  width={28}
-                  height={28}
-                  className="h-7 w-7 object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-base font-semibold text-text-primary">{t("app.title")}</h1>
-                <p className="text-xs text-text-secondary">{t("app.subtitle")}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href="/warehouse"
-                className="rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-text-primary hover:bg-background"
-              >
-                {t("nav.warehouse")}
-              </Link>
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium ${status.text}`}
-                title={threadId ? `thread: ${threadId}` : undefined}
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    corpusStatus === "ready" ? "bg-success" : status.dot
-                  } ${backendStatus === "checking" ? "animate-pulse" : ""}`}
-                />
-                {corpusLabel}
-              </span>
-              <ThemeToggle />
-            </div>
-          </header>
+          <AppHeader
+            active="chat"
+            statusSlot={
+              <StatusPill
+                label={statusLabel}
+                variant={statusVariant}
+                pulse={backendStatus === "checking"}
+              />
+            }
+          />
           <ConstraintsPanel brief={structuredBrief} onChange={setStructuredBrief} />
           <ChatThread
             messages={messages}
@@ -383,7 +353,7 @@ export default function ChatPage() {
         </>
       }
       rightPanel={
-        <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto p-4 lg:p-6">
+        <div className="stagger-children flex h-full min-h-0 flex-col gap-4 overflow-y-auto p-4 lg:p-6">
           <StructuredFormulaPanel
             formulation={latestStructured}
             formulations={latestStructuredList}
@@ -396,5 +366,21 @@ export default function ChatPage() {
         </div>
       }
     />
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="app-mesh-bg flex min-h-screen items-center justify-center">
+          <div className="glass-panel animate-pulse rounded-2xl px-8 py-6 text-sm text-text-secondary">
+            Loading chat…
+          </div>
+        </div>
+      }
+    >
+      <ChatPageContent />
+    </Suspense>
   );
 }

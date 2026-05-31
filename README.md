@@ -45,7 +45,7 @@ In three terminals from the project root:
 
 ```bash
 # Terminal 1: AI service
-cd ai-service && .venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 9000 --reload
+cd ai-service && .venv/bin/pip install -r requirements.txt && .venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 9000 --reload
 
 # Terminal 2: Laravel
 cd backend && php artisan serve --port=8000

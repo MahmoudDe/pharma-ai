@@ -65,7 +65,11 @@ class ChatController extends Controller
                         'thread_id' => $validated['thread_id'],
                     ]);
 
-                    throw $exception;
+                    throw new \RuntimeException(
+                        $this->aiConnectionMessage($exception),
+                        502,
+                        $exception,
+                    );
                 }
 
                 $body = $response->json();
@@ -111,5 +115,20 @@ class ChatController extends Controller
                 $status,
             );
         }
+    }
+
+    private function aiConnectionMessage(Throwable $exception): string
+    {
+        $message = $exception->getMessage();
+
+        if (
+            str_contains($message, '9000')
+            || str_contains($message, 'Connection refused')
+            || str_contains($message, 'Could not connect')
+        ) {
+            return 'AI service is not running. Start it: cd ai-service && .venv/bin/uvicorn app.main:app --port 9000 --reload';
+        }
+
+        return $message;
     }
 }
