@@ -37,6 +37,7 @@ cd ai-service
 python3 -m venv .venv
 .venv/bin/pip install --upgrade pip
 .venv/bin/pip install -r requirements.txt
+# includes python-multipart (required for /warehouse/upload file uploads)
 
 # 2. Config
 cp .env.example .env

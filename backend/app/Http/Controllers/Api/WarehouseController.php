@@ -29,7 +29,8 @@ class WarehouseController extends Controller
 
         try {
             $file = $request->file('file');
-            $response = Http::timeout(120)
+            $response = Http::connectTimeout(5)
+                ->timeout(120)
                 ->attach('file', fopen($file->getRealPath(), 'r'), $file->getClientOriginalName())
                 ->post("{$baseUrl}/warehouse/upload");
 
@@ -37,7 +38,12 @@ class WarehouseController extends Controller
         } catch (Throwable $e) {
             Log::warning('Warehouse upload proxy failed', ['error' => $e->getMessage()]);
 
-            return response()->json(['message' => $e->getMessage()], 502);
+            $message = $e->getMessage();
+            if (str_contains($message, '9000') || str_contains($message, 'Connection refused')) {
+                $message = 'AI service is not running. Start it: cd ai-service && .venv/bin/uvicorn app.main:app --port 9000 --reload';
+            }
+
+            return response()->json(['message' => $message], 502);
         }
     }
 

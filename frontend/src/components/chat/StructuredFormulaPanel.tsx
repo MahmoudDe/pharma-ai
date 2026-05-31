@@ -28,7 +28,7 @@ export function StructuredFormulaPanel({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="stagger-children flex flex-col gap-4">
       {visible.map((item) => (
         <FormulaCard key={item.formulation_id} formulation={item} />
       ))}
@@ -38,38 +38,39 @@ export function StructuredFormulaPanel({
 
 function FormulaCard({ formulation }: { formulation: StructuredFormulationView }) {
   return (
-    <section className="rounded-xl border border-border bg-background p-4">
+    <section className="hover-lift rounded-2xl border border-border/80 bg-background/60 p-4 backdrop-blur-sm">
       <PanelHeader formulation={formulation} />
-      <div className="mt-3 overflow-x-auto">
+      <div className="mt-3 overflow-x-auto rounded-xl border border-border/60">
         <table className="w-full min-w-[280px] text-left text-sm">
           <thead>
-            <tr className="border-b border-border text-xs uppercase tracking-wide text-text-secondary">
-              <th className="py-2 pr-3 font-medium">Ingredient</th>
-              <th className="py-2 pr-3 font-medium">Amount</th>
-              <th className="py-2 font-medium">Phase</th>
+            <tr className="border-b border-border bg-surface/80 text-xs uppercase tracking-wide text-text-secondary">
+              <th className="px-3 py-2.5 font-semibold">Ingredient</th>
+              <th className="px-3 py-2.5 font-semibold">Amount</th>
+              <th className="px-3 py-2.5 font-semibold">Phase</th>
             </tr>
           </thead>
           <tbody>
             {formulation.ingredients.map((ing, index) => (
-              <tr key={`${ing.raw_name}-${index}`} className="border-b border-border/60">
-                <td className="py-2 pr-3 text-text-primary">{ing.raw_name}</td>
-                <td className="py-2 pr-3 font-mono text-text-secondary">
+              <tr
+                key={`${ing.raw_name}-${index}`}
+                className="border-b border-border/40 transition-colors hover:bg-secondary/5"
+              >
+                <td className="px-3 py-2 text-text-primary">{ing.raw_name}</td>
+                <td className="px-3 py-2 font-mono text-text-secondary">
                   {ing.amount != null ? `${ing.amount}${ing.unit ?? ""}` : "—"}
                 </td>
-                <td className="py-2 text-text-secondary">{ing.phase ?? "—"}</td>
+                <td className="px-3 py-2 text-text-secondary">{ing.phase ?? "—"}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       {formulation.procedure && formulation.procedure.length > 0 ? (
-        <div className="mt-3 text-xs text-text-secondary">
-          <p className="font-medium text-text-primary">Procedure</p>
-          <ol className="mt-1 list-decimal pl-4">
+        <div className="mt-3 rounded-xl bg-surface/50 p-3 text-xs text-text-secondary">
+          <p className="font-semibold text-text-primary">Procedure</p>
+          <ol className="mt-1 list-decimal space-y-1 pl-4">
             {formulation.procedure.slice(0, 5).map((step, i) => (
-              <li key={i} className="mt-0.5">
-                {step}
-              </li>
+              <li key={i}>{step}</li>
             ))}
           </ol>
         </div>
@@ -90,23 +91,22 @@ function PanelHeader({ formulation }: { formulation: StructuredFormulationView }
   return (
     <div>
       <div className="flex items-start justify-between gap-2">
-        <h2 className="text-sm font-semibold text-text-primary">Structured formula</h2>
+        <h2 className="text-sm font-bold text-text-primary">{t("formula.title")}</h2>
         <button
           type="button"
           onClick={() => void onCopy()}
-          className="shrink-0 text-xs font-medium text-secondary hover:underline"
+          className="shrink-0 rounded-lg border border-border px-2 py-1 text-xs font-semibold text-secondary transition hover:border-secondary/50 hover:bg-secondary/10"
         >
           {copied ? t("formula.copied") : t("formula.copy")}
         </button>
       </div>
-      <p className="mt-1 text-xs text-text-secondary">{formulation.name}</p>
+      <p className="mt-1 text-sm font-medium text-text-primary">{formulation.name}</p>
       <p className="mt-1 text-[10px] text-text-secondary">
-        Extracted · confidence {(formulation.confidence * 100).toFixed(0)}% · PDF p.
-        {formulation.pdf_page}
+        {(formulation.confidence * 100).toFixed(0)}% confidence · PDF p.{formulation.pdf_page}
         {formulation.printed_page != null ? ` · Book p.${formulation.printed_page}` : ""}
       </p>
       <span
-        className="mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium text-white"
+        className="mt-2 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold"
         style={{ background: AppColors.softGradient, color: AppColors.primary }}
       >
         {formulation.product_types.join(", ") || "general"}

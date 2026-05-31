@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { SuggestedNextAction } from "@/types/chat";
 
 interface SuggestedActionsPanelProps {
@@ -30,18 +31,19 @@ export function SuggestedActionsPanel({ actions, onActionClick }: SuggestedActio
   }
 
   return (
-    <section className="rounded-xl border border-border bg-background p-4">
-      <h2 className="text-sm font-semibold text-text-primary">Suggested next steps</h2>
+    <section className="animate-fade-in-up rounded-2xl border border-border/80 bg-background/60 p-4 backdrop-blur-sm">
+      <h2 className="text-sm font-bold text-text-primary">{t("actions.title")}</h2>
       <div className="mt-3 flex flex-col gap-2">
         {actions.map((action, index) => (
           <button
             key={`${action.type}-${index}`}
             type="button"
             onClick={() => onActionClick(action)}
-            className="group flex items-center justify-between gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 text-left text-sm text-text-primary shadow-sm transition hover:border-secondary/60 hover:bg-secondary/5"
+            className="hover-lift group flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-surface/90 px-3 py-2.5 text-left text-sm text-text-primary"
+            style={{ animationDelay: `${index * 50}ms` }}
           >
             <span className="font-medium">{action.label}</span>
-            <span className="text-text-secondary transition group-hover:translate-x-0.5 group-hover:text-secondary">
+            <span className="text-text-secondary transition-transform duration-300 group-hover:translate-x-1 group-hover:text-secondary">
               <ArrowIcon />
             </span>
           </button>
