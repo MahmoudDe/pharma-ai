@@ -1,0 +1,37 @@
+[
+  {
+    "message": "Show me an anti-dandruff shampoo formula.",
+    "expect_route": "lookup",
+    "expect_llm": false,
+    "min_structured_confidence": 80,
+    "structured_top_name_must_match": "dandruff",
+    "structured_top_name_must_not_contain": ["baby"],
+    "prefer_structured_name_match": "sham|shampoo"
+  },
+  {
+    "message": "Give me a hand cream formula for normal skin.",
+    "expect_route": "lookup",
+    "expect_llm": false,
+    "min_structured_confidence": 80,
+    "structured_top_name_must_match": "hand\\s+(and\\s+)?(nail\\s+)?cream|tube[- ]dispensed hand cream",
+    "structured_top_name_must_not_contain": ["baby", "shampoo", "sunscreen"]
+  },
+  {
+    "message": "compare baby shampoo formulas",
+    "expect_route": "compare",
+    "expect_llm": false,
+    "min_structured_matches": 1,
+    "structured_top_name_must_match": "baby|shampoo"
+  },
+  {
+    "message": "Why is CAPB used instead of SLS in mild shampoos?",
+    "expect_route": "reasoning",
+    "expect_llm": true,
+    "classification_only": true
+  },
+  {
+    "message": "best shampoo formula",
+    "expect_route": "unknown",
+    "expect_llm": false
+  }
+]

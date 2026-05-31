@@ -1,0 +1,15 @@
+fastapi>=0.115,<0.120
+uvicorn[standard]>=0.30,<0.40
+pydantic>=2.9,<3
+pydantic-settings>=2.5,<3
+python-dotenv>=1.0
+httpx>=0.27,<1
+pymupdf>=1.27,<2
+# Optional: better PDF column/table reading order (pip install pymupdf-layout)
+# pymupdf-layout>=1.27,<2
+sentence-transformers>=5.0,<6
+qdrant-client>=1.16,<2
+openai>=1.50,<2
+numpy>=2.0,<3
+tqdm>=4.66
+spacy>=3.7,<4

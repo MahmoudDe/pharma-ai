@@ -1,0 +1,58 @@
+{
+  "Give me a baby shampoo formula with ingredient percentages.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_all": ["baby", "shampoo"],
+    "min_ingredient_count": 6,
+    "combined_text_must_match": "baby\\s+shampoo",
+    "combined_text_must_not_contain": ["baby bath", "baby products"]
+  },
+  "What surfactants are commonly used in shampoo formulations?": {
+    "top_k": 5,
+    "min_top_score": 0.35,
+    "product_types_any": ["shampoo"]
+  },
+  "Show me an anti-dandruff shampoo formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_all": ["anti_dandruff"],
+    "min_ingredient_count": 6,
+    "combined_text_must_match": "anti[-\\s]?dandruff|antidandruff",
+    "combined_text_must_not_contain": ["regular sham", "baby shampoo", "baby cream"]
+  },
+  "Give me a hand cream formula for normal skin.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cream", "lotion"],
+    "min_ingredient_count": 6,
+    "combined_text_must_match": "hand\\s+(and\\s+)?(nail\\s+)?cream|tube[- ]dispensed hand cream",
+    "combined_text_must_not_contain": ["baby cream", "baby shampoo", "sunscreen", "shaving cream"]
+  },
+  "Compare baby shampoo formulas with mild surfactants.": {
+    "min_formula_in_top_k": 2,
+    "top_k": 5,
+    "product_types_all": ["baby", "shampoo"],
+    "combined_text_must_not_contain": ["baby bath", "baby wipe", "sun protection"]
+  },
+  "I need a sulfate-free shampoo formulation.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["shampoo"],
+    "combined_text_must_match": "shampoo",
+    "combined_text_must_not_contain": ["hand cream", "body lotion", "sunscreen"]
+  },
+  "Show me a conditioning shampoo formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["shampoo", "conditioner"],
+    "combined_text_must_match": "condition",
+    "combined_text_must_not_contain": ["hand cream", "baby wipe"]
+  },
+  "Give me a body lotion formula with humectants.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["lotion"],
+    "combined_text_must_match": "lotion",
+    "combined_text_must_not_contain": ["shampoo", "hand cream", "sunscreen"]
+  }
+}

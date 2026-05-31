@@ -1,0 +1,2 @@
+# Optional: run weekly via cron (see scripts/cron_ingest.sh)
+# 0 3 * * 0 cd /path/to/ai-service && INGEST_FORCE=0 ./scripts/cron_ingest.sh >> data/ingest.log 2>&1

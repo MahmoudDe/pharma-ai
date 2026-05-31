@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.idea/
+.vscode/
+.cursor/
+.zed/
+*.swp
+*.swo
+
+# Env (keep *.example templates)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Logs
+*.log
+
+# Unrelated local files in docs (source books are PDF/DOC)
+docs/*.xlsx
