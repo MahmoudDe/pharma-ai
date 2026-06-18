@@ -7,7 +7,6 @@ import { StructuredFormulaPanel } from "@/components/chat/StructuredFormulaPanel
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Spinner } from "@/components/ui/Spinner";
-import { AppColors } from "@/constants/AppColors";
 import {
   fetchFormulationDetail,
   fetchFormulationSummaries,
@@ -78,8 +77,9 @@ export default function FormulationsPage() {
 
           <div className="space-y-6 px-6 py-8 lg:px-8">
             <div>
-              <h2 className="text-2xl font-bold text-text-primary">{t("library.title")}</h2>
-              <p className="mt-1 text-sm text-text-secondary">{t("library.subtitle")}</p>
+              <p className="eyebrow">{t("nav.formulations")}</p>
+              <h2 className="mt-1.5 text-2xl font-extrabold tracking-tight text-text-primary">{t("library.title")}</h2>
+              <p className="mt-1.5 text-sm text-text-secondary">{t("library.subtitle")}</p>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -88,20 +88,19 @@ export default function FormulationsPage() {
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
                 placeholder={t("library.filterProduct")}
-                className="min-w-[140px] flex-1 rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                className="field min-w-[140px] flex-1"
               />
               <input
                 type="text"
                 value={filterIngredient}
                 onChange={(e) => setFilterIngredient(e.target.value)}
                 placeholder={t("library.filterIngredient")}
-                className="min-w-[140px] flex-1 rounded-xl border border-border bg-background px-3 py-2 text-sm"
+                className="field min-w-[140px] flex-1"
               />
               <button
                 type="button"
                 onClick={() => void loadList()}
-                className="rounded-xl px-4 py-2 text-sm font-semibold text-white"
-                style={{ background: AppColors.buttonGradient }}
+                className="btn-primary rounded-xl px-5 py-2 text-sm font-semibold"
               >
                 {t("library.search")}
               </button>
@@ -114,7 +113,7 @@ export default function FormulationsPage() {
             ) : null}
 
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-              <div className="max-h-[28rem] overflow-y-auto rounded-2xl border border-border/80 bg-background/40">
+              <div className="surface-inset max-h-[28rem] overflow-y-auto">
                 {loading ? (
                   <div className="flex justify-center py-12">
                     <Spinner className="h-8 w-8" />
@@ -122,24 +121,34 @@ export default function FormulationsPage() {
                 ) : summaries.length === 0 ? (
                   <p className="p-6 text-sm text-text-secondary">{t("library.empty")}</p>
                 ) : (
-                  <ul className="divide-y divide-border/60">
-                    {summaries.map((item) => (
-                      <li key={item.formulation_id}>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedId(item.formulation_id)}
-                          className={`w-full px-4 py-3 text-start transition hover:bg-secondary/5 ${
-                            selectedId === item.formulation_id ? "bg-secondary/10" : ""
-                          }`}
-                        >
-                          <p className="text-sm font-semibold text-text-primary">{item.name}</p>
-                          <p className="mt-0.5 text-xs text-text-secondary">
-                            {item.product_types.join(", ") || "—"} · {item.ingredient_count}{" "}
-                            {t("library.ingredients")}
-                          </p>
-                        </button>
-                      </li>
-                    ))}
+                  <ul className="divide-y divide-border">
+                    {summaries.map((item) => {
+                      const isSelected = selectedId === item.formulation_id;
+                      return (
+                        <li key={item.formulation_id}>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedId(item.formulation_id)}
+                            className={`relative w-full px-4 py-3 text-start transition-colors hover:bg-secondary/5 ${
+                              isSelected ? "bg-secondary/10" : ""
+                            }`}
+                          >
+                            {isSelected ? (
+                              <span
+                                aria-hidden
+                                className="absolute inset-y-2 start-0 w-1 rounded-e-full"
+                                style={{ background: "var(--brand-gradient-vivid)" }}
+                              />
+                            ) : null}
+                            <p className="text-sm font-semibold text-text-primary">{item.name}</p>
+                            <p className="mt-0.5 text-xs text-text-secondary">
+                              {item.product_types.join(", ") || "—"} · {item.ingredient_count}{" "}
+                              {t("library.ingredients")}
+                            </p>
+                          </button>
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </div>

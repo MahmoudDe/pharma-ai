@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, KeyboardEvent, useEffect, useRef } from "react";
-import { AppColors } from "@/constants/AppColors";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 
 interface ChatComposerProps {
@@ -83,7 +82,7 @@ export function ChatComposer({
         </div>
       ) : null}
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="flex w-full items-end gap-2 rounded-xl border border-border bg-surface p-2 shadow-sm focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/20">
+        <div className="flex w-full items-end gap-2 rounded-2xl border border-border bg-surface p-2 shadow-sm transition-shadow duration-200 focus-within:border-[color-mix(in_srgb,var(--secondary)_55%,transparent)] focus-within:shadow-[0_0_0_3px_var(--ring)]">
           <textarea
             ref={textareaRef}
             value={value}
@@ -92,17 +91,14 @@ export function ChatComposer({
             placeholder={t("composer.placeholder")}
             rows={1}
             dir="auto"
-            className="min-h-[44px] max-h-40 min-w-0 flex-1 resize-none border-0 bg-transparent py-2.5 ps-2 pe-1 text-start text-sm leading-relaxed text-text-primary outline-none placeholder:text-text-secondary"
+            className="min-h-[44px] max-h-40 min-w-0 flex-1 resize-none border-0 bg-transparent py-2.5 ps-3 pe-1 text-start text-sm leading-relaxed text-text-primary outline-none placeholder:text-text-tertiary"
             disabled={disabled}
           />
           <button
             type="submit"
             disabled={submitDisabled}
             aria-label={t("composer.send")}
-            className="btn-primary flex h-10 shrink-0 items-center gap-1.5 rounded-lg px-4 text-sm font-semibold text-white shadow-sm disabled:cursor-not-allowed disabled:opacity-40"
-            style={{
-              background: submitDisabled ? AppColors.textSecondary : AppColors.buttonGradient,
-            }}
+            className="btn-primary flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-4 text-sm font-semibold disabled:cursor-not-allowed"
           >
             <SendIcon />
             <span className="hidden sm:inline">{t("composer.send")}</span>

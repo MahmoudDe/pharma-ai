@@ -40,11 +40,13 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
             </span>
           ) : null}
         </span>
-        <span
-          className={`inline-block transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        <svg
+          width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden
+          className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`}
         >
-          ▾
-        </span>
+          <path d="m6 9 6 6 6-6" />
+        </svg>
       </button>
       <div className={`constraints-expand ${open ? "open" : ""}`}>
         <div>
@@ -58,7 +60,7 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
                   onChange({ ...brief, product_type: e.target.value || undefined })
                 }
                 placeholder={t("constraints.productTypePlaceholder")}
-                className="rounded-xl border border-border bg-surface/80 px-3 py-2 text-sm text-text-primary transition focus:border-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
+                className="field"
               />
             </label>
             <label className="flex flex-col gap-1 text-xs text-text-secondary">
@@ -70,7 +72,7 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
                   onChange({ ...brief, banned_ingredients: splitList(e.target.value) })
                 }
                 placeholder={t("constraints.bannedPlaceholder")}
-                className="rounded-xl border border-border bg-surface/80 px-3 py-2 text-sm text-text-primary transition focus:border-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
+                className="field"
               />
             </label>
             <label className="flex flex-col gap-1 text-xs text-text-secondary">
@@ -82,7 +84,7 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
                   onChange({ ...brief, preferred_ingredients: splitList(e.target.value) })
                 }
                 placeholder={t("constraints.preferredPlaceholder")}
-                className="rounded-xl border border-border bg-surface/80 px-3 py-2 text-sm text-text-primary transition focus:border-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/25"
+                className="field"
               />
             </label>
           </div>

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Spinner } from "@/components/ui/Spinner";
-import { AppColors } from "@/constants/AppColors";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { discoverProducts, resolveWarehouse, setMaterialAlias, uploadWarehouseFile } from "@/lib/warehouse";
 import { sourcePdfUrl } from "@/lib/sources";
@@ -52,13 +51,13 @@ function MaterialAliasEditor({
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="min-w-[8rem] flex-1 rounded border border-border bg-background px-2 py-0.5 text-xs"
+        className="field min-w-[8rem] flex-1 px-2 py-1 text-xs"
         placeholder={t("warehouse.overrideAlias")}
       />
       <button
         type="submit"
         disabled={busy}
-        className="rounded border border-secondary/40 px-2 py-0.5 text-[10px] font-semibold text-secondary"
+        className="rounded-md border border-secondary/40 bg-secondary/10 px-2 py-1 text-[10px] font-semibold text-secondary transition hover:bg-secondary/20 disabled:opacity-50"
       >
         {t("warehouse.saveAlias")}
       </button>
@@ -151,11 +150,12 @@ export default function WarehousePage() {
         <div className="panel-solid animate-scale-in overflow-hidden rounded-3xl">
           <AppHeader active="warehouse" />
 
-          <div className="border-b border-border/60 px-6 py-6 lg:px-8">
-            <h2 className="animate-fade-in-up text-2xl font-bold tracking-tight text-text-primary">
+          <div className="border-b border-border px-6 py-6 lg:px-8">
+            <p className="eyebrow animate-fade-in-up">{t("nav.warehouse")}</p>
+            <h2 className="animate-fade-in-up mt-1.5 text-2xl font-extrabold tracking-tight text-text-primary">
               {t("warehouse.title")}
             </h2>
-            <p className="animate-fade-in-up mt-1 text-sm text-text-secondary" style={{ animationDelay: "60ms" }}>
+            <p className="animate-fade-in-up mt-1.5 text-sm text-text-secondary" style={{ animationDelay: "60ms" }}>
               {t("warehouse.subtitle")}
             </p>
 
@@ -181,7 +181,7 @@ export default function WarehousePage() {
                       className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${
                         done ? "bg-success text-white" : active ? "text-white" : "bg-background"
                       }`}
-                      style={active && !done ? { background: AppColors.buttonGradient } : undefined}
+                      style={active && !done ? { background: "var(--brand-gradient-vivid)" } : undefined}
                     >
                       {done ? "✓" : n}
                     </span>
@@ -199,7 +199,7 @@ export default function WarehousePage() {
               </p>
             ) : null}
 
-            <section className="animate-fade-in-up rounded-2xl border border-border/80 bg-background/50 p-6">
+            <section className="surface-inset animate-fade-in-up p-6">
               <h3 className="text-sm font-bold text-text-primary">{t("warehouse.upload")}</h3>
               <label
                 className={`upload-zone mt-4 flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-14 text-center ${
@@ -231,11 +231,20 @@ export default function WarehousePage() {
                   <Spinner className="h-8 w-8" />
                 ) : (
                   <>
-                    <span className="text-3xl opacity-40">📦</span>
-                    <p className="mt-3 text-sm font-medium text-text-primary">
+                    <span
+                      className="flex h-14 w-14 items-center justify-center rounded-2xl text-secondary"
+                      style={{ background: "color-mix(in srgb, var(--secondary) 12%, transparent)" }}
+                    >
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <path d="M7 10l5-5 5 5" />
+                        <path d="M12 5v12" />
+                      </svg>
+                    </span>
+                    <p className="mt-4 text-sm font-semibold text-text-primary">
                       {t("warehouse.dropHint")}
                     </p>
-                    <p className="mt-1 text-xs text-text-secondary">{t("warehouse.arabicHint")}</p>
+                    <p className="mt-1.5 max-w-md text-xs leading-relaxed text-text-secondary">{t("warehouse.arabicHint")}</p>
                   </>
                 )}
               </label>
@@ -249,8 +258,7 @@ export default function WarehousePage() {
                   type="button"
                   disabled={!upload || busy}
                   onClick={() => void onAnalyze()}
-                  className="btn-primary inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md disabled:opacity-40"
-                  style={{ background: AppColors.buttonGradient }}
+                  className="btn-primary inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
                 >
                   {busy ? <Spinner className="h-4 w-4 text-white" /> : null}
                   {t("warehouse.analyze")}
@@ -259,7 +267,7 @@ export default function WarehousePage() {
                   type="button"
                   disabled={!resolve || busy}
                   onClick={() => void onDiscover()}
-                  className="hover-lift rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-text-primary disabled:opacity-40"
+                  className="btn-ghost rounded-xl px-5 py-2.5 text-sm font-semibold disabled:opacity-50"
                 >
                   {t("warehouse.discover")}
                 </button>
@@ -271,7 +279,7 @@ export default function WarehousePage() {
                     max={100}
                     value={minCoverage}
                     onChange={(e) => setMinCoverage(Number(e.target.value))}
-                    className="w-16 rounded-lg border border-border bg-surface px-2 py-1"
+                    className="field w-16 px-2 py-1.5 text-center"
                   />
                   %
                 </label>
@@ -279,7 +287,7 @@ export default function WarehousePage() {
             </section>
 
             {resolve ? (
-              <section className="animate-fade-in-up rounded-2xl border border-border/80 bg-background/50 p-6">
+              <section className="surface-inset animate-fade-in-up p-6">
                 <h3 className="text-sm font-bold text-text-primary">{t("warehouse.materials")}</h3>
                 <p className="mt-1 text-xs text-text-secondary">
                   {t("warehouse.resolvedSummary", {
@@ -287,9 +295,9 @@ export default function WarehousePage() {
                     review: resolve.needs_review,
                   })}
                 </p>
-                <div className="mt-4 max-h-72 overflow-auto rounded-xl border border-border/60">
+                <div className="mt-4 max-h-72 overflow-auto rounded-xl border border-border">
                   <table className="w-full text-start text-xs">
-                    <thead className="sticky top-0 bg-surface/95 text-text-secondary">
+                    <thead className="sticky top-0 bg-surface text-text-secondary">
                       <tr>
                         <th className="px-3 py-2 font-semibold">{t("warehouse.tableRaw")}</th>
                         <th className="px-3 py-2 font-semibold">{t("warehouse.tableCanonical")}</th>
@@ -344,13 +352,13 @@ export default function WarehousePage() {
             ) : null}
 
             {resolve && products.length === 0 && step >= 2 && !busy ? (
-              <p className="rounded-2xl border border-border/80 bg-background/50 px-4 py-3 text-sm text-text-secondary">
+              <p className="surface-inset px-4 py-3 text-sm text-text-secondary">
                 {t("warehouse.noProducts")}
               </p>
             ) : null}
 
             {products.length > 0 ? (
-              <section className="animate-fade-in-up rounded-2xl border border-border/80 bg-background/50 p-6">
+              <section className="surface-inset animate-fade-in-up p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <h3 className="text-sm font-bold text-text-primary">
                     {t("warehouse.products")} ({filteredProducts.length})
@@ -392,7 +400,7 @@ export default function WarehousePage() {
                     return (
                     <li
                       key={p.formulation_id}
-                      className="hover-lift rounded-2xl border border-border/80 bg-surface/90 p-4"
+                      className="surface-card hover-lift p-4"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="font-semibold text-text-primary">{p.name}</span>

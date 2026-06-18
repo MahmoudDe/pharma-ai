@@ -1,6 +1,5 @@
 "use client";
 
-import { AppColors } from "@/constants/AppColors";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { ChatThreadSummary } from "@/types/chat";
 
@@ -40,17 +39,19 @@ export function ChatHistorySidebar({
 
   return (
     <aside className="flex h-full min-h-0 w-full flex-col">
-      <div className="border-b border-border/60 px-4 py-4">
+      <div className="border-b border-border px-4 py-4">
         <h2 className="text-sm font-bold text-text-primary">{t("history.title")}</h2>
         <p className="text-xs text-text-secondary">{t("history.subtitle")}</p>
       </div>
       <button
         type="button"
         onClick={onNewChat}
-        className="btn-primary mx-3 mb-3 mt-3 rounded-xl px-4 py-2.5 text-sm font-semibold text-white shadow-md"
-        style={{ background: AppColors.buttonGradient }}
+        className="btn-primary mx-3 mb-3 mt-3 flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-semibold"
       >
-        + {t("thread.newChat")}
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        {t("thread.newChat")}
       </button>
       <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-4">
         {isLoadingThreads ? (
@@ -72,10 +73,10 @@ export function ChatHistorySidebar({
                   <button
                     type="button"
                     onClick={() => onSelectThread(thread.id)}
-                    className={`w-full rounded-xl px-3 py-3 pr-14 text-left transition-all duration-300 ${
+                    className={`w-full rounded-xl px-3 py-3 pe-14 text-start transition-all duration-300 ${
                       isActive
-                        ? "border border-secondary/40 bg-background shadow-md"
-                        : "border border-transparent hover:border-border/60 hover:bg-background/70"
+                        ? "border border-secondary/40 bg-surface-sunken shadow-sm"
+                        : "border border-transparent hover:border-border hover:bg-surface-sunken/70"
                     }`}
                     style={
                       isActive
@@ -87,8 +88,8 @@ export function ChatHistorySidebar({
                   >
                     {isActive ? (
                       <span
-                        className="absolute left-0 top-3 bottom-3 w-1 rounded-r-full"
-                        style={{ background: AppColors.buttonGradient }}
+                        className="absolute inset-y-3 start-0 w-1 rounded-e-full"
+                        style={{ background: "var(--brand-gradient-vivid)" }}
                       />
                     ) : null}
                     <p className="truncate text-sm font-semibold text-text-primary">
@@ -103,7 +104,7 @@ export function ChatHistorySidebar({
                       {formatRelativeTime(thread.updated_at)}
                     </p>
                   </button>
-                  <div className="absolute right-2 top-2.5 flex gap-0.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  <div className="absolute end-2 top-2.5 flex gap-0.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                     {onRenameThread ? (
                       <button
                         type="button"

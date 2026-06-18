@@ -5,14 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { ChatComposer } from "@/components/chat/ChatComposer";
-import { ChatHistorySidebar } from "@/components/chat/ChatHistorySidebar";
 import { ChatLayout } from "@/components/chat/ChatLayout";
 import { ChatThread } from "@/components/chat/ChatThread";
 import { ConstraintsPanel } from "@/components/chat/ConstraintsPanel";
-import { EvidencePanel } from "@/components/chat/EvidencePanel";
-import { StructuredFormulaPanel } from "@/components/chat/StructuredFormulaPanel";
-import { FormulaComparePanel } from "@/components/formula/FormulaComparePanel";
-import { SuggestedActionsPanel } from "@/components/chat/SuggestedActionsPanel";
+import { FormulaWorksheet } from "@/components/chat/FormulaWorksheet";
+import { HistoryRail } from "@/components/chat/HistoryRail";
 import { fetchBackendHealth, fetchBackendReadiness } from "@/lib/backend";
 import {
   createChatThread,
@@ -114,6 +111,7 @@ function ChatPageContent() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageInput, setMessageInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingId, setStreamingId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
   const [latestEvidence, setLatestEvidence] = useState<CitedEvidence[]>([]);
@@ -305,6 +303,7 @@ function ChatPageContent() {
     const streamAssistant = createMessage("assistant", "");
     setMessages((previous) => [...previous, userMessage, streamAssistant]);
     setIsLoading(true);
+    setStreamingId(streamAssistant.id);
     setErrorMessage(null);
     setLastFailedMessage(null);
 
@@ -343,6 +342,7 @@ function ChatPageContent() {
       );
     } finally {
       setIsLoading(false);
+      setStreamingId(null);
     }
   };
 
@@ -418,8 +418,8 @@ function ChatPageContent() {
 
   return (
     <ChatLayout
-      historyPanel={
-        <ChatHistorySidebar
+      rail={
+        <HistoryRail
           threads={threads}
           activeThreadId={threadId}
           isLoadingThreads={isLoadingThreads}
@@ -429,10 +429,11 @@ function ChatPageContent() {
           onRenameThread={(id, title) => void handleRenameThread(id, title)}
         />
       }
-      leftPanel={
+      chat={
         <div className="flex min-h-0 flex-1 flex-col">
           <AppHeader
             active="chat"
+            compact
             statusSlot={
               <StatusPill
                 label={statusLabel}
@@ -446,6 +447,7 @@ function ChatPageContent() {
             <ChatThread
               messages={messages}
               isLoading={isLoading || isInitializing}
+              streamingMessageId={streamingId}
               onSuggestionClick={handleSuggestionClick}
             />
           </div>
@@ -459,21 +461,14 @@ function ChatPageContent() {
           />
         </div>
       }
-      rightPanel={
-        <div className="stagger-children flex h-full min-h-0 flex-col gap-4 overflow-y-auto bg-[var(--chat-canvas)] p-4 lg:p-6">
-          <StructuredFormulaPanel
-            formulation={latestStructured}
-            formulations={latestStructuredList}
-          />
-          {latestStructuredList.length >= 2 ? (
-            <FormulaComparePanel formulations={latestStructuredList} />
-          ) : null}
-          <EvidencePanel evidence={latestEvidence} />
-          <SuggestedActionsPanel
-            actions={latestActions}
-            onActionClick={handleActionClick}
-          />
-        </div>
+      worksheet={
+        <FormulaWorksheet
+          formulation={latestStructured}
+          formulations={latestStructuredList}
+          evidence={latestEvidence}
+          actions={latestActions}
+          onActionClick={handleActionClick}
+        />
       }
     />
   );

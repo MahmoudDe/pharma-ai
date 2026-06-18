@@ -37,15 +37,26 @@ export function FormulaComparePanel({ formulations }: FormulaComparePanelProps) 
   if (options.length < 2) return null;
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-4 shadow-sm">
-      <h2 className="text-sm font-bold text-text-primary">{t("tools.compareTitle")}</h2>
+    <section className="surface-card p-4">
+      <h2 className="flex items-center gap-2 text-sm font-bold text-text-primary">
+        <span
+          aria-hidden
+          className="flex h-6 w-6 items-center justify-center rounded-lg text-secondary"
+          style={{ background: "color-mix(in srgb, var(--secondary) 12%, transparent)" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7" />
+          </svg>
+        </span>
+        {t("tools.compareTitle")}
+      </h2>
       <p className="mt-1 text-xs text-text-secondary">{t("tools.compareSubtitle")}</p>
 
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
         <select
           value={leftId}
           onChange={(e) => setLeftId(e.target.value)}
-          className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs"
+          className="field py-2 text-xs"
         >
           {options.map((f) => (
             <option key={f.formulation_id} value={f.formulation_id}>
@@ -56,7 +67,7 @@ export function FormulaComparePanel({ formulations }: FormulaComparePanelProps) 
         <select
           value={rightId}
           onChange={(e) => setRightId(e.target.value)}
-          className="rounded-lg border border-border bg-background px-2 py-1.5 text-xs"
+          className="field py-2 text-xs"
         >
           {options.map((f) => (
             <option key={f.formulation_id} value={f.formulation_id}>

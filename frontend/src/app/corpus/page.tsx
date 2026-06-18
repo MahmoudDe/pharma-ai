@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Spinner } from "@/components/ui/Spinner";
 import { useLocale } from "@/components/i18n/LocaleProvider";
-import { AppColors } from "@/constants/AppColors";
 import { fetchCorpusStats, type CorpusStats } from "@/lib/corpus";
 import { sourcePdfUrl } from "@/lib/sources";
 
@@ -30,8 +29,9 @@ export default function CorpusPage() {
 
           <div className="space-y-6 px-6 py-8 lg:px-8">
             <div>
-              <h2 className="text-2xl font-bold text-text-primary">{t("corpus.title")}</h2>
-              <p className="mt-1 text-sm text-text-secondary">{t("corpus.subtitle")}</p>
+              <p className="eyebrow">{t("nav.corpus")}</p>
+              <h2 className="mt-1.5 text-2xl font-extrabold tracking-tight text-text-primary">{t("corpus.title")}</h2>
+              <p className="mt-1.5 text-sm text-text-secondary">{t("corpus.subtitle")}</p>
             </div>
 
             {loading ? (
@@ -49,12 +49,20 @@ export default function CorpusPage() {
             {stats ? (
               <>
                 <div
-                  className="flex items-center gap-3 rounded-2xl border border-border/80 bg-background/50 p-4"
-                  style={stats.ready ? { borderColor: "rgba(34,197,94,0.3)" } : undefined}
+                  className={`flex items-center gap-3 rounded-2xl border p-4 ${
+                    stats.ready
+                      ? "border-success/30 bg-success/5"
+                      : "border-warning/30 bg-warning/5"
+                  }`}
                 >
-                  <span
-                    className={`h-3 w-3 rounded-full ${stats.ready ? "bg-success" : "bg-warning animate-pulse"}`}
-                  />
+                  <span className="relative flex h-3 w-3">
+                    {stats.ready ? (
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-50" />
+                    ) : null}
+                    <span
+                      className={`relative inline-flex h-3 w-3 rounded-full ${stats.ready ? "bg-success" : "bg-warning animate-pulse"}`}
+                    />
+                  </span>
                   <p className="font-semibold text-text-primary">
                     {stats.ready ? t("corpus.ready") : t("corpus.notReady")}
                   </p>
@@ -72,15 +80,15 @@ export default function CorpusPage() {
                   ].map((card) => (
                     <div
                       key={card.label}
-                      className="rounded-2xl border border-border/80 bg-surface/90 p-4 text-center"
+                      className="surface-card hover-lift p-5 text-center"
                     >
-                      <p className="text-2xl font-bold text-text-primary">{card.value}</p>
-                      <p className="mt-1 text-xs text-text-secondary">{card.label}</p>
+                      <p className="gradient-text text-3xl font-extrabold tabular-nums">{card.value}</p>
+                      <p className="mt-1.5 text-xs font-medium text-text-secondary">{card.label}</p>
                     </div>
                   ))}
                 </div>
 
-                <section className="rounded-2xl border border-border/80 bg-background/50 p-4">
+                <section className="surface-inset p-4">
                   <h3 className="text-sm font-bold text-text-primary">{t("corpus.dependencies")}</h3>
                   <ul className="mt-3 space-y-2 text-xs">
                     {stats.dependencies.map((d) => (
@@ -97,7 +105,7 @@ export default function CorpusPage() {
                   </ul>
                 </section>
 
-                <section className="rounded-2xl border border-border/80 bg-background/50 p-4">
+                <section className="surface-inset p-4">
                   <h3 className="text-sm font-bold text-text-primary">{t("corpus.sources")}</h3>
                   <ul className="mt-3 space-y-2 text-xs">
                     {stats.source_documents.map((doc) => (
@@ -118,10 +126,10 @@ export default function CorpusPage() {
 
                 <Link
                   href="/chat"
-                  className="btn-primary inline-flex rounded-xl px-5 py-2.5 text-sm font-semibold text-white"
-                  style={{ background: AppColors.buttonGradient }}
+                  className="btn-primary inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold"
                 >
                   {t("home.openChat")}
+                  <span aria-hidden className="rtl:rotate-180">→</span>
                 </Link>
               </>
             ) : null}
