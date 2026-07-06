@@ -101,6 +101,25 @@ def ingest_document(
     for record in formulations:
         upsert_formulation(record)
 
+    # KBS: score precision of every extracted record; never blocks ingestion.
+    try:
+        from app.kbs.service import validate_and_rescore
+
+        flagged = 0
+        for record in formulations:
+            report = validate_and_rescore(record)
+            if report.status == "low_precision":
+                flagged += 1
+        if formulations:
+            logger.info(
+                "[%s] KBS validated %d formulations (%d flagged low precision)",
+                path.name,
+                len(formulations),
+                flagged,
+            )
+    except Exception:
+        logger.exception("[%s] KBS validation failed; records stored without reports", path.name)
+
     if not sqlite_only and chunks:
         for batch in tqdm(
             list(_batched_chunks(chunks, batch_size)),

@@ -61,3 +61,5 @@ class StructuredFormulationSummary(BaseModel):
     printed_page: int | None = None
     ingredient_count: int
     confidence: float
+    precision_score: float | None = None
+    kbs_status: str | None = None

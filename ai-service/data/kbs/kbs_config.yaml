@@ -1,0 +1,37 @@
+# KBS scoring configuration.
+# Weights: how much each rule family contributes to the precision score.
+# Source fidelity weighs heaviest — it directly measures extraction precision
+# against the text stored in the vector database.
+weights:
+  fidelity: 0.35
+  consistency: 0.25
+  completeness: 0.20
+  ranges: 0.20
+
+# Score deducted from a family's sub-score per finding.
+penalties:
+  error: 0.35
+  warning: 0.12
+  info: 0.0
+
+# Precision-score bands (see also frontend badge rendering).
+bands:
+  low_precision_below: 0.4
+  review_below: 0.7
+
+# Units treated as "percent-like" (weight fraction of 100).
+percent_units: ["%", "wtg", "wt.g", "wt g", "w/w", "wt%", "g%", "percent"]
+
+consistency:
+  sum_target: 100.0
+  sum_warn_tolerance: 3.0   # |sum - 100| beyond this -> warning
+  sum_error_tolerance: 10.0 # |sum - 100| beyond this -> error
+  min_percent_coverage: 0.8
+
+completeness:
+  min_ingredients: 2
+
+# Markets checked by the regulatory family (existing regulatory.py rules).
+# Regulatory findings do NOT affect the precision score; they surface as
+# a separate compliance_status on the report.
+regulatory_markets: ["EU", "US"]

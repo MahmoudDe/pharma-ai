@@ -1,0 +1,126 @@
+# Domain knowledge: typical usage ranges (% w/w) per ingredient category.
+# Editable without code changes — the KBS reloads this on service restart
+# or via POST /kbs/validate-batch.
+#
+# typical: [min, max]  -> outside this band raises a WARNING
+# hard_max:            -> above this raises an ERROR (implausible extraction)
+# ingredients:         -> matched against normalized and raw ingredient names
+
+categories:
+  - name: preservative
+    typical: [0.05, 1.0]
+    hard_max: 2.5
+    ingredients:
+      - methylparaben
+      - propylparaben
+      - butylparaben
+      - phenoxyethanol
+      - benzyl alcohol
+      - sodium benzoate
+      - potassium sorbate
+      - dmdm hydantoin
+      - imidazolidinyl urea
+      - diazolidinyl urea
+      - methylisothiazolinone
+      - methylchloroisothiazolinone
+
+  - name: fragrance
+    typical: [0.05, 2.0]
+    hard_max: 5.0
+    ingredients:
+      - fragrance
+      - parfum
+      - perfume
+
+  - name: chelating_agent
+    typical: [0.01, 0.5]
+    hard_max: 1.0
+    ingredients:
+      - disodium edta
+      - tetrasodium edta
+      - edta
+
+  - name: rheology_modifier
+    typical: [0.1, 3.0]
+    hard_max: 10.0
+    ingredients:
+      - carbomer
+      - xanthan gum
+      - guar gum
+      - hydroxypropyl methylcellulose
+      - hydroxyethylcellulose
+      - magnesium aluminum silicate
+      - sodium chloride
+
+  - name: primary_surfactant
+    typical: [5.0, 40.0]
+    hard_max: 70.0
+    ingredients:
+      - sodium laureth sulfate
+      - sodium lauryl sulfate
+      - ammonium lauryl sulfate
+      - ammonium laureth sulfate
+      - sodium coco-sulfate
+
+  - name: secondary_surfactant
+    typical: [1.0, 15.0]
+    hard_max: 30.0
+    ingredients:
+      - cocamidopropyl betaine
+      - cocamide dea
+      - cocamide mea
+      - coco-glucoside
+      - decyl glucoside
+      - lauryl glucoside
+      - sodium cocoamphoacetate
+
+  - name: humectant
+    typical: [1.0, 15.0]
+    hard_max: 50.0
+    ingredients:
+      - glycerin
+      - propylene glycol
+      - butylene glycol
+      - sorbitol
+      - panthenol
+
+  - name: ph_adjuster
+    typical: [0.05, 2.0]
+    hard_max: 5.0
+    ingredients:
+      - triethanolamine
+      - citric acid
+      - lactic acid
+      - sodium hydroxide
+      - aminomethyl propanol
+
+  - name: antidandruff_active
+    typical: [0.3, 2.5]
+    hard_max: 5.0
+    ingredients:
+      - zinc pyrithione
+      - piroctone olamine
+      - ketoconazole
+      - selenium sulfide
+      - salicylic acid
+      - climbazole
+
+  - name: emollient
+    typical: [0.5, 15.0]
+    hard_max: 40.0
+    ingredients:
+      - dimethicone
+      - cyclomethicone
+      - isopropyl myristate
+      - isopropyl palmitate
+      - caprylic/capric triglyceride
+      - mineral oil
+      - petrolatum
+      - lanolin
+      - shea butter
+
+  - name: solvent_water
+    typical: [30.0, 95.0]
+    hard_max: 100.0
+    ingredients:
+      - water
