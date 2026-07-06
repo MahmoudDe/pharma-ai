@@ -1,25 +1,62 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Spinner } from "@/components/ui/Spinner";
 import { useLocale } from "@/components/i18n/LocaleProvider";
-import { fetchCorpusStats, type CorpusStats } from "@/lib/corpus";
+import {
+  fetchCorpusStats,
+  fetchIngestJobs,
+  startIngestJob,
+  type CorpusStats,
+  type IngestJob,
+} from "@/lib/corpus";
 import { sourcePdfUrl } from "@/lib/sources";
 
 export default function CorpusPage() {
   const { t } = useLocale();
   const [stats, setStats] = useState<CorpusStats | null>(null);
+  const [jobs, setJobs] = useState<IngestJob[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [ingestBusy, setIngestBusy] = useState(false);
+
+  const refresh = useCallback(async () => {
+    const [s, j] = await Promise.all([fetchCorpusStats(), fetchIngestJobs()]);
+    setStats(s);
+    setJobs(j);
+  }, []);
 
   useEffect(() => {
-    fetchCorpusStats()
-      .then(setStats)
+    refresh()
       .catch((e) => setError(e instanceof Error ? e.message : "Failed to load"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [refresh]);
+
+  useEffect(() => {
+    const hasActive = jobs.some((j) => j.status === "queued" || j.status === "running");
+    if (!hasActive) return;
+    const timer = window.setInterval(() => {
+      void refresh().catch(() => undefined);
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, [jobs, refresh]);
+
+  const runIngest = async (force: boolean) => {
+    setIngestBusy(true);
+    setError(null);
+    try {
+      await startIngestJob({ force });
+      await refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Ingest failed");
+    } finally {
+      setIngestBusy(false);
+    }
+  };
+
+  const manifest = stats?.ingest_manifest ? Object.values(stats.ingest_manifest) : [];
 
   return (
     <div className="app-mesh-bg min-h-screen">
@@ -88,6 +125,64 @@ export default function CorpusPage() {
                   ))}
                 </div>
 
+                {stats.formulation_store ? (
+                  <p className="text-xs text-text-secondary">
+                    {t("corpus.storeBackend")}: <span className="font-semibold">{stats.formulation_store}</span>
+                  </p>
+                ) : null}
+
+                <section className="surface-inset p-4">
+                  <h3 className="text-sm font-bold text-text-primary">{t("corpus.ingestTitle")}</h3>
+                  <p className="mt-1 text-xs text-text-secondary">{t("corpus.ingestSubtitle")}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={ingestBusy}
+                      onClick={() => void runIngest(false)}
+                      className="btn-primary rounded-xl px-4 py-2 text-xs font-semibold disabled:opacity-60"
+                    >
+                      {ingestBusy ? t("corpus.ingestRunning") : t("corpus.startIngest")}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={ingestBusy}
+                      onClick={() => void runIngest(true)}
+                      className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-text-secondary hover:border-secondary/40"
+                    >
+                      {t("corpus.forceIngest")}
+                    </button>
+                  </div>
+                  {jobs.length > 0 ? (
+                    <ul className="mt-3 space-y-2 text-xs">
+                      {jobs.slice(0, 5).map((job) => (
+                        <li
+                          key={job.id}
+                          className="flex items-center justify-between gap-2 rounded-lg border border-border/60 px-3 py-2"
+                        >
+                          <span className="font-mono text-text-secondary">{job.id.slice(0, 8)}</span>
+                          <span
+                            className={
+                              job.status === "done"
+                                ? "text-success"
+                                : job.status === "failed"
+                                  ? "text-error"
+                                  : "text-warning"
+                            }
+                          >
+                            {job.status === "running"
+                              ? t("corpus.ingestRunning")
+                              : job.status === "done"
+                                ? t("corpus.ingestDone")
+                                : job.status === "failed"
+                                  ? t("corpus.ingestFailed")
+                                  : job.status}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </section>
+
                 <section className="surface-inset p-4">
                   <h3 className="text-sm font-bold text-text-primary">{t("corpus.dependencies")}</h3>
                   <ul className="mt-3 space-y-2 text-xs">
@@ -104,6 +199,28 @@ export default function CorpusPage() {
                     ))}
                   </ul>
                 </section>
+
+                {manifest.length > 0 ? (
+                  <section className="surface-inset p-4">
+                    <h3 className="text-sm font-bold text-text-primary">{t("corpus.manifestTitle")}</h3>
+                    <ul className="mt-3 space-y-2 text-xs">
+                      {manifest.map((doc) => (
+                        <li
+                          key={doc.doc_id}
+                          className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/60 px-3 py-2"
+                        >
+                          <span className="text-text-primary">{doc.filename}</span>
+                          <span className="text-text-secondary">
+                            {doc.formulations} formulas · {doc.chunks} chunks
+                            {(doc.ocr_pages_count ?? 0) > 0
+                              ? ` · ${doc.ocr_pages_count} ${t("corpus.ocrPages")}`
+                              : ""}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
 
                 <section className="surface-inset p-4">
                   <h3 className="text-sm font-bold text-text-primary">{t("corpus.sources")}</h3>

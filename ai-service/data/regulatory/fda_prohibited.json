@@ -1,0 +1,16 @@
+[
+  {
+    "ingredient": "formaldehyde",
+    "aliases": ["formalin", "methanal"],
+    "market": "US",
+    "status": "prohibited",
+    "source_ref": "FDA prohibited list (cosmetics)"
+  },
+  {
+    "ingredient": "hydroquinone",
+    "aliases": ["1,4-dihydroxybenzene"],
+    "market": "US",
+    "status": "prohibited",
+    "source_ref": "FDA prohibited list (cosmetics)"
+  }
+]

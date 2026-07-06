@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     llm_api_key: str = ""
     llm_model: str = "openai/gpt-4o-mini"
 
+    # OpenRouter model for eval generation + LLM-as-judge (defaults to llm_model)
+    eval_model: str = ""
+
     docs_dir: str = Field(default=str(PROJECT_ROOT.parent / "docs"))
     chunk_char_size: int = 3200
     chunk_char_overlap: int = 400
@@ -70,6 +73,18 @@ class Settings(BaseSettings):
     warehouse_llm_batch_size: int = 25
     warehouse_review_threshold: float = 0.7
     warehouse_makeable_coverage: float = 95.0
+
+    # Formulation store: sqlite (default) or postgres
+    formulation_store: str = "sqlite"
+    database_url: str = ""
+
+    # OCR for scanned PDF pages
+    ocr_enabled: bool = True
+    ocr_lang: str = "eng"
+    ocr_min_text_chars: int = 40
+
+    # Ingest job queue (file-based under data/ingest_jobs)
+    ingest_jobs_dir: str = Field(default=str(PROJECT_ROOT / "data" / "ingest_jobs"))
 
 
 @lru_cache

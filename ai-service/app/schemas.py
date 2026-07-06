@@ -15,6 +15,7 @@ class StructuredBrief(BaseModel):
     preferred_ingredients: Optional[list[str]] = None
     cost_target: Optional[float] = None
     batch_size: Optional[float] = None
+    markets: Optional[list[str]] = None
 
 
 class CitedEvidence(BaseModel):

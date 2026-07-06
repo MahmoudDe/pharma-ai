@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { fetchBackendHealth, fetchBackendReadiness } from "@/lib/backend";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { LanguageToggle } from "@/components/i18n/LanguageToggle";
+import { Logo } from "@/components/ui/Logo";
 import type { TranslationKey } from "@/lib/i18n";
 
 function ChatIcon() {
@@ -76,9 +76,7 @@ export default function Home() {
   return (
     <div className="app-mesh-bg flex min-h-screen flex-col">
       <header className="relative z-10 flex items-center justify-between px-5 py-4 lg:px-10">
-        <div className="logo-container logo-container--header animate-fade-in-down">
-          <Image src="/logo.png" alt="Pharma AI" width={28} height={28} className="h-full w-full object-contain" priority />
-        </div>
+        <Logo size="header" className="animate-fade-in-down" priority />
         <div className="flex items-center gap-2">
           <LanguageToggle />
           <ThemeToggle />

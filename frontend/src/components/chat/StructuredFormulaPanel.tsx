@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { BatchCalculator } from "@/components/formula/BatchCalculator";
 import { useLocale } from "@/components/i18n/LocaleProvider";
-import { downloadTextFile, formulaToCsv } from "@/lib/formulaExport";
+import { downloadBlob, downloadTextFile, formulaToCsv, formulaToExcelBlob, formulaToPdfBlob, safeFormulaFilename } from "@/lib/formulaExport";
 import { formulaToMarkdown } from "@/lib/formulaMarkdown";
 import type { StructuredFormulationView } from "@/types/chat";
 
@@ -94,8 +94,17 @@ function PanelHeader({ formulation }: { formulation: StructuredFormulationView }
   };
 
   const onExportCsv = () => {
-    const safeName = formulation.name.replace(/[^\w.-]+/g, "_").slice(0, 40);
-    downloadTextFile(formulaToCsv(formulation), `${safeName}.csv`, "text/csv;charset=utf-8");
+    downloadTextFile(
+      formulaToCsv(formulation),
+      safeFormulaFilename(formulation.name, "csv"),
+      "text/csv;charset=utf-8",
+    );
+  };
+  const onExportExcel = () => {
+    downloadBlob(formulaToExcelBlob(formulation), safeFormulaFilename(formulation.name, "xlsx"));
+  };
+  const onExportPdf = () => {
+    downloadBlob(formulaToPdfBlob(formulation), safeFormulaFilename(formulation.name, "pdf"));
   };
 
   return (
@@ -113,7 +122,21 @@ function PanelHeader({ formulation }: { formulation: StructuredFormulationView }
           </span>
           {t("formula.title")}
         </h2>
-        <div className="flex shrink-0 gap-1">
+        <div className="flex shrink-0 flex-wrap gap-1">
+          <button
+            type="button"
+            onClick={onExportExcel}
+            className="rounded-lg border border-border px-2 py-1 text-xs font-semibold text-text-secondary transition hover:border-secondary/50 hover:bg-secondary/10 hover:text-secondary"
+          >
+            {t("formula.exportExcel")}
+          </button>
+          <button
+            type="button"
+            onClick={onExportPdf}
+            className="rounded-lg border border-border px-2 py-1 text-xs font-semibold text-text-secondary transition hover:border-secondary/50 hover:bg-secondary/10 hover:text-secondary"
+          >
+            {t("formula.exportPdf")}
+          </button>
           <button
             type="button"
             onClick={onExportCsv}

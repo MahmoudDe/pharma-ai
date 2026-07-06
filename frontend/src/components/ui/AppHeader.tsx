@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { LanguageToggle } from "@/components/i18n/LanguageToggle";
+import { Logo } from "@/components/ui/Logo";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 
 export type AppRoute = "chat" | "warehouse" | "formulations" | "corpus";
@@ -46,9 +46,7 @@ export function AppHeader({ active, statusSlot, compact = false }: AppHeaderProp
   return (
     <header className="glass-header app-header animate-fade-in-down relative z-10">
       <Link href="/" className="group flex min-w-0 shrink-0 items-center gap-3">
-        <span className="logo-container logo-container--header transition-transform duration-300 group-hover:scale-105">
-          <Image src="/logo.png" alt="Pharma AI" width={26} height={26} className="h-full w-full object-contain" />
-        </span>
+        <Logo size="header" className="transition-transform duration-300 group-hover:scale-105" />
         <span className={`min-w-0 leading-tight ${compact ? "lg:hidden" : ""}`}>
           <span className="block truncate text-[0.9375rem] font-bold text-text-primary">
             {t("app.title")}

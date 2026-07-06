@@ -36,6 +36,7 @@ class PageRecord:
     pdf_page: int
     printed_page: int | None
     text: str
+    ocr_applied: bool = False
 
     @property
     def page(self) -> int:
@@ -144,14 +145,28 @@ def _extract_page_text(page: fitz.Page) -> str:
 
 def extract_pdf(path: Path) -> Iterator[PageRecord]:
     """Yield one PageRecord per non-empty page in `path`."""
+    from app.config import get_settings
+    from app.ingestion.extract_ocr import maybe_ocr_page
+
     _activate_layout_extraction()
+    settings = get_settings()
     doc_id = doc_id_from_path(path)
     doc_title = path.stem
+    ocr_pages = 0
 
     with fitz.open(path) as pdf:
         for page_index in range(pdf.page_count):
             page = pdf.load_page(page_index)
             normalized = _extract_page_text(page)
+            normalized, ocr_applied = maybe_ocr_page(
+                page,
+                normalized,
+                min_chars=settings.ocr_min_text_chars,
+                lang=settings.ocr_lang,
+                enabled=settings.ocr_enabled,
+            )
+            if ocr_applied:
+                ocr_pages += 1
             if len(normalized) < 40:
                 continue
             yield PageRecord(
@@ -160,7 +175,11 @@ def extract_pdf(path: Path) -> Iterator[PageRecord]:
                 pdf_page=page_index + 1,
                 printed_page=_detect_printed_page(page),
                 text=normalized,
+                ocr_applied=ocr_applied,
             )
+
+    if ocr_pages:
+        logger.info("[%s] OCR applied on %d page(s)", path.name, ocr_pages)
 
 
 def discover_pdfs(docs_dir: Path) -> list[Path]:

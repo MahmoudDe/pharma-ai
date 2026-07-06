@@ -8,7 +8,6 @@ from typing import Literal
 from app.formulation.schemas import FormulationRecord
 from app.formulation.store import list_formulations
 from app.reasoning.brief import (
-    apply_brief_filters,
     merge_intent_with_brief,
     normalize_brief_terms,
     preferred_ingredient_score,
@@ -167,11 +166,22 @@ def structured_search(
 ) -> StructuredSearchResult:
     intent = merge_intent_with_brief(intent, brief)
     filter_types = _filter_types_for_intent(intent)
-    candidates = list_formulations(product_types=filter_types, limit=limit * 12)
+    banned = normalize_brief_terms(brief.banned_ingredients) if brief else None
+    candidates = list_formulations(
+        product_types=filter_types,
+        banned_ingredients=banned,
+        limit=limit * 12,
+    )
 
     if not candidates and intent.product_types:
         for pt in intent.product_types:
-            candidates.extend(list_formulations(product_type=pt, limit=limit * 6))
+            candidates.extend(
+                list_formulations(
+                    product_type=pt,
+                    banned_ingredients=banned,
+                    limit=limit * 6,
+                )
+            )
 
     ranked: list[RankedFormulation] = []
     seen_names: dict[str, RankedFormulation] = {}
@@ -210,11 +220,6 @@ def structured_search(
             ),
         )
 
-    ranked = ranked[: limit * 2]
-    if brief:
-        filtered_records = apply_brief_filters([r.record for r in ranked], brief)
-        allowed_ids = {r.id for r in filtered_records}
-        ranked = [r for r in ranked if r.record.id in allowed_ids]
     ranked = ranked[:limit]
 
     from app.config import get_settings

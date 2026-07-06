@@ -1,5 +1,14 @@
 [
   {
+    "message": "Give me a baby shampoo formula with ingredient percentages.",
+    "expect_route": "lookup",
+    "expect_llm": false,
+    "min_structured_confidence": 80,
+    "structured_top_name_must_match": "baby\\s+shampoo",
+    "structured_top_name_must_not_contain": ["bath", "wipe", "sunscreen"],
+    "prefer_structured_name_match": "baby\\s+shampoo"
+  },
+  {
     "message": "Show me an anti-dandruff shampoo formula.",
     "expect_route": "lookup",
     "expect_llm": false,

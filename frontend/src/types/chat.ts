@@ -7,6 +7,7 @@ export interface StructuredBrief {
   preferred_ingredients?: string[];
   cost_target?: number;
   batch_size?: number;
+  markets?: string[];
 }
 
 export interface CitedEvidence {

@@ -1,179 +1,82 @@
-"""SQLite persistence for structured formulations."""
+"""Formulation store factory and backward-compatible module API."""
 from __future__ import annotations
 
-import json
-import logging
 import re
-import sqlite3
-import uuid
-from pathlib import Path
+from functools import lru_cache
 
-from app.config import PROJECT_ROOT
-from app.formulation.schemas import FormulationRecord, IngredientLine
+from app.config import get_settings
+from app.formulation.schemas import FormulationRecord
+from app.formulation.store_base import FormulationSearchFilters, FormulationStore
+from app.formulation.store_sqlite import DB_PATH, SQLiteFormulationStore, new_formulation_id
 from app.retrieval.intent import QueryIntent
 
-
-logger = logging.getLogger(__name__)
-
-DB_PATH = PROJECT_ROOT / "data" / "formulations.db"
-
-
-def _connect() -> sqlite3.Connection:
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def _migrate_schema(conn: sqlite3.Connection) -> None:
-    cols = {row[1] for row in conn.execute("PRAGMA table_info(formulations)").fetchall()}
-    if "procedure" not in cols:
-        conn.execute("ALTER TABLE formulations ADD COLUMN procedure TEXT NOT NULL DEFAULT '[]'")
-    if "vector_text" not in cols:
-        conn.execute("ALTER TABLE formulations ADD COLUMN vector_text TEXT NOT NULL DEFAULT ''")
+__all__ = [
+    "DB_PATH",
+    "FormulationSearchFilters",
+    "FormulationStore",
+    "clear_all_formulations",
+    "get_formulation",
+    "get_store",
+    "init_db",
+    "list_formulations",
+    "new_formulation_id",
+    "search_by_intent",
+    "upsert_formulation",
+]
 
 
-def clear_all_formulations() -> int:
-    """Delete all structured formulations (used with run_ingest --force)."""
-    init_db()
-    with _connect() as conn:
-        n_ing = conn.execute("SELECT COUNT(*) FROM ingredients").fetchone()[0]
-        n_form = conn.execute("SELECT COUNT(*) FROM formulations").fetchone()[0]
-        conn.execute("DELETE FROM ingredients")
-        conn.execute("DELETE FROM formulations")
-        conn.commit()
-    removed = int(n_form or 0)
-    logger.info(
-        "Cleared formulations DB (%d formulations, %d ingredient rows).",
-        removed,
-        int(n_ing or 0),
-    )
-    return removed
+@lru_cache
+def get_store() -> FormulationStore:
+    settings = get_settings()
+    if settings.formulation_store == "postgres":
+        if not settings.database_url:
+            raise RuntimeError("DATABASE_URL is required when FORMULATION_STORE=postgres")
+        from app.formulation.store_postgres import PostgresFormulationStore
+
+        return PostgresFormulationStore(settings.database_url)
+    return SQLiteFormulationStore()
 
 
 def init_db() -> None:
-    with _connect() as conn:
-        conn.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS formulations (
-                id TEXT PRIMARY KEY,
-                name TEXT NOT NULL,
-                product_types TEXT NOT NULL,
-                doc_id TEXT NOT NULL,
-                doc_title TEXT,
-                pdf_page INTEGER NOT NULL,
-                printed_page INTEGER,
-                source_text TEXT NOT NULL,
-                procedure TEXT NOT NULL DEFAULT '[]',
-                vector_text TEXT NOT NULL DEFAULT '',
-                extraction_method TEXT NOT NULL,
-                confidence REAL NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS ingredients (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                formulation_id TEXT NOT NULL,
-                raw_name TEXT NOT NULL,
-                normalized_name TEXT,
-                amount REAL,
-                unit TEXT,
-                phase TEXT,
-                FOREIGN KEY (formulation_id) REFERENCES formulations(id) ON DELETE CASCADE
-            );
-            CREATE INDEX IF NOT EXISTS idx_formulations_doc ON formulations(doc_id);
-            CREATE INDEX IF NOT EXISTS idx_formulations_product ON formulations(product_types);
-            CREATE INDEX IF NOT EXISTS idx_ingredients_norm ON ingredients(normalized_name);
-            CREATE INDEX IF NOT EXISTS idx_ingredients_raw ON ingredients(raw_name);
-            """
-        )
-        _migrate_schema(conn)
-        conn.commit()
+    get_store().init_db()
 
 
 def upsert_formulation(record: FormulationRecord) -> None:
-    init_db()
-    with _connect() as conn:
-        conn.execute(
-            """
-            INSERT OR REPLACE INTO formulations
-            (id, name, product_types, doc_id, doc_title, pdf_page, printed_page,
-             source_text, procedure, vector_text, extraction_method, confidence)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                record.id,
-                record.name,
-                json.dumps(record.product_types),
-                record.doc_id,
-                record.doc_title,
-                record.pdf_page,
-                record.printed_page,
-                record.source_text,
-                json.dumps(record.procedure),
-                record.vector_text,
-                record.extraction_method,
-                record.confidence,
-            ),
-        )
-        conn.execute("DELETE FROM ingredients WHERE formulation_id = ?", (record.id,))
-        for ing in record.ingredients:
-            conn.execute(
-                """
-                INSERT INTO ingredients
-                (formulation_id, raw_name, normalized_name, amount, unit, phase)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    record.id,
-                    ing.raw_name,
-                    ing.normalized_name,
-                    ing.amount,
-                    ing.unit,
-                    ing.phase,
-                ),
-            )
-        conn.commit()
+    get_store().upsert(record)
 
 
 def get_formulation(formulation_id: str) -> FormulationRecord | None:
-    init_db()
-    with _connect() as conn:
-        row = conn.execute(
-            "SELECT * FROM formulations WHERE id = ?", (formulation_id,)
-        ).fetchone()
-        if row is None:
-            return None
-        ings = conn.execute(
-            "SELECT * FROM ingredients WHERE formulation_id = ? ORDER BY id",
-            (formulation_id,),
-        ).fetchall()
-    return _row_to_record(row, ings)
+    return get_store().get(formulation_id)
 
 
-def _row_to_record(row: sqlite3.Row, ings: list[sqlite3.Row]) -> FormulationRecord:
-    return FormulationRecord(
-        id=row["id"],
-        name=row["name"],
-        product_types=json.loads(row["product_types"] or "[]"),
-        doc_id=row["doc_id"],
-        doc_title=row["doc_title"] or "",
-        pdf_page=int(row["pdf_page"]),
-        printed_page=row["printed_page"],
-        source_text=row["source_text"],
-        procedure=json.loads(row["procedure"] or "[]"),
-        vector_text=(row["vector_text"] or "") if row["vector_text"] else "",
-        extraction_method=row["extraction_method"],
-        confidence=float(row["confidence"]),
-        ingredients=[
-            IngredientLine(
-                raw_name=i["raw_name"],
-                normalized_name=i["normalized_name"],
-                amount=i["amount"],
-                unit=i["unit"],
-                phase=i["phase"],
-            )
-            for i in ings
-        ],
+def clear_all_formulations() -> int:
+    return get_store().clear_all()
+
+
+def list_formulations(
+    *,
+    product_types: list[str] | None = None,
+    product_type: str | None = None,
+    ingredient: str | None = None,
+    doc_id: str | None = None,
+    banned_ingredients: list[str] | None = None,
+    preferred_ingredients: list[str] | None = None,
+    limit: int = 20,
+) -> list[FormulationRecord]:
+    filters = FormulationSearchFilters(
+        product_types=product_types,
+        product_type=product_type,
+        ingredient=ingredient,
+        doc_id=doc_id,
+        banned_ingredients=banned_ingredients,
+        preferred_ingredients=preferred_ingredients,
+        limit=limit,
     )
+    return get_store().search(filters)
+
+
+def count_formulations() -> int:
+    return get_store().count()
 
 
 def _name_relevance_score(name: str, intent: QueryIntent, query: str) -> float:
@@ -186,7 +89,7 @@ def _name_relevance_score(name: str, intent: QueryIntent, query: str) -> float:
         elif "baby" in name_lower and "bath" in name_lower:
             score -= 2.0
     if "anti_dandruff" in intent.product_types:
-        if "anti" in name_lower and "dandruff" in name_lower.replace("-", ""):
+        if "anti" in name_lower and "dandruff" in name_lower:
             score += 3.0
         elif "antidandruff" in name_lower.replace(" ", ""):
             score += 3.0
@@ -207,54 +110,6 @@ def _name_relevance_score(name: str, intent: QueryIntent, query: str) -> float:
         if len(kw) >= 4 and kw in name_lower:
             score += 0.5
     return score
-
-
-def list_formulations(
-    *,
-    product_types: list[str] | None = None,
-    product_type: str | None = None,
-    ingredient: str | None = None,
-    doc_id: str | None = None,
-    limit: int = 20,
-) -> list[FormulationRecord]:
-    init_db()
-    required_types = list(product_types or [])
-    if product_type and product_type not in required_types:
-        required_types.append(product_type)
-
-    sql = "SELECT DISTINCT f.* FROM formulations f"
-    joins: list[str] = []
-    params: list[object] = []
-    if ingredient:
-        joins.append("JOIN ingredients i ON i.formulation_id = f.id")
-    if joins:
-        sql += " " + " ".join(joins)
-    clauses: list[str] = []
-    if doc_id:
-        clauses.append("f.doc_id = ?")
-        params.append(doc_id)
-    if ingredient:
-        clauses.append("(i.normalized_name LIKE ? OR i.raw_name LIKE ?)")
-        needle = f"%{ingredient.lower()}%"
-        params.extend([needle, needle])
-    if clauses:
-        sql += " WHERE " + " AND ".join(clauses)
-
-    with _connect() as conn:
-        rows = conn.execute(sql, params).fetchall()
-        out: list[FormulationRecord] = []
-        for row in rows:
-            types = json.loads(row["product_types"] or "[]")
-            if required_types and not all(t in types for t in required_types):
-                continue
-            ings = conn.execute(
-                "SELECT * FROM ingredients WHERE formulation_id = ? ORDER BY id",
-                (row["id"],),
-            ).fetchall()
-            out.append(_row_to_record(row, ings))
-
-    out.sort(key=lambda r: r.confidence, reverse=True)
-    return out[:limit]
 
 
 def _structured_product_filter(intent: QueryIntent) -> list[str] | None:
@@ -302,12 +157,11 @@ def search_by_intent(intent: QueryIntent, query: str = "", limit: int = 3) -> li
         if prev is None or len(rec.ingredients) > len(prev.ingredients):
             best_by_name[key] = rec
 
-    out = sorted(best_by_name.values(), key=lambda r: next(s for s, rec in scored if rec.id == r.id), reverse=True)
-    # Re-sort by computed score
+    out = sorted(
+        best_by_name.values(),
+        key=lambda r: next(s for s, rec in scored if rec.id == r.id),
+        reverse=True,
+    )
     score_map = {rec.id: sc for sc, rec in scored}
     out.sort(key=lambda r: score_map.get(r.id, 0.0), reverse=True)
     return out[:limit]
-
-
-def new_formulation_id() -> str:
-    return str(uuid.uuid4())

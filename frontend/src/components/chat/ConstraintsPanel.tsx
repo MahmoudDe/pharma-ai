@@ -23,7 +23,8 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
   const hasValues =
     Boolean(brief.product_type) ||
     (brief.banned_ingredients?.length ?? 0) > 0 ||
-    (brief.preferred_ingredients?.length ?? 0) > 0;
+    (brief.preferred_ingredients?.length ?? 0) > 0 ||
+    (brief.markets?.length ?? 0) > 0;
 
   return (
     <section className="panel-muted-band relative z-10 shrink-0 px-4 py-2 lg:px-6">
@@ -50,7 +51,7 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
       </button>
       <div className={`constraints-expand ${open ? "open" : ""}`}>
         <div>
-          <div className="grid gap-2 pb-3 pt-2 sm:grid-cols-3">
+          <div className="grid gap-2 pb-3 pt-2 sm:grid-cols-2 lg:grid-cols-4">
             <label className="flex flex-col gap-1 text-xs text-text-secondary">
               {t("constraints.productType")}
               <input
@@ -84,6 +85,18 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
                   onChange({ ...brief, preferred_ingredients: splitList(e.target.value) })
                 }
                 placeholder={t("constraints.preferredPlaceholder")}
+                className="field"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-text-secondary">
+              {t("constraints.markets")}
+              <input
+                type="text"
+                value={(brief.markets ?? []).join(", ")}
+                onChange={(e) =>
+                  onChange({ ...brief, markets: splitList(e.target.value) })
+                }
+                placeholder={t("constraints.marketsPlaceholder")}
                 className="field"
               />
             </label>

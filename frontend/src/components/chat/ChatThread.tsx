@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { Logo } from "@/components/ui/Logo";
 import type { TranslationKey } from "@/lib/i18n";
 import type { ChatMessage } from "@/types/chat";
 import { MessageContent } from "@/components/chat/MessageContent";
@@ -33,14 +33,7 @@ function toLocalTime(isoValue: string) {
 }
 
 function AssistantAvatar({ active = false }: { active?: boolean }) {
-  return (
-    <div
-      className={`logo-container logo-container--sm shrink-0 self-start${active ? " avatar-active" : ""}`}
-      aria-hidden
-    >
-      <Image src="/logo.png" alt="" width={24} height={24} className="h-full w-full object-contain" />
-    </div>
-  );
+  return <Logo size="sm" alt="" active={active} className="shrink-0 self-start" />;
 }
 
 function TypingDots() {
@@ -155,9 +148,7 @@ export function ChatThread({
             className="absolute inset-0 -z-10 scale-150 rounded-full opacity-70 blur-2xl"
             style={{ background: "var(--brand-gradient-soft)" }}
           />
-          <div className="logo-container logo-container-lg ring-gradient">
-            <Image src="/logo.png" alt="" width={56} height={56} className="h-full w-full object-contain" />
-          </div>
+          <Logo size="lg" alt="" ring />
         </div>
         <div className="animate-fade-in-up max-w-md" style={{ animationDelay: "80ms" }}>
           <h2 className="text-2xl font-bold tracking-tight text-text-primary">

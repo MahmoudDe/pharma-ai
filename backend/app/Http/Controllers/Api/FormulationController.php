@@ -40,6 +40,27 @@ class FormulationController extends Controller
 
     public function search(Request $request): JsonResponse
     {
+        return $this->proxyPost("{$this->aiBaseUrl()}/formulations/search", $request->all());
+    }
+
+    public function substitutions(Request $request, string $formulationId): JsonResponse
+    {
+        return $this->proxyPost(
+            "{$this->aiBaseUrl()}/formulations/{$formulationId}/substitutions",
+            $request->all(),
+        );
+    }
+
+    public function compliance(Request $request, string $formulationId): JsonResponse
+    {
+        return $this->proxyPost(
+            "{$this->aiBaseUrl()}/formulations/{$formulationId}/compliance",
+            $request->all(),
+        );
+    }
+
+    private function proxyPost(string $url, array $body): JsonResponse
+    {
         $baseUrl = $this->aiBaseUrl();
         if ($baseUrl === '') {
             return response()->json(['message' => 'AI_SERVICE_URL is not configured.'], 503);
@@ -49,7 +70,7 @@ class FormulationController extends Controller
             $response = Http::timeout(30)
                 ->acceptJson()
                 ->asJson()
-                ->post("{$baseUrl}/formulations/search", $request->all());
+                ->post($url, $body);
 
             return response()->json($response->json() ?? [], $response->status());
         } catch (Throwable $e) {

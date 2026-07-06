@@ -99,6 +99,11 @@ def main() -> int:
         errors: list[str] = []
 
         classification_only = bool(case.get("classification_only"))
+        expect_llm = expect_llm
+        if case.get("expect_route") == "reasoning" and args.with_reasoning_llm:
+            classification_only = False
+            expect_llm = True
+
         if classification_only:
             route = classify_query(message).route
             llm_used = False

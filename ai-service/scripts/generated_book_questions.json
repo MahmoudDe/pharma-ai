@@ -1,0 +1,783 @@
+{
+  "version": 1,
+  "count": 50,
+  "model": "openai/gpt-4o-mini",
+  "passage_count": 45,
+  "questions": [
+    {
+      "id": "q01",
+      "question": "What is the primary function of Octyl Methoxycinnamate in the sunscreen formulation?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "sunscreen"
+      ],
+      "must_mention_any": [
+        "Octyl Methoxycinnamate",
+        "sunscreen"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q02",
+      "question": "How does the SPF value of the sunscreen formulation in Passage 1 compare to that of the Solar Protection Lotion?",
+      "category": "compare",
+      "product_types": [
+        "sunscreen",
+        "lotion"
+      ],
+      "must_mention_any": [
+        "SPF 24",
+        "Solar Protection Lotion"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q03",
+      "question": "What is the role of Glycerin in the Moisture Lotion formulation?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Glycerin",
+        "Moisture Lotion"
+      ],
+      "must_not_mention": [
+        "sunscreen",
+        "cream"
+      ]
+    },
+    {
+      "id": "q04",
+      "question": "What is the total weight percentage of water in the Baby Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "baby",
+        "cream"
+      ],
+      "must_mention_any": [
+        "Water 39.65"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q05",
+      "question": "What are the emulsifiers used in the Anti-Aging Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "Glyceryl Stearate",
+        "Cetearyl Alcohol"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q06",
+      "question": "Why is it important to preheat the ingredients to 75.0 wt% in the conditioner formulation?",
+      "category": "reasoning",
+      "product_types": [
+        "conditioner"
+      ],
+      "must_mention_any": [
+        "preheat to 75.0"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q07",
+      "question": "What is the function of Disodium EDTA in the lotion formulation?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Disodium EDTA"
+      ],
+      "must_not_mention": [
+        "sunscreen",
+        "cream"
+      ]
+    },
+    {
+      "id": "q08",
+      "question": "Compare the use of preservatives in the Moisturizing Facial Lotion and the Cocoa Butter Skin Cream.",
+      "category": "compare",
+      "product_types": [
+        "lotion",
+        "cream"
+      ],
+      "must_mention_any": [
+        "Germall 115",
+        "Methyl Paraben"
+      ],
+      "must_not_mention": [
+        "conditioner",
+        "baby"
+      ]
+    },
+    {
+      "id": "q09",
+      "question": "What is the significance of using a thickener like Xanthan Gum in the lotion formulations?",
+      "category": "reasoning",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Xanthan Gum",
+        "thickener"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "What is the weight percentage of Methylparaben in the Moisture Lotion?",
+      "category": "lookup",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Methylparaben 0.2"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q11",
+      "question": "What ingredients are used to achieve the desired viscosity in the Solar Protection Lotion?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Xanthan Gum",
+        "Polysorbate"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q12",
+      "question": "How does the formulation of the Velvet Body Lotion differ from that of the Moisturizing Facial Lotion in terms of oil content?",
+      "category": "compare",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Cyclopentasiloxane",
+        "Mineral Oil"
+      ],
+      "must_not_mention": [
+        "cream",
+        "baby"
+      ]
+    },
+    {
+      "id": "q13",
+      "question": "What is the purpose of using Propylene Glycol in the formulations?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "cream",
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Propylene Glycol"
+      ],
+      "must_not_mention": [
+        "conditioner",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q14",
+      "question": "What is the total weight percentage of oils in the Baby Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "baby",
+        "cream"
+      ],
+      "must_mention_any": [
+        "Vaseline 10.0",
+        "Calendula oil 2.0"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q15",
+      "question": "Why is it necessary to cool the mixture to 60.0 wt% after adding Part B to Part A in the conditioner formulation?",
+      "category": "reasoning",
+      "product_types": [
+        "conditioner"
+      ],
+      "must_mention_any": [
+        "cool with agitation to 60.0"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q16",
+      "question": "What is the function of Sodium Laureth Sulfate in the anti-dandruff formulation?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "anti-dandruff"
+      ],
+      "must_mention_any": [
+        "Sodium Laureth Sulfate"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q17",
+      "question": "How does the use of Dimethicone in the conditioner formulation enhance its properties?",
+      "category": "reasoning",
+      "product_types": [
+        "conditioner"
+      ],
+      "must_mention_any": [
+        "Dimethicone"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q18",
+      "question": "What is the weight percentage of Octyl Salicylate in the sunscreen formulation?",
+      "category": "lookup",
+      "product_types": [
+        "sunscreen"
+      ],
+      "must_mention_any": [
+        "Octyl Salicylate 10.0"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q19",
+      "question": "What role does Glycerin play in the formulation of the Moisturizing Facial Lotion?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Glycerin 5.0"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q20",
+      "question": "How do the emulsifiers in the Cocoa Butter Skin Cream formulation contribute to its texture?",
+      "category": "reasoning",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "emulsifiers",
+        "texture"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q21",
+      "question": "What is the function of the thickener used in the formulation of the Solar Protection Lotion?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "thickener"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q22",
+      "question": "What is the weight percentage of Cetearyl Alcohol in the Baby Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "baby",
+        "cream"
+      ],
+      "must_mention_any": [
+        "Cetearyl Alcohol 1.5"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q23",
+      "question": "How does the formulation of the Moisture Lotion differ from that of the Velvet Body Lotion in terms of water content?",
+      "category": "compare",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Deionized Water 78.7",
+        "Water 74.13"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q24",
+      "question": "What is the purpose of using a preservative like Germaben II in the lotion formulations?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Germaben II"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q25",
+      "question": "What is the total weight percentage of active ingredients in the sunscreen formulation?",
+      "category": "lookup",
+      "product_types": [
+        "sunscreen"
+      ],
+      "must_mention_any": [
+        "SPF 24",
+        "active ingredients"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q26",
+      "question": "What is the role of Allantoin in the anti-dandruff formulation?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "anti-dandruff"
+      ],
+      "must_mention_any": [
+        "Allantoin"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q27",
+      "question": "How does the use of Octyldodecanol Neopentanoate affect the texture of the Moisture Lotion?",
+      "category": "reasoning",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Octyldodecanol Neopentanoate"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q28",
+      "question": "What is the weight percentage of Methylparaben in the Cocoa Butter Skin Cream?",
+      "category": "lookup",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "Methyl Paraben 0.2"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q29",
+      "question": "What is the significance of using a combination of oils in the Baby Cream formulation?",
+      "category": "reasoning",
+      "product_types": [
+        "baby",
+        "cream"
+      ],
+      "must_mention_any": [
+        "combination of oils"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q30",
+      "question": "What is the total weight percentage of preservatives in the Velvet Body Lotion?",
+      "category": "lookup",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Phenoxyethanol",
+        "Methylparaben"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q31",
+      "question": "How does the formulation of the Moisturizing Facial Lotion differ from that of the Solar Protection Lotion in terms of emulsifiers?",
+      "category": "compare",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Arlacel 165",
+        "Schercemol"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q32",
+      "question": "What is the role of Sodium Hydroxide in the formulation of the Dow Corning formulation?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "general"
+      ],
+      "must_mention_any": [
+        "Sodium Hydroxide"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q33",
+      "question": "What is the weight percentage of Ceteareth-20 in the conditioner formulation?",
+      "category": "lookup",
+      "product_types": [
+        "conditioner"
+      ],
+      "must_mention_any": [
+        "Ceteareth-20 0.5"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q34",
+      "question": "How does the use of Dimethicone in the conditioner formulation enhance its performance?",
+      "category": "reasoning",
+      "product_types": [
+        "conditioner"
+      ],
+      "must_mention_any": [
+        "Dimethicone"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q35",
+      "question": "What is the total weight percentage of active ingredients in the Anti-Aging Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "active ingredients"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q36",
+      "question": "What is the function of the emulsifier in the formulation of the Cocoa Butter Skin Cream?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "emulsifier"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q37",
+      "question": "What is the weight percentage of Fragrance in the Baby Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "baby",
+        "cream"
+      ],
+      "must_mention_any": [
+        "Fragrance 0.2"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q38",
+      "question": "How does the formulation of the Moisturizing Facial Lotion differ from that of the Velvet Body Lotion in terms of preservatives?",
+      "category": "compare",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Germall 115",
+        "Phenoxyethanol"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q39",
+      "question": "What is the significance of using a combination of surfactants in the anti-dandruff formulation?",
+      "category": "reasoning",
+      "product_types": [
+        "anti-dandruff"
+      ],
+      "must_mention_any": [
+        "combination of surfactants"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q40",
+      "question": "What is the weight percentage of Propylparaben in the Moisture Lotion?",
+      "category": "lookup",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Propylparaben 11.0"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q41",
+      "question": "What is the role of the thickener in the formulation of the Solar Protection Lotion?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "thickener"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q42",
+      "question": "What is the total weight percentage of oils in the Cocoa Butter Skin Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "total weight percentage of oils"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q43",
+      "question": "How does the use of a polymer like Carbomer affect the viscosity of the Moisturizing Facial Lotion?",
+      "category": "reasoning",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "Carbomer",
+        "viscosity"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q44",
+      "question": "What is the weight percentage of Dimethicone in the conditioner formulation?",
+      "category": "lookup",
+      "product_types": [
+        "conditioner"
+      ],
+      "must_mention_any": [
+        "Dimethicone 3.0"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q45",
+      "question": "What is the function of the emulsifier in the formulation of the Velvet Body Lotion?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "emulsifier"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q46",
+      "question": "What is the total weight percentage of preservatives in the Anti-Aging Cream formulation?",
+      "category": "lookup",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "total weight percentage of preservatives"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q47",
+      "question": "How does the formulation of the Solar Protection Lotion differ from that of the Baby Cream in terms of active ingredients?",
+      "category": "compare",
+      "product_types": [
+        "lotion",
+        "baby"
+      ],
+      "must_mention_any": [
+        "active ingredients"
+      ],
+      "must_not_mention": [
+        "cream",
+        "conditioner"
+      ]
+    },
+    {
+      "id": "q48",
+      "question": "What is the role of the thickener in the formulation of the Anti-Aging Cream?",
+      "category": "ingredient_knowledge",
+      "product_types": [
+        "cream"
+      ],
+      "must_mention_any": [
+        "thickener"
+      ],
+      "must_not_mention": [
+        "lotion",
+        "sunscreen"
+      ]
+    },
+    {
+      "id": "q49",
+      "question": "What is the weight percentage of Allantoin in the anti-dandruff formulation?",
+      "category": "lookup",
+      "product_types": [
+        "anti-dandruff"
+      ],
+      "must_mention_any": [
+        "Allantoin 0.5"
+      ],
+      "must_not_mention": [
+        "cream",
+        "lotion"
+      ]
+    },
+    {
+      "id": "q50",
+      "question": "What is the significance of using a combination of surfactants in the formulation of the Solar Protection Lotion?",
+      "category": "reasoning",
+      "product_types": [
+        "lotion"
+      ],
+      "must_mention_any": [
+        "combination of surfactants"
+      ],
+      "must_not_mention": [
+        "cream",
+        "sunscreen"
+      ]
+    }
+  ]
+}

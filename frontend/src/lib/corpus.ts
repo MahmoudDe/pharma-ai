@@ -8,6 +8,31 @@ export interface CorpusStats {
   formulation_count: number;
   ingredient_count: number;
   source_documents: { doc_id: string; filename: string }[];
+  ingest_manifest?: Record<string, IngestManifestDoc>;
+  formulation_store?: string;
+}
+
+export interface IngestManifestDoc {
+  doc_id: string;
+  filename: string;
+  kind: string;
+  sha256: string;
+  formulations: number;
+  chunks: number;
+  ocr_pages_count?: number;
+  ingested_at?: string;
+}
+
+export interface IngestJob {
+  id: string;
+  status: "queued" | "running" | "done" | "failed";
+  force: boolean;
+  sqlite_only: boolean;
+  pdf_only: boolean;
+  created_at: string;
+  started_at?: string | null;
+  finished_at?: string | null;
+  error?: string | null;
 }
 
 export async function fetchCorpusStats(): Promise<CorpusStats> {
@@ -23,4 +48,40 @@ export async function fetchCorpusStats(): Promise<CorpusStats> {
     );
   }
   return body as CorpusStats;
+}
+
+export async function startIngestJob(options?: {
+  force?: boolean;
+  sqlite_only?: boolean;
+  pdf_only?: boolean;
+}): Promise<IngestJob> {
+  const response = await fetch(`${BACKEND_URL}/api/corpus/ingest`, {
+    method: "POST",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify(options ?? {}),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+  return (body as { job: IngestJob }).job;
+}
+
+export async function fetchIngestJobs(): Promise<IngestJob[]> {
+  const response = await fetch(`${BACKEND_URL}/api/corpus/ingest`, {
+    headers: { Accept: "application/json" },
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+  return (body as { jobs: IngestJob[] }).jobs ?? [];
 }

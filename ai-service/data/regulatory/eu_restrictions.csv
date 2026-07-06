@@ -1,0 +1,6 @@
+ingredient,market,status,max_percent,source_ref
+formaldehyde,EU,prohibited,,Annex II / 157
+hydroquinone,EU,prohibited,,Annex II / 1334
+salicylic acid,EU,restricted,2.0,Annex III / 1
+methylparaben,EU,restricted,0.4,Annex V
+salicylic acid,US,restricted,2.0,FDA OTC monograph

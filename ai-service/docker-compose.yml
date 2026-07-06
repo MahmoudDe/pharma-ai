@@ -10,3 +10,16 @@ services:
       - ./data/qdrant:/qdrant/storage
     environment:
       QDRANT__SERVICE__GRPC_PORT: 6334
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: pharma-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pharma
+      POSTGRES_PASSWORD: pharma
+      POSTGRES_DB: pharma
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data

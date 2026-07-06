@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
@@ -16,6 +17,7 @@ from app.formulation.store import clear_all_formulations, init_db, upsert_formul
 from app.ingestion.embed import embed_passages
 from app.ingestion.extract import discover_pdfs, doc_id_from_path, extract_pdf
 from app.ingestion.extract_docx import discover_docx, extract_docx
+from app.ingestion.extract_xlsx import discover_xlsx, extract_xlsx
 from app.retrieval.bm25_index import append_chunks_to_bm25, clear_bm25_index
 from app.ingestion.index import (
     collection_stats,
@@ -71,12 +73,15 @@ def ingest_document(
     *,
     batch_size: int = 64,
     sqlite_only: bool = False,
-) -> tuple[int, int]:
+) -> tuple[int, int, int]:
     suffix = path.suffix.lower()
     if suffix == ".docx":
         pages = list(extract_docx(path))
+    elif suffix == ".xlsx":
+        pages = list(extract_xlsx(path))
     else:
         pages = list(extract_pdf(path))
+    ocr_pages = sum(1 for p in pages if getattr(p, "ocr_applied", False))
     settings = get_settings()
     logger.info("[%s] %d pages with text", path.name, len(pages))
 
@@ -106,7 +111,7 @@ def ingest_document(
             upsert_chunks(batch, vectors)
         append_chunks_to_bm25(chunks)
 
-    return len(formulations), len(chunks)
+    return len(formulations), len(chunks), ocr_pages
 
 
 def ingest_pdf(
@@ -114,7 +119,7 @@ def ingest_pdf(
     *,
     batch_size: int = 64,
     sqlite_only: bool = False,
-) -> tuple[int, int]:
+) -> tuple[int, int, int]:
     return ingest_document(path, batch_size=batch_size, sqlite_only=sqlite_only)
 
 
@@ -125,7 +130,7 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     parser = argparse.ArgumentParser(
-        description="Unified ingest: PDFs/DOCX -> SQLite formulations + Qdrant chunks.",
+        description="Unified ingest: PDFs/DOCX/XLSX -> formulations + Qdrant chunks.",
     )
     parser.add_argument("--docs", default=None, help="Path to docs directory.")
     parser.add_argument(
@@ -163,11 +168,14 @@ def main(argv: list[str] | None = None) -> int:
 
     pdfs = discover_pdfs(docs_dir)
     docx_files = [] if args.pdf_only else discover_docx(docs_dir)
-    sources: list[tuple[Path, str]] = [(p, "pdf") for p in pdfs] + [
-        (p, "docx") for p in docx_files
-    ]
+    xlsx_files = [] if args.pdf_only else discover_xlsx(docs_dir)
+    sources: list[tuple[Path, str]] = (
+        [(p, "pdf") for p in pdfs]
+        + [(p, "docx") for p in docx_files]
+        + [(p, "xlsx") for p in xlsx_files]
+    )
     if not sources:
-        logger.warning("No PDF/DOCX files found in %s", docs_dir)
+        logger.warning("No PDF/DOCX/XLSX files found in %s", docs_dir)
         return 0
 
     total_chunks = 0
@@ -179,7 +187,7 @@ def main(argv: list[str] | None = None) -> int:
             logger.info("[%s] unchanged, skipping (use --force)", source_path.name)
             continue
 
-        n_formulas, n_chunks = ingest_document(
+        n_formulas, n_chunks, ocr_pages = ingest_document(
             source_path, sqlite_only=args.sqlite_only
         )
         if n_formulas:
@@ -212,6 +220,8 @@ def main(argv: list[str] | None = None) -> int:
             "sha256": digest,
             "formulations": n_formulas,
             "chunks": n_chunks,
+            "ocr_pages_count": ocr_pages,
+            "ingested_at": datetime.now(timezone.utc).isoformat(),
         }
         _save_manifest(manifest)
         total_formulas += n_formulas

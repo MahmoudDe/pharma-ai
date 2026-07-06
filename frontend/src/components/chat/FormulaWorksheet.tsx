@@ -2,16 +2,26 @@
 
 import { useState, type ReactNode } from "react";
 import { BatchCalculator } from "@/components/formula/BatchCalculator";
-import { FormulaComparePanel } from "@/components/formula/FormulaComparePanel";
+import { ComplianceBadge } from "@/components/formula/ComplianceBadge";
+import { SubstitutionPanel } from "@/components/formula/SubstitutionPanel";
 import { useLocale } from "@/components/i18n/LocaleProvider";
-import { downloadTextFile, formulaToCsv } from "@/lib/formulaExport";
+import {
+  downloadBlob,
+  downloadTextFile,
+  formulaToCsv,
+  formulaToExcelBlob,
+  formulaToPdfBlob,
+  safeFormulaFilename,
+} from "@/lib/formulaExport";
 import { formulaToMarkdown } from "@/lib/formulaMarkdown";
 import { sourcePdfUrl } from "@/lib/sources";
 import type {
   CitedEvidence,
+  StructuredBrief,
   StructuredFormulationView,
   SuggestedNextAction,
 } from "@/types/chat";
+import { FormulaComparePanel } from "@/components/formula/FormulaComparePanel";
 
 interface FormulaWorksheetProps {
   formulation: StructuredFormulationView | null;
@@ -19,6 +29,7 @@ interface FormulaWorksheetProps {
   evidence: CitedEvidence[];
   actions: SuggestedNextAction[];
   onActionClick: (action: SuggestedNextAction) => void;
+  brief?: StructuredBrief;
 }
 
 /** Stable palette for phase color-coding (works in light & dark). */
@@ -96,7 +107,13 @@ function Section({
 }
 
 /* ---------- spec sheet ---------- */
-function SpecSheet({ formulation }: { formulation: StructuredFormulationView }) {
+function SpecSheet({
+  formulation,
+  brief,
+}: {
+  formulation: StructuredFormulationView;
+  brief?: StructuredBrief;
+}) {
   const { t } = useLocale();
   const [copied, setCopied] = useState(false);
   const phaseColors = buildPhaseColors(formulation);
@@ -109,8 +126,17 @@ function SpecSheet({ formulation }: { formulation: StructuredFormulationView }) 
     setTimeout(() => setCopied(false), 1800);
   };
   const onExportCsv = () => {
-    const safe = formulation.name.replace(/[^\w.-]+/g, "_").slice(0, 40);
-    downloadTextFile(formulaToCsv(formulation), `${safe}.csv`, "text/csv;charset=utf-8");
+    downloadTextFile(
+      formulaToCsv(formulation),
+      safeFormulaFilename(formulation.name, "csv"),
+      "text/csv;charset=utf-8",
+    );
+  };
+  const onExportExcel = () => {
+    downloadBlob(formulaToExcelBlob(formulation), safeFormulaFilename(formulation.name, "xlsx"));
+  };
+  const onExportPdf = () => {
+    downloadBlob(formulaToPdfBlob(formulation), safeFormulaFilename(formulation.name, "pdf"));
   };
 
   return (
@@ -118,7 +144,23 @@ function SpecSheet({ formulation }: { formulation: StructuredFormulationView }) 
       {/* title + meta */}
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-bold leading-snug text-text-primary">{formulation.name}</p>
-        <div className="flex shrink-0 gap-1">
+        <div className="flex shrink-0 flex-wrap justify-end gap-1">
+          <button
+            type="button"
+            onClick={onExportExcel}
+            title={t("formula.exportExcel")}
+            className="rounded-lg border border-border px-2 py-1 text-[11px] font-semibold text-text-secondary transition hover:border-secondary/50 hover:bg-secondary/10 hover:text-secondary"
+          >
+            {t("formula.exportExcel")}
+          </button>
+          <button
+            type="button"
+            onClick={onExportPdf}
+            title={t("formula.exportPdf")}
+            className="rounded-lg border border-border px-2 py-1 text-[11px] font-semibold text-text-secondary transition hover:border-secondary/50 hover:bg-secondary/10 hover:text-secondary"
+          >
+            {t("formula.exportPdf")}
+          </button>
           <button
             type="button"
             onClick={onExportCsv}
@@ -162,6 +204,7 @@ function SpecSheet({ formulation }: { formulation: StructuredFormulationView }) 
         >
           {t("evidence.openPdf")}{formulation.pdf_page}
         </a>
+        <ComplianceBadge formulation={formulation} markets={brief?.markets} />
         <span className="rounded-md border border-border bg-[var(--panel-muted)] px-2 py-0.5 text-[10px] font-semibold text-text-secondary">
           {formulation.product_types.join(", ") || "general"}
         </span>
@@ -209,6 +252,7 @@ function SpecSheet({ formulation }: { formulation: StructuredFormulationView }) 
       </div>
 
       <BatchCalculator formulation={formulation} />
+      <SubstitutionPanel formulation={formulation} brief={brief} />
     </div>
   );
 }
@@ -226,6 +270,7 @@ export function FormulaWorksheet({
   evidence,
   actions,
   onActionClick,
+  brief,
 }: FormulaWorksheetProps) {
   const { t } = useLocale();
   const list = (
@@ -311,7 +356,11 @@ export function FormulaWorksheet({
             </div>
           ) : null}
 
-          {active ? <div className="surface-card p-3.5"><SpecSheet formulation={active} /></div> : null}
+          {active ? (
+            <div className="surface-card p-3.5">
+              <SpecSheet formulation={active} brief={brief} />
+            </div>
+          ) : null}
 
           {active && active.procedure && active.procedure.length > 0 ? (
             <Section

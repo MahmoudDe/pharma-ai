@@ -116,13 +116,23 @@ def _evidence_from_chunks(
 
 
 def _default_actions(payload: ChatTurnRequest) -> list[SuggestedNextAction]:
-    return [
+    actions = [
         SuggestedNextAction(
             type="scale_to_batch",
             label="Scale to a 5 kg batch",
             payload={"batch_kg": 5},
         ),
     ]
+    msg = (payload.message or "").lower()
+    if "instead of" in msg or "substitute" in msg or "alternative" in msg:
+        actions.append(
+            SuggestedNextAction(
+                type="substitute_ingredient",
+                label="Suggest ingredient substitutions",
+                payload={"message": payload.message},
+            )
+        )
+    return actions
 
 
 def _build_response(

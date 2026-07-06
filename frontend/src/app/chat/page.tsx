@@ -310,7 +310,8 @@ function ChatPageContent() {
     const hasBrief =
       structuredBrief.product_type ||
       (structuredBrief.banned_ingredients?.length ?? 0) > 0 ||
-      (structuredBrief.preferred_ingredients?.length ?? 0) > 0;
+      (structuredBrief.preferred_ingredients?.length ?? 0) > 0 ||
+      (structuredBrief.markets?.length ?? 0) > 0;
 
     const payload: ChatTurnRequest = {
       thread_id: threadId,
@@ -468,6 +469,7 @@ function ChatPageContent() {
           evidence={latestEvidence}
           actions={latestActions}
           onActionClick={handleActionClick}
+          brief={structuredBrief}
         />
       }
     />

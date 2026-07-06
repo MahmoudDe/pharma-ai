@@ -1,0 +1,20 @@
+[
+  {
+    "from": "sodium lauryl sulfate",
+    "aliases_from": ["sls", "sodium lauryl sulphate"],
+    "to": "sodium laureth sulfate",
+    "aliases_to": ["sles", "sodium laureth sulphate"],
+    "product_types": ["shampoo"],
+    "reason": "SLES is milder and commonly substituted for SLS in rinse-off products.",
+    "confidence": 0.85
+  },
+  {
+    "from": "cocamidopropyl betaine",
+    "aliases_from": ["capb", "cocamidopropyl betaine"],
+    "to": "coco-glucoside",
+    "aliases_to": ["coco glucoside"],
+    "product_types": ["shampoo", "body_wash"],
+    "reason": "Non-ionic surfactant alternative for mild cleansing systems.",
+    "confidence": 0.75
+  }
+]

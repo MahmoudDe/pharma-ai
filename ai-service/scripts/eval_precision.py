@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -17,6 +18,7 @@ from app.schemas import ChatTurnRequest
 from scripts.retrieval_eval import GOLDEN_QUESTIONS, run_retrieval_eval
 
 SPOT_CHECK_QUESTIONS = [
+    "Give me a baby shampoo formula with ingredient percentages.",
     "Show me an anti-dandruff shampoo formula.",
     "Give me a hand cream formula for normal skin.",
 ]
@@ -38,8 +40,24 @@ def _check_llm_response(question: str) -> list[str]:
         if not response.assistant_message.strip():
             errors.append(f"{question!r}: empty assistant_message on template route")
         top = structured[0]
-        if "hand cream" in question.lower() and "baby" in top.name.lower():
-            errors.append(f"{question!r}: hand cream query returned {top.name!r}")
+        if "hand cream" in question.lower():
+            if "baby" in top.name.lower():
+                errors.append(f"{question!r}: hand cream query returned {top.name!r}")
+            if not re.search(
+                r"tube[-\s]?dispensed|hand\s+(and\s+)?(nail\s+)?cream",
+                top.name,
+                re.I,
+            ):
+                errors.append(
+                    f"{question!r}: hand cream query returned {top.name!r} (expected tube/hand cream)"
+                )
+        if "baby shampoo" in question.lower():
+            if not re.search(r"baby\s+shampoo", top.name, re.I):
+                errors.append(f"{question!r}: baby shampoo query returned {top.name!r}")
+            if len(top.ingredients) < 6:
+                errors.append(
+                    f"{question!r}: baby shampoo has only {len(top.ingredients)} ingredients"
+                )
         if "anti" in question.lower() and "dandruff" in question.lower():
             if "dandruff" not in top.name.lower().replace("-", ""):
                 errors.append(f"{question!r}: anti-dandruff query returned {top.name!r}")

@@ -13,6 +13,8 @@ providers is a 2-line env change — see "LLM provider" below.
 The service exposes:
 
 - `GET /health` -> liveness probe.
+- `GET /health/live` -> process up (k8s liveness).
+- `GET /health/ready` -> Qdrant + SQLite + BM25 readiness.
 - `POST /chat`  -> hybrid retrieval (Qdrant + structured SQLite) + LLM grounded answer.
 - `GET /formulations` / `POST /formulations/search` -> structured formula JSON API.
 - `GET /debug/retrieve` -> retrieval-only debug (dev).
@@ -89,7 +91,8 @@ Retrieval checks use **local BGE embeddings + Qdrant only** — no `LLM_API_KEY`
 
 ```bash
 cd ai-service
-.venv/bin/python scripts/eval_retrieval.py
+.venv/bin/python scripts/eval_retrieval.py   # 8 golden queries
+.venv/bin/python scripts/eval_rerank.py        # compare heuristic vs CE rerank (slow first run)
 ```
 
 `scripts/eval_precision.py` runs the same retrieval checks by default. LLM validation
@@ -115,6 +118,23 @@ Optional stricter expectations live in `scripts/golden_retrieval.json`.
 ```
 
 Asserts lookup/compare routes avoid the LLM; reasoning intent is classification-only unless `--with-reasoning-llm`.
+
+### OpenRouter book eval (generate 50 questions + LLM judge)
+
+Uses `LLM_API_KEY` / OpenRouter for **question generation** and **LLM-as-judge** scoring (retrieval still local).
+
+```bash
+# Generate 50 grounded questions from ingested book passages
+.venv/bin/python scripts/generate_book_questions.py --force
+
+# Run pipeline + OpenRouter judge on all questions (bills OpenRouter)
+.venv/bin/python scripts/eval_openrouter.py --output scripts/openrouter_eval_results.json
+
+# Smoke test (first 3 questions)
+.venv/bin/python scripts/eval_openrouter.py --limit 3
+```
+
+Optional `EVAL_MODEL` in `.env` overrides the judge/generator model (defaults to `LLM_MODEL`).
 
 ### Debug retrieval (dev)
 
@@ -147,7 +167,7 @@ Ingest flags: `--docs <path>`, `--force` (rebuild SQLite + Qdrant).
 | reasoning | why use CAPB instead of SLS? | Yes |
 | unknown | best shampoo formula | Structured-first, then vector → expansion → transparent failure |
 
-Env knobs: `STRUCTURED_DIRECT_THRESHOLD` (80), `STRUCTURED_HYBRID_THRESHOLD` (50), `ENABLE_QUERY_EXPANSION`, `USE_LLM_ON_HYBRID`, `USE_LLM_ON_VECTOR_FALLBACK`.
+Env knobs: `STRUCTURED_DIRECT_THRESHOLD` (80), `STRUCTURED_HYBRID_THRESHOLD` (50), `ENABLE_QUERY_EXPANSION`, `USE_LLM_ON_HYBRID`, `USE_LLM_ON_VECTOR_FALLBACK`, `ENABLE_BM25_HYBRID`, `ENABLE_CROSS_ENCODER_RERANK`, `RERANK_CE_WEIGHT`.
 
 ## Project layout
 
@@ -168,7 +188,9 @@ app/
     segments.py          FormulaArtifact + segment_page (one pass)
     unified.py           process_pages: formulations + chunks together
   retrieval/
-    search.py            embed_query + Qdrant top-k
+    search.py            embed_query + Qdrant + BM25 RRF + cross-encoder rerank
+    rerank.py            BGE cross-encoder reranker
+    bm25_index.py        sparse BM25 index (persisted JSON)
   reasoning/
     prompt.py            Grounding-only system prompt + SOURCES formatter
     llm.py               Provider-agnostic LLM client (uses the OpenAI SDK against any
@@ -231,9 +253,10 @@ the hosted models with one env var change.
 See [../REQUIREMENTS.md](../REQUIREMENTS.md) for the full list. Highlights still open:
 
 - PostgreSQL formula store + SQL pre-filters (banned ingredients, cost).
-- Hybrid BM25+vector, conversation-aware retrieval.
-- `structured_brief` wired into search (API field exists today).
+- Conversation-aware retrieval; `structured_brief` wired into search.
 - Batch calculator, substitution, cost estimator, regulatory checks.
 - Auth on the Laravel proxy; per-user thread isolation.
 - OCR for scanned PDFs.
+
+Done in this service: hybrid BM25+vector (RRF), cross-encoder rerank, structured SQLite formulations, intent routing.
 

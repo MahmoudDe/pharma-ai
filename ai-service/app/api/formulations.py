@@ -1,14 +1,27 @@
 from fastapi import APIRouter, HTTPException, Query
 
+from app.formulation.regulatory import check_formulation
 from app.formulation.schemas import (
     FormulationRecord,
     FormulationSearchRequest,
     StructuredFormulationSummary,
 )
 from app.formulation.store import get_formulation, list_formulations
+from app.formulation.substitution import suggest_substitutions
+from app.schemas import StructuredBrief
+from pydantic import BaseModel, Field
 
 
 router = APIRouter(prefix="/formulations", tags=["formulations"])
+
+
+class SubstitutionRequest(BaseModel):
+    ingredient: str
+    constraints: StructuredBrief | None = None
+
+
+class ComplianceRequest(BaseModel):
+    markets: list[str] = Field(default_factory=lambda: ["EU"])
 
 
 def _to_summary(record: FormulationRecord) -> StructuredFormulationSummary:
@@ -62,4 +75,52 @@ def search(body: FormulationSearchRequest) -> dict:
     return {
         "formulations": records,
         "count": len(records),
+    }
+
+
+@router.post("/{formulation_id}/substitutions")
+def substitutions(formulation_id: str, body: SubstitutionRequest) -> dict:
+    record = get_formulation(formulation_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Formulation not found")
+    suggestions = suggest_substitutions(
+        record,
+        body.ingredient,
+        brief=body.constraints,
+    )
+    return {
+        "suggestions": [
+            {
+                "substitute": s.substitute,
+                "confidence": s.confidence,
+                "reason": s.reason,
+                "source": s.source,
+                "citations": [c.model_dump() for c in s.citations],
+            }
+            for s in suggestions
+        ]
+    }
+
+
+@router.post("/{formulation_id}/compliance")
+def compliance(formulation_id: str, body: ComplianceRequest) -> dict:
+    record = get_formulation(formulation_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Formulation not found")
+    report = check_formulation(record, body.markets)
+    return {
+        "status": report.status,
+        "markets": report.markets,
+        "findings": [
+            {
+                "ingredient": f.ingredient,
+                "normalized_name": f.normalized_name,
+                "market": f.market,
+                "status": f.status,
+                "max_percent": f.max_percent,
+                "source_ref": f.source_ref,
+                "message": f.message,
+            }
+            for f in report.findings
+        ],
     }
