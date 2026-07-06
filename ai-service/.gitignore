@@ -9,5 +9,6 @@ data/bm25_index.json
 data/warehouse.db
 data/warehouse/
 data/hf-cache/
+data/models/
 .DS_Store
 *.egg-info/
