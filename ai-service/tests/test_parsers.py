@@ -81,7 +81,7 @@ qs
 def test_pre_blended_concentrate_five_ingredients():
     ingredients, method, confidence = parse_formula_block(PRE_BLENDED_BLOCK)
     assert len(ingredients) == 5
-    assert method in ("column_wt", "inline_wt", "phase_inline")
+    assert method in ("column_wt", "inline_wt", "phase_inline", "leading_amounts")
     assert confidence >= 0.85
     names = {i.raw_name for i in ingredients}
     assert "Fragrance" in names
@@ -107,14 +107,14 @@ def test_ocr_amount_normalization():
 
 def test_ocr_facial_water_amount():
     ingredients, method, _ = parse_formula_block(OCR_FACIAL_BLOCK)
-    assert method in ("column_wt", "phase_inline")
+    assert method in ("column_wt", "phase_inline", "leading_amounts")
     water = next(i for i in ingredients if i.raw_name == "Water")
     assert water.amount == 16.4
 
 
 def test_moisturising_cream_twelve_ingredients():
     ingredients, method, confidence = parse_formula_block(MOISTURISING_BLOCK)
-    assert method in ("column_wt", "phase_inline")
+    assert method in ("column_wt", "phase_inline", "leading_amounts")
     assert len(ingredients) >= 10
     assert confidence >= 0.85
     names = {i.raw_name for i in ingredients}

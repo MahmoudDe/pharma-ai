@@ -36,7 +36,7 @@ def _parse_amount(raw: str) -> tuple[float | None, str]:
     if re.match(r"^q\.?\s*s\.?$", s) or s.startswith("q"):
         return None, "qs"
     if s.startswith("to 100"):
-        return 100.0, "wt%"
+        return None, "qs"
     range_m = re.match(r"^(\d+(?:\.\d+)?)\s*-\s*\d", s)
     if range_m:
         return float(range_m.group(1)), "wt%"

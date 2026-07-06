@@ -1,4 +1,6 @@
 from app.formulation.parsers.column_wt import parse_column_wt_layout
+from app.formulation.parsers.component_wt import parse_component_wt
+from app.formulation.parsers.leading_amounts import parse_leading_amounts
 from app.formulation.parsers.part_labeled_wt import parse_part_labeled_wt
 from app.formulation.parsers.inline_wt import parse_inline_wt_rows
 import re
@@ -48,9 +50,11 @@ def parse_formula_block(text: str) -> tuple[list, str, float]:
         (parse_phase_inline_wt, "phase_inline", 0.88),
         (parse_part_labeled_wt, "part_labeled", 0.89),
         (parse_part_function_layout, "part_function", 0.87),
+        (parse_leading_amounts, "leading_amounts", 0.86),
         (parse_column_wt_layout, "column_wt", 0.88),
         (parse_numbered_stage, "numbered_stage", 0.9),
         (parse_phase_column, "phase_column", 0.87),
+        (parse_component_wt, "component_wt", 0.87),
         (parse_inline_wt_rows, "inline_wt", 0.86),
         (parse_percent_table, "table", 0.85),
         (parse_wtg_table, "wtg", 0.8),

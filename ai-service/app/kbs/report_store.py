@@ -91,6 +91,18 @@ def get_verdicts(formulation_ids: list[str]) -> dict[str, tuple[float, str]]:
     return {r[0]: (r[1], r[2]) for r in rows}
 
 
+def delete_report(formulation_id: str) -> bool:
+    if not DB_PATH.exists():
+        return False
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        cur = conn.execute("DELETE FROM reports WHERE formulation_id = ?", (formulation_id,))
+        conn.commit()
+        return cur.rowcount > 0
+    finally:
+        conn.close()
+
+
 def count_reports() -> int:
     if not DB_PATH.exists():
         return 0

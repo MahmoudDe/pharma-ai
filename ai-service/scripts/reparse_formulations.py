@@ -24,11 +24,20 @@ logger = logging.getLogger(__name__)
 
 
 def _sum_deviation(ingredients) -> float | None:
-    """Distance of the percent sum from 100; None when too few amounts."""
+    """Distance of the percent sum from 100; None when too few amounts.
+
+    With a q.s. line present ("water to 100"), only overshoot counts —
+    the fill line legitimately absorbs any remainder below 100.
+    """
+    from app.kbs.facts import is_qs_line
+
     amounts = [i.amount for i in ingredients if i.amount]
     if len(amounts) < 2:
         return None
-    return abs(sum(amounts) - 100.0)
+    total = sum(amounts)
+    if any(is_qs_line(i) or (i.unit or "").strip().lower() == "qs" for i in ingredients):
+        return max(0.0, total - 100.0)
+    return abs(total - 100.0)
 
 
 def main(argv: list[str] | None = None) -> int:

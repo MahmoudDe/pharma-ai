@@ -411,3 +411,112 @@ def test_phase_column_block_parsed():
     assert 97.0 <= total <= 103.0
     phases = {i.raw_name: i.phase for i in ings}
     assert phases.get("Sulfochem ES-2") == "B"
+
+
+COMPONENT_HAIR_MILK = """
+Sprayable Hair Milk
+
+Component:
+wt%
+Dehyquart L 80/Dicocoylethyl Hydroxyethylmonium Metho-
+sulfate (and) Propylene Glycol
+2.0
+Lamesoft PO 65/Coco-Glucoside (and) Glyceryl Oleate
+2.0
+Cetiol HE/PEG-7 Glyceryl Cocoate
+1.0
+Water
+ad 100
+Preservatives
+q . s .
+
+pH Value: 3.5
+
+Mix the ingredients at room temperature.
+"""
+
+LEADING_AMOUNTS_BUBBLE_BATH = """
+Bubble Bath
+Starting formulation for an economical pearly bubble bath.
+
+Wt%
+25.00
+73.65
+0.25
+typical: 0.80
+typical: 0.05
+
+Inqredients;
+Sulfochem B-2090P
+Water, soft
+Fragrance
+NaCl
+Citric acid
+Preservatives
+Hydrolyzed milk protein
+
+0.25
+q.s.
+
+Blending Procedure:
+With medium agitation, mix water and milk protein in main vessel.
+"""
+
+JAPAN_TO_100 = """
+Prescription 5.30 Simple shampoo
+Part
+Ingredient
+% (100 g)
+1
+A
+Sodium laureth sulfate
+15.00
+2
+A
+Cocamidopropyl betaine
+5.00
+3
+B
+Citric acid
+0.30
+Purified water
+to 100
+Directions
+1) Mix everything.
+"""
+
+
+def test_component_wt_trade_codes_not_amounts():
+    ings, method, _conf = parse_formula_block(COMPONENT_HAIR_MILK)
+    assert method == "component_wt"
+    amounts = {i.raw_name: i.amount for i in ings}
+    # "L 80" and "PO 65" are trade codes and must stay in the name
+    dehyquart = next(n for n in amounts if n.startswith("Dehyquart"))
+    assert "80" in dehyquart and amounts[dehyquart] == 2.0
+    lamesoft = next(n for n in amounts if n.startswith("Lamesoft"))
+    assert "65" in lamesoft and amounts[lamesoft] == 2.0
+    # water "ad 100" is a q.s. fill, not 100%
+    water = next(i for i in ings if i.raw_name == "Water")
+    assert water.amount is None and water.unit == "qs"
+
+
+def test_leading_amounts_bubble_bath():
+    ings, method, _conf = parse_formula_block(LEADING_AMOUNTS_BUBBLE_BATH)
+    assert method == "leading_amounts"
+    amounts = {i.raw_name: i.amount for i in ings}
+    assert amounts.get("Sulfochem B-2090P") == 25.0
+    assert amounts.get("Water, soft") == 73.65
+    assert amounts.get("NaCl") == 0.8  # "typical: 0.80"
+    # trailing amounts pair in column order: 0.25 then q.s.
+    assert amounts.get("Preservatives") == 0.25
+    milk = next(i for i in ings if i.raw_name == "Hydrolyzed milk protein")
+    assert milk.amount is None and milk.unit == "qs"
+    total = sum(a for a in amounts.values() if a)
+    assert 97.0 <= total <= 103.0
+
+
+def test_japan_to_100_water_is_qs():
+    ings, method, _conf = parse_formula_block(JAPAN_TO_100)
+    assert method == "japan_rx"
+    water = next(i for i in ings if "water" in i.raw_name.lower())
+    assert water.amount is None and water.unit == "qs"
