@@ -1,7 +1,7 @@
 """Registry of active KBS rules."""
 from __future__ import annotations
 
-from app.kbs.rules import completeness, consistency, fidelity, ranges
+from app.kbs.rules import completeness, consistency, fidelity, name_quality, ranges
 from app.kbs.rules.base import Rule
 
 
@@ -11,6 +11,7 @@ def get_rules() -> list[Rule]:
         *consistency.build_rules(),
         *ranges.build_rules(),
         *fidelity.build_rules(),
+        *name_quality.build_rules(),
     ]
 
 

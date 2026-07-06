@@ -40,9 +40,15 @@ export function KbsBadge({
 
 export function KbsReportPanel({ report }: { report: KbsReport }) {
   const { t } = useLocale();
+  const severityRank: Record<string, number> = { error: 0, warning: 1, info: 2 };
+  const dotColor: Record<string, string> = {
+    error: "bg-error",
+    warning: "bg-warning",
+    info: "bg-text-secondary/40",
+  };
   const shown = report.findings
     .filter((f) => f.family !== "regulatory")
-    .sort((a, b) => (a.severity === "error" ? -1 : 1) - (b.severity === "error" ? -1 : 1))
+    .sort((a, b) => (severityRank[a.severity] ?? 3) - (severityRank[b.severity] ?? 3))
     .slice(0, 5);
 
   return (
@@ -65,7 +71,7 @@ export function KbsReportPanel({ report }: { report: KbsReport }) {
               <span
                 aria-hidden
                 className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${
-                  f.severity === "error" ? "bg-error" : "bg-warning"
+                  dotColor[f.severity] ?? "bg-warning"
                 }`}
               />
               <span>{f.message}</span>
