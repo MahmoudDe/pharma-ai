@@ -12,6 +12,8 @@ ExtractionMethod = Literal[
     "wtg",
     "column_wt",
     "inline_wt",
+    "numbered_stage",
+    "phase_column",
     "part_function",
     "part_labeled",
     "phase_inline",

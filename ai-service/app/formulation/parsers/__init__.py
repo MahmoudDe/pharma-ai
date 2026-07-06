@@ -6,7 +6,10 @@ from app.formulation.parsers.japan_prescription import parse_japan_prescription
 from app.formulation.parsers.part_function import parse_part_function_layout
 from app.formulation.parsers.phase_inline_wt import parse_phase_inline_wt
 from app.formulation.parsers.ingredient_list import parse_ingredient_list
+from app.formulation.parsers.numbered_stage import parse_numbered_stage
+from app.formulation.parsers.ocr_amounts import repair_spaced_decimals
 from app.formulation.parsers.percent_table import parse_percent_table
+from app.formulation.parsers.phase_column import parse_phase_column
 from app.formulation.parsers.procedure import parse_procedure
 from app.formulation.parsers.reference_filter import is_reference_table_block
 from app.formulation.parsers.validate import confidence_from_ingredients, filter_ingredient_lines
@@ -28,6 +31,8 @@ def parse_formula_block(text: str) -> tuple[list, str, float]:
     if is_reference_table_block(text):
         return [], "regex", 0.0
 
+    text = repair_spaced_decimals(text)
+
     _MIN_WEAK_INGREDIENTS = {
         "list": 3,
         "table": 4,
@@ -44,6 +49,8 @@ def parse_formula_block(text: str) -> tuple[list, str, float]:
         (parse_part_labeled_wt, "part_labeled", 0.89),
         (parse_part_function_layout, "part_function", 0.87),
         (parse_column_wt_layout, "column_wt", 0.88),
+        (parse_numbered_stage, "numbered_stage", 0.9),
+        (parse_phase_column, "phase_column", 0.87),
         (parse_inline_wt_rows, "inline_wt", 0.86),
         (parse_percent_table, "table", 0.85),
         (parse_wtg_table, "wtg", 0.8),

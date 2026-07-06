@@ -4,7 +4,10 @@ from __future__ import annotations
 import re
 
 from app.formulation.normalize import normalize_ingredient_name
-from app.formulation.parsers.ocr_amounts import normalize_ocr_amount_line
+from app.formulation.parsers.ocr_amounts import (
+    normalize_ocr_amount_line,
+    normalize_table_cell_amount,
+)
 from app.formulation.schemas import IngredientLine
 
 _ING_HEADER = re.compile(
@@ -110,6 +113,25 @@ def parse_part_labeled_wt(text: str) -> list[IngredientLine]:
             continue
         if not in_block:
             continue
+
+        # Pipe-separated table rows: "A: Wacker-Belsil DMC 6032 | 2 00".
+        if "|" in stripped:
+            name_part, _, amount_cell = stripped.rpartition("|")
+            name_part = name_part.strip()
+            cell = normalize_table_cell_amount(amount_cell)
+            if not name_part or not cell:
+                continue  # prose row or header row, not an ingredient
+            part_match = _PART_LABEL.match(name_part)
+            if part_match:
+                phase = part_match.group(1).upper()
+                name_part = (part_match.group(2) or "").strip()
+            if pending_names:
+                pair_pre_amounts(pending_names)
+                pending_names = []
+            if not _SKIP.match(name_part):
+                flush_name(name_part, _parse_amount(cell))
+            continue
+
         if _SKIP.match(stripped):
             break
 
