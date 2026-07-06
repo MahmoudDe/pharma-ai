@@ -92,6 +92,8 @@ Use the **EN / AR** toggle in the header; Arabic enables RTL (`dir="rtl"`) via `
 From `ai-service/`:
 
 ```bash
+.venv/bin/python scripts/eval_product.py          # ingest + retrieval + routing (product promises)
+.venv/bin/python scripts/eval_ingest.py             # parser completeness on formulations.db
 .venv/bin/python scripts/eval_retrieval.py          # retrieval only (free)
 .venv/bin/python scripts/eval_precision.py          # same, default
 .venv/bin/python scripts/eval_precision.py --llm-spot-check 1   # one paid smoke test

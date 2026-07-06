@@ -42,17 +42,41 @@ def format_lookup_response(records: list[FormulationRecord]) -> str:
     return "\n".join(parts)
 
 
+def _emulsifier_hint(record: FormulationRecord) -> str:
+    emulsifiers = [
+        ing.raw_name
+        for ing in record.ingredients
+        if any(
+            kw in (ing.raw_name or "").lower()
+            for kw in ("emulsif", "polawax", "stearate", "wax", "peg-", "glyceryl")
+        )
+    ]
+    if emulsifiers:
+        return f"**Emulsifiers / structurants:** {', '.join(emulsifiers[:6])}"
+    return ""
+
+
 def format_compare_response(records: list[FormulationRecord]) -> str:
     if len(records) < 2:
         return format_lookup_response(records)
     lines = ["## Formula comparison", ""]
-    for rec in records[:5]:
-        names = ", ".join(ing.raw_name for ing in rec.ingredients[:8])
-        if len(rec.ingredients) > 8:
-            names += f", … (+{len(rec.ingredients) - 8} more)"
-        lines.append(f"### {rec.name}")
-        lines.append(f"- **Ingredients ({len(rec.ingredients)}):** {names}")
+    for rec in records[:3]:
+        lines.append(_ingredient_table(rec))
+        hint = _emulsifier_hint(rec)
+        if hint:
+            lines.append(hint)
         lines.append("")
+    if len(records) >= 2:
+        a_names = {ing.normalized_name or ing.raw_name for ing in records[0].ingredients}
+        b_names = {ing.normalized_name or ing.raw_name for ing in records[1].ingredients}
+        only_a = [ing.raw_name for ing in records[0].ingredients if (ing.normalized_name or ing.raw_name) not in b_names][:6]
+        only_b = [ing.raw_name for ing in records[1].ingredients if (ing.normalized_name or ing.raw_name) not in a_names][:6]
+        if only_a or only_b:
+            lines.append("**Ingredient differences (from sources):**")
+            if only_a:
+                lines.append(f"- Only in *{records[0].name}*: {', '.join(only_a)}")
+            if only_b:
+                lines.append(f"- Only in *{records[1].name}*: {', '.join(only_b)}")
     return "\n".join(lines)
 
 

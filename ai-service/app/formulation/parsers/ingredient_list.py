@@ -17,6 +17,8 @@ _INGREDIENTS_HEADER = re.compile(
 
 
 def parse_ingredient_list(text: str) -> list[IngredientLine]:
+    if re.search(r"\bformulation\s+\w+\s+illustrates\b", text, re.I):
+        return []
     if not _INGREDIENTS_HEADER.search(text) and "Ingredients:" not in text:
         colon_lists = re.findall(
             r"(?:Ingredients?|Inqredients?):\s*([^\n]+(?:\n[A-Z][^\n]+)*)",

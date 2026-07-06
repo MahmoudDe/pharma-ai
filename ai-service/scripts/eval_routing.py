@@ -57,6 +57,20 @@ def _check_structured(case: dict, message: str) -> list[str]:
                 f"structured top name {top_name!r} contains forbidden {forbidden!r}"
             )
 
+    min_ing = case.get("min_structured_ingredients")
+    if min_ing is not None and matches:
+        top_count = len(matches[0].record.ingredients)
+        if top_count < int(min_ing):
+            errors.append(
+                f"structured top has {top_count} ingredients < {min_ing}"
+            )
+
+    must_have_amounts = case.get("structured_must_have_amounts")
+    if must_have_amounts and matches:
+        top = matches[0].record
+        if not any(i.amount is not None for i in top.ingredients):
+            errors.append("structured top has no ingredient amounts")
+
     prefer = case.get("prefer_structured_name_match")
     if prefer and matches:
         if not re.search(prefer, top_name, re.I):

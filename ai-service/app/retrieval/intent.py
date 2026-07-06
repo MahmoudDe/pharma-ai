@@ -14,6 +14,7 @@ _QUERY_PRODUCT_MAP: list[tuple[str, re.Pattern[str]]] = [
     ("cream", re.compile(r"\b(hand\s+)?cream\b", re.I)),
     ("lotion", re.compile(r"\blotion\b", re.I)),
     ("conditioner", re.compile(r"\bcondition(er|ing)\b", re.I)),
+    ("sunscreen", re.compile(r"\bsunscreen\b|\bspf\b|\bsolar\s+protection\b", re.I)),
     ("soap", re.compile(r"\bsoap\b", re.I)),
 ]
 
@@ -31,6 +32,13 @@ _LOOKUP = re.compile(
     re.I,
 )
 _VAGUE_BEST = re.compile(r"\bbest\b", re.I)
+_ROLE_REASONING = re.compile(
+    r"\b(?:role|function|significance|purpose)\s+of\b|"
+    r"\bwhy\s+is\b|\bexplain\s+the\s+role\b|"
+    r"\btrade-?offs?\b|\bwhat\s+are\s+the\s+functions?\b|"
+    r"\bdiscuss\s+the\b",
+    re.I,
+)
 
 
 @dataclass(slots=True)
@@ -82,6 +90,9 @@ def parse_query_intent(query: str) -> QueryIntent:
 def classify_query(query: str) -> QueryClassification:
     q = query.strip()
     intent = parse_query_intent(q)
+
+    if _ROLE_REASONING.search(q):
+        return QueryClassification(route="reasoning", intent=intent, query=q)
 
     if _REASONING.search(q) and not _COMPARE.search(q):
         return QueryClassification(route="reasoning", intent=intent, query=q)

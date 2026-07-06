@@ -91,8 +91,17 @@ Retrieval checks use **local BGE embeddings + Qdrant only** — no `LLM_API_KEY`
 
 ```bash
 cd ai-service
-.venv/bin/python scripts/eval_retrieval.py   # 8 golden queries
-.venv/bin/python scripts/eval_rerank.py        # compare heuristic vs CE rerank (slow first run)
+.venv/bin/python scripts/eval_product.py      # ingest + retrieval + routing (product promises)
+.venv/bin/python scripts/eval_ingest.py         # parser/ingestion completeness only
+.venv/bin/python scripts/eval_retrieval.py      # 8 golden queries
+.venv/bin/python scripts/eval_rerank.py         # compare heuristic vs CE rerank (slow first run)
+```
+
+`eval_product.py` checks what the app promises: complete structured formulas for lookup
+queries, golden retrieval relevance, and no-LLM routing. Re-ingest after parser changes:
+
+```bash
+.venv/bin/python -m app.ingestion.run_ingest --force
 ```
 
 `scripts/eval_precision.py` runs the same retrieval checks by default. LLM validation
@@ -109,7 +118,8 @@ is opt-in and **bills your OpenRouter account**:
 .venv/bin/python scripts/eval_precision.py --with-llm
 ```
 
-Optional stricter expectations live in `scripts/golden_retrieval.json`.
+Optional stricter expectations live in `scripts/golden_retrieval.json` and
+`scripts/golden_product.json`.
 
 ### Routing eval (minimal LLM spend)
 
@@ -124,11 +134,13 @@ Asserts lookup/compare routes avoid the LLM; reasoning intent is classification-
 Uses `LLM_API_KEY` / OpenRouter for **question generation** and **LLM-as-judge** scoring (retrieval still local).
 
 ```bash
-# Generate 50 grounded questions from ingested book passages
-.venv/bin/python scripts/generate_book_questions.py --force
+# Generate 50 hard stress-test questions from ingested book passages
+.venv/bin/python scripts/generate_book_questions.py --hard --force
 
-# Run pipeline + OpenRouter judge on all questions (bills OpenRouter)
-.venv/bin/python scripts/eval_openrouter.py --output scripts/openrouter_eval_results.json
+# Run pipeline + OpenRouter judge on all questions (bills OpenRouter; ~3–5 min without CE rerank)
+ENABLE_CROSS_ENCODER_RERANK=false .venv/bin/python scripts/eval_openrouter.py \
+  --questions scripts/generated_hard_questions.json \
+  --output scripts/hard_eval_results.json
 
 # Smoke test (first 3 questions)
 .venv/bin/python scripts/eval_openrouter.py --limit 3

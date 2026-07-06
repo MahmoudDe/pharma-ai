@@ -18,6 +18,11 @@ _PAGE_NOISE = re.compile(
     r"^(?:page|pdf|printed|\d+\s*[-–]\s*\d+|book)\b",
     re.I,
 )
+_PROCEDURE_AS_NAME = re.compile(
+    r"^(?:melt|mix|stir|heat|charge|add|blend|fill)\b",
+    re.I,
+)
+_FORMULATION_REF = re.compile(r"^formulation\s+\d+", re.I)
 _ONLY_NUMBERS = re.compile(r"^\d+(?:\.\d+)?\s*%?$")
 _TOO_LONG = 80
 
@@ -29,6 +34,10 @@ def is_valid_ingredient_line(line: IngredientLine) -> bool:
     if _JUNK_NAME.match(raw):
         return False
     if _PAGE_NOISE.search(raw):
+        return False
+    if _PROCEDURE_AS_NAME.match(raw):
+        return False
+    if _FORMULATION_REF.match(raw):
         return False
     if _ONLY_NUMBERS.match(raw):
         return False
@@ -62,7 +71,11 @@ def filter_ingredient_lines(lines: list[IngredientLine]) -> list[IngredientLine]
     for line in lines:
         if not is_valid_ingredient_line(line):
             continue
-        key = (line.normalized_name or line.raw_name).lower().strip()
+        raw = (line.raw_name or "").strip().lower()
+        if re.search(r"\([^)]+\)", raw):
+            key = raw
+        else:
+            key = (line.normalized_name or line.raw_name).lower().strip()
         if not key or key in seen:
             continue
         seen.add(key)

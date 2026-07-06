@@ -12,6 +12,7 @@ from app.ingestion.embed import embed_query
 from app.ingestion.formula_detect import is_formula_chunk  # re-exported for callers
 from app.ingestion.index import fetch_chunks_by_formulation_ids, get_client
 from app.retrieval.intent import QueryIntent, parse_query_intent
+from app.retrieval.query_signals import extract_query_signals, record_has_ingredient
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ _TEXT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("hand_cream", re.compile(r"\bhand\s+(and\s+)?(nail\s+)?cream\b", re.I)),
     ("cream", re.compile(r"\bcream\b", re.I)),
     ("lotion", re.compile(r"\blotion\b", re.I)),
+    ("sunscreen", re.compile(r"\bsunscreen\b|\bspf\b|\bsolar\s+protection\b", re.I)),
 ]
 
 
@@ -152,6 +154,17 @@ def _query_phrase_boost(text: str, query: str) -> float:
 
     if re.search(r"\b(percentage|percentages)\b", query_lower) and is_formula:
         boost += 0.08
+
+    signals = extract_query_signals(query)
+    combined = text.lower()
+    for ing in signals.required_ingredients:
+        if ing.lower() in combined:
+            boost += 0.22 if is_formula else 0.10
+    for name in signals.named_formulas + signals.compare_targets:
+        if name.lower()[:20] in combined or any(
+            tok in combined for tok in name.lower().split() if len(tok) >= 5
+        ):
+            boost += 0.18 if is_formula else 0.08
 
     return boost
 

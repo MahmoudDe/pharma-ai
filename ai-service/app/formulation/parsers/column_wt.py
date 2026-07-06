@@ -4,10 +4,11 @@ from __future__ import annotations
 import re
 
 from app.formulation.normalize import normalize_ingredient_name
+from app.formulation.parsers.ocr_amounts import normalize_ocr_amount_line
 from app.formulation.schemas import IngredientLine
 
 _ING_HEADER = re.compile(
-    r"(?:inqredients?|insredients?|ingredients?|raw materials)\s*:",
+    r"(?:inqredients?|insredients?|ingredients?|puredients?|raw materials)\s*:",
     re.I,
 )
 _WT_MARKER = re.compile(r"^\s*(?:Wt[%\$]|wt%)\s*$", re.I)
@@ -24,7 +25,11 @@ _AMOUNT_LINE = re.compile(
     re.I,
 )
 _SKIP_NAME = re.compile(
-    r"^(?:procedure|blending procedure|formulation no|source|note)\b",
+    r"^(?:procedure|blending procedure|formulation no|source|note|preparation)\b",
+    re.I,
+)
+_JUNK_NAME = re.compile(
+    r"^(?:formulation\s+\d+|melt|mix|stir|heat|charge|add|blend|fill)\b",
     re.I,
 )
 _FORMULA_SECTION = re.compile(
@@ -34,7 +39,13 @@ _FORMULA_SECTION = re.compile(
 )
 
 
+def _is_amount_line(line: str) -> bool:
+    normalized = normalize_ocr_amount_line(line)
+    return bool(_AMOUNT_LINE.match(normalized))
+
+
 def _parse_amount_token(raw: str) -> tuple[float | None, str]:
+    raw = normalize_ocr_amount_line(raw)
     s = re.sub(r"\s+", "", raw.strip().lower())
     if re.match(r"^q\.?s\.?$", s) or s.startswith("qs"):
         return None, "qs"
@@ -60,9 +71,9 @@ def _collect_names(block: str) -> list[str]:
             continue
         if _WT_MARKER.match(stripped):
             break
-        if _AMOUNT_LINE.match(stripped):
+        if _is_amount_line(stripped):
             break
-        if _SKIP_NAME.match(stripped):
+        if _SKIP_NAME.match(stripped) or _JUNK_NAME.match(stripped):
             break
         if not _NAME_LINE.match(stripped) or len(stripped) < 3:
             continue
@@ -87,6 +98,7 @@ def _collect_names(block: str) -> list[str]:
 def _collect_amounts(block: str) -> list[tuple[float | None, str]]:
     amounts: list[tuple[float | None, str]] = []
     in_amounts = False
+    past_names = False
     for line in block.splitlines():
         stripped = line.strip()
         if not stripped:
@@ -95,17 +107,25 @@ def _collect_amounts(block: str) -> list[tuple[float | None, str]]:
             in_amounts = True
             continue
         if _ING_HEADER.search(stripped):
+            past_names = True
             continue
-        if not in_amounts and _AMOUNT_LINE.match(stripped):
+        if not in_amounts and _is_amount_line(stripped):
             in_amounts = True
         if not in_amounts:
             continue
-        if _SKIP_NAME.match(stripped) or _ING_HEADER.search(stripped):
+        if _SKIP_NAME.match(stripped):
             break
-        if _AMOUNT_LINE.match(stripped):
+        if _is_amount_line(stripped):
             amounts.append(_parse_amount_token(stripped))
-        elif _NAME_LINE.match(stripped) and amounts:
-            break
+            continue
+        if _NAME_LINE.match(stripped) and amounts and not past_names:
+            past_names = True
+            continue
+        if past_names and _NAME_LINE.match(stripped):
+            continue
+        if past_names and amounts and not _is_amount_line(stripped):
+            if not _NAME_LINE.match(stripped):
+                break
     return amounts
 
 
@@ -119,6 +139,8 @@ def _pair_names_amounts(
     lines: list[IngredientLine] = []
     seen: set[str] = set()
     for name, (amount, unit) in zip(names[:n], amounts[:n]):
+        if _JUNK_NAME.match(name.strip()):
+            continue
         norm = normalize_ingredient_name(name)
         if norm in seen:
             continue
@@ -160,7 +182,7 @@ def _parse_amounts_then_names(text: str) -> list[IngredientLine]:
                 phase = "names"
                 continue
             if phase == "amounts":
-                if _AMOUNT_LINE.match(stripped):
+                if _is_amount_line(stripped):
                     amount_lines.append(stripped)
                 elif _NAME_LINE.match(stripped) and not amount_lines:
                     phase = "names"
@@ -168,8 +190,10 @@ def _parse_amounts_then_names(text: str) -> list[IngredientLine]:
             else:
                 if _SKIP_NAME.match(stripped):
                     break
-                if _NAME_LINE.match(stripped):
+                if _NAME_LINE.match(stripped) and not _JUNK_NAME.match(stripped):
                     name_lines.append(stripped)
+                elif _is_amount_line(stripped):
+                    amount_lines.append(stripped)
                 elif _WT_MARKER.match(stripped):
                     break
 

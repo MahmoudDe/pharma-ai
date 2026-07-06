@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from app.formulation.normalize import normalize_ingredient_name
+from app.formulation.parsers.ocr_amounts import normalize_ocr_amount_line
 from app.formulation.schemas import IngredientLine
 
 _WT_HEADER = re.compile(r"^\s*wt[%\$]\s*$", re.I)
@@ -27,6 +28,7 @@ _SKIP = re.compile(
 
 
 def _amount(raw: str) -> tuple[float | None, str]:
+    raw = normalize_ocr_amount_line(raw)
     s = re.sub(r"\s+", "", raw.strip().lower())
     if re.match(r"^q\.?s\.?$", s):
         return None, "qs"
@@ -60,7 +62,8 @@ def parse_inline_wt_rows(text: str) -> list[IngredientLine]:
                 phase = "names"
                 continue
             if phase == "amounts":
-                if _AMOUNT.match(stripped):
+                normalized = normalize_ocr_amount_line(stripped)
+                if _AMOUNT.match(normalized):
                     amounts.append(_amount(stripped))
                 elif _NAME.match(stripped) and len(stripped) >= 3:
                     phase = "names"

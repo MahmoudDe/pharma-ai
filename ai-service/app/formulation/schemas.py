@@ -7,7 +7,17 @@ from pydantic import BaseModel, Field
 
 
 ExtractionMethod = Literal[
-    "regex", "table", "wtg", "column_wt", "inline_wt", "part_function", "list", "llm"
+    "regex",
+    "table",
+    "wtg",
+    "column_wt",
+    "inline_wt",
+    "part_function",
+    "part_labeled",
+    "phase_inline",
+    "japan_rx",
+    "list",
+    "llm",
 ]
 
 

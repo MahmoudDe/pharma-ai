@@ -15,7 +15,20 @@ _INLINE = re.compile(
 )
 
 
+_FORMULA_MARKERS = re.compile(
+    r"(?:"
+    r"wt\s*[%\$8]|"
+    r"\bpart\s+[a-z0-9]\s*:|"
+    r"\bprescription\s+\d|"
+    r"(?:inqredients?|insredients?|ingredients?|puredients?)\s*:"
+    r")",
+    re.I,
+)
+
+
 def parse_percent_table(text: str) -> list[IngredientLine]:
+    if not _FORMULA_MARKERS.search(text):
+        return []
     if "ingredient" not in text.lower() and "%" not in text:
         return []
 

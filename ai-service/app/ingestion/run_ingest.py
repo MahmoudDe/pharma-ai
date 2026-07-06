@@ -180,9 +180,18 @@ def main(argv: list[str] | None = None) -> int:
 
     total_chunks = 0
     total_formulas = 0
+    seen_content_hashes: dict[str, str] = {}
     for source_path, kind in sources:
         doc_id = doc_id_from_path(source_path)
         digest = _file_hash(source_path)
+        if digest in seen_content_hashes:
+            logger.info(
+                "[%s] duplicate content of %s (SHA-256), skipping",
+                source_path.name,
+                seen_content_hashes[digest],
+            )
+            continue
+        seen_content_hashes[digest] = source_path.name
         if not args.force and manifest.get(doc_id, {}).get("sha256") == digest:
             logger.info("[%s] unchanged, skipping (use --force)", source_path.name)
             continue

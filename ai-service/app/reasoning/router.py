@@ -8,7 +8,11 @@ from typing import Literal
 
 from app.config import get_settings
 from app.formulation.schemas import FormulationRecord
-from app.formulation.search import StructuredSearchResult, structured_search
+from app.formulation.search import (
+    StructuredSearchResult,
+    structured_search,
+    structured_search_for_compare,
+)
 from app.formulation.store import get_formulation
 from app.reasoning.llm import reason, reason_stream
 from app.reasoning.prompt import SYSTEM_PROMPT, format_context, format_structured_formulations
@@ -27,6 +31,7 @@ from app.retrieval.intent import (
     parse_query_intent,
 )
 from app.retrieval.arabic_query import english_search_query
+from app.retrieval.query_signals import extract_query_signals, record_matches_signals
 from app.retrieval.search import RetrievedChunk, search
 from app.schemas import (
     ChatTurnRequest,
@@ -215,6 +220,38 @@ def _vector_search_ok(chunks: list[RetrievedChunk]) -> bool:
     return bool(chunks) and chunks[0].score >= settings.min_vector_score
 
 
+def _direct_template_ok(
+    route: QueryRoute,
+    records: list[FormulationRecord],
+    query: str,
+) -> bool:
+    """Only skip LLM when structured results satisfy explicit query constraints."""
+    if not records:
+        return False
+    signals = extract_query_signals(query)
+    if signals.asks_ingredient_role:
+        return False
+    if signals.asks_identify_with_ingredients and signals.required_ingredients:
+        return record_matches_signals(records[0], signals)
+    if signals.required_ingredients and not record_matches_signals(records[0], signals):
+        return False
+    if route == "compare":
+        if signals.compare_targets and len(records) < 2:
+            return False
+        if signals.compare_targets:
+            for target, rec in zip(signals.compare_targets[:2], records[:2]):
+                from app.retrieval.query_signals import fuzzy_name_match
+
+                if not fuzzy_name_match(target, rec.name):
+                    return False
+    if signals.named_formulas and len(signals.named_formulas) == 1:
+        from app.retrieval.query_signals import fuzzy_name_match
+
+        if not fuzzy_name_match(signals.named_formulas[0], records[0].name):
+            return False
+    return True
+
+
 def route_chat(
     payload: ChatTurnRequest,
     *,
@@ -236,6 +273,7 @@ def route_chat(
     classification = classify_query(search_query)
     route = classification.route
     intent = merge_intent_with_brief(classification.intent, payload.structured_brief)
+    signals = extract_query_signals(search_query)
 
     logger.info("Route=%s query=%r search=%r", route, query[:80], search_query[:80])
 
@@ -275,13 +313,36 @@ def route_chat(
         [m.record for m in struct_result.matches],
         payload.structured_brief,
     )
+
+    if route == "compare" and len(signals.compare_targets) >= 2:
+        compare_records = structured_search_for_compare(
+            search_query,
+            intent,
+            signals,
+            limit=limit,
+            brief=payload.structured_brief,
+        )
+        if len(compare_records) >= 2:
+            structured_records = apply_brief_filters(
+                compare_records,
+                payload.structured_brief,
+            )
+            struct_result = StructuredSearchResult(
+                matches=struct_result.matches,
+                top_confidence=max(struct_result.top_confidence, 85.0),
+                route_hint="direct",
+            )
+
     fallback_stage: FallbackStage = "none"
 
-    if (
+    use_direct = (
         struct_result.route_hint == "direct"
         and structured_records
         and not (route == "compare" and len(structured_records) < 2)
-    ):
+        and _direct_template_ok(route, structured_records, search_query)
+    )
+
+    if use_direct:
         if route == "compare":
             msg = format_compare_response(structured_records)
         else:
@@ -308,7 +369,13 @@ def route_chat(
         structured_records = hydrated
 
     if struct_result.route_hint == "hybrid" and structured_records:
-        if settings.use_llm_on_hybrid:
+        needs_llm = (
+            signals.asks_ingredient_role
+            or signals.asks_identify_with_ingredients
+            or (route == "compare" and len(structured_records) >= 2)
+            or not _direct_template_ok(route, structured_records, search_query)
+        )
+        if settings.use_llm_on_hybrid or needs_llm:
             return _run_llm_path(
                 query,
                 chunks,

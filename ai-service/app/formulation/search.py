@@ -12,7 +12,13 @@ from app.reasoning.brief import (
     normalize_brief_terms,
     preferred_ingredient_score,
 )
-from app.retrieval.intent import QueryIntent
+from app.retrieval.intent import QueryIntent, parse_query_intent
+from app.retrieval.query_signals import (
+    QuerySignals,
+    extract_query_signals,
+    fuzzy_name_match,
+    record_has_ingredient,
+)
 from app.schemas import StructuredBrief
 
 RouteHint = Literal["direct", "hybrid", "fallback"]
@@ -104,13 +110,42 @@ def _query_hand_cream(query: str) -> bool:
     return bool(re.search(r"\bhand\s+cream\b", query, re.I))
 
 
+def _ingredient_match_score(record: FormulationRecord, signals: QuerySignals) -> float:
+    if not signals.required_ingredients:
+        return 0.0
+    hits = sum(1 for ing in signals.required_ingredients if record_has_ingredient(record, ing))
+    total = len(signals.required_ingredients)
+    if hits == total:
+        return 35.0
+    if hits > 0:
+        return 8.0 * hits - 15.0
+    return -25.0
+
+
+def _named_formula_score(record: FormulationRecord, signals: QuerySignals) -> float:
+    if not signals.named_formulas:
+        return 0.0
+    best = 0.0
+    combined = f"{record.name}\n{record.source_text[:400]}"
+    for name in signals.named_formulas:
+        if fuzzy_name_match(name, record.name):
+            best = max(best, 30.0)
+        elif fuzzy_name_match(name, combined):
+            best = max(best, 18.0)
+        elif best <= 0:
+            best = -12.0
+    return best
+
+
 def score_formulation(
     record: FormulationRecord,
     intent: QueryIntent,
     query: str,
     *,
     brief: StructuredBrief | None = None,
+    signals: QuerySignals | None = None,
 ) -> RankedFormulation:
+    signals = signals or extract_query_signals(query)
     breakdown: dict[str, float] = {}
     required = intent.product_types
 
@@ -137,6 +172,9 @@ def score_formulation(
         preferred = normalize_brief_terms(brief.preferred_ingredients)
         breakdown["preferred_ingredients"] = preferred_ingredient_score(record, preferred)
 
+    breakdown["ingredient_match"] = _ingredient_match_score(record, signals)
+    breakdown["named_formula"] = _named_formula_score(record, signals)
+
     if _query_hand_cream(query):
         name_lower = record.name.lower()
         if re.search(r"\btube[-\s]?dispensed\b", name_lower, re.I):
@@ -146,8 +184,47 @@ def score_formulation(
         elif "baby" in name_lower or "shampoo" in name_lower:
             breakdown["hand_cream_title"] = -20.0
 
-    total = min(100.0, sum(breakdown.values()))
+    total = min(100.0, max(0.0, sum(breakdown.values())))
     return RankedFormulation(record=record, score=total, score_breakdown=breakdown)
+
+
+def _best_for_target(
+    target: str,
+    ranked: list[RankedFormulation],
+) -> RankedFormulation | None:
+    for r in ranked:
+        if fuzzy_name_match(target, r.record.name):
+            return r
+    target_signals = extract_query_signals(target)
+    for r in ranked:
+        if _named_formula_score(r.record, target_signals) >= 18.0:
+            return r
+    return ranked[0] if ranked else None
+
+
+def structured_search_for_compare(
+    query: str,
+    intent: QueryIntent,
+    signals: QuerySignals,
+    *,
+    limit: int = 5,
+    brief: StructuredBrief | None = None,
+) -> list[FormulationRecord]:
+    """Find one best match per named compare target."""
+    targets = signals.compare_targets or signals.named_formulas
+    if len(targets) < 2:
+        return []
+
+    found: list[FormulationRecord] = []
+    seen_ids: set[str] = set()
+    for target in targets[:3]:
+        sub_intent = parse_query_intent(target)
+        sub_result = structured_search(target, sub_intent, limit=limit, brief=brief)
+        pick = _best_for_target(target, sub_result.matches)
+        if pick and pick.record.id not in seen_ids:
+            seen_ids.add(pick.record.id)
+            found.append(pick.record)
+    return found
 
 
 def _filter_types_for_intent(intent: QueryIntent) -> list[str] | None:
@@ -165,6 +242,7 @@ def structured_search(
     brief: StructuredBrief | None = None,
 ) -> StructuredSearchResult:
     intent = merge_intent_with_brief(intent, brief)
+    signals = extract_query_signals(query)
     filter_types = _filter_types_for_intent(intent)
     banned = normalize_brief_terms(brief.banned_ingredients) if brief else None
     candidates = list_formulations(
@@ -183,12 +261,22 @@ def structured_search(
                 )
             )
 
+    if signals.required_ingredients and len(candidates) < limit * 4:
+        for ing in signals.required_ingredients[:3]:
+            candidates.extend(
+                list_formulations(
+                    ingredient=ing.split()[0] if ing else None,
+                    banned_ingredients=banned,
+                    limit=limit * 4,
+                )
+            )
+
     ranked: list[RankedFormulation] = []
     seen_names: dict[str, RankedFormulation] = {}
     for rec in candidates:
         if len(rec.ingredients) < 2:
             continue
-        r = score_formulation(rec, intent, query, brief=brief)
+        r = score_formulation(rec, intent, query, brief=brief, signals=signals)
         key = rec.name.lower()[:80]
         prev = seen_names.get(key)
         if prev is None or len(rec.ingredients) > len(prev.record.ingredients):
