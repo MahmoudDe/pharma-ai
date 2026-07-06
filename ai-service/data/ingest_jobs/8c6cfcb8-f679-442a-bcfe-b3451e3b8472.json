@@ -1,0 +1,15 @@
+{
+  "id": "8c6cfcb8-f679-442a-bcfe-b3451e3b8472",
+  "status": "done",
+  "force": false,
+  "sqlite_only": false,
+  "pdf_only": false,
+  "docs_dir": null,
+  "created_at": "2026-07-06T11:59:34.885399+00:00",
+  "started_at": "2026-07-06T11:59:34.886203+00:00",
+  "finished_at": "2026-07-06T11:59:35.050260+00:00",
+  "error": null,
+  "result": {
+    "exit_code": 0
+  }
+}
