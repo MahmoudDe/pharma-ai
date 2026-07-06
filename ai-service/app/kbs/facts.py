@@ -30,10 +30,16 @@ class FactContext:
     record: FormulationRecord
     source_texts: list[str] = field(default_factory=list)
     percent_mode: bool = False
+    # texts of this record's chunks in the vector store;
+    # None means the store was unavailable (chunk rules skip)
+    indexed_chunk_texts: list[str] | None = None
 
     @property
     def combined_source(self) -> str:
-        return "\n".join(t for t in self.source_texts if t)
+        texts = [t for t in self.source_texts if t]
+        if self.indexed_chunk_texts:
+            texts.extend(t for t in self.indexed_chunk_texts if t)
+        return "\n".join(texts)
 
     def dosed_ingredients(self) -> list[IngredientLine]:
         """Ingredients expected to carry an explicit amount (q.s. lines excluded)."""
@@ -59,6 +65,7 @@ def _detect_percent_mode(record: FormulationRecord) -> bool:
 def build_facts(
     record: FormulationRecord,
     extra_source_texts: list[str] | None = None,
+    indexed_chunk_texts: list[str] | None = None,
 ) -> FactContext:
     sources = [record.source_text]
     if record.vector_text and record.vector_text != record.source_text:
@@ -69,4 +76,5 @@ def build_facts(
         record=record,
         source_texts=[s for s in sources if s],
         percent_mode=_detect_percent_mode(record),
+        indexed_chunk_texts=indexed_chunk_texts,
     )

@@ -59,6 +59,24 @@ class FormulationController extends Controller
         );
     }
 
+    public function kbsReport(string $formulationId): JsonResponse
+    {
+        return $this->proxyGet("{$this->aiBaseUrl()}/kbs/report/{$formulationId}", []);
+    }
+
+    public function kbsValidate(Request $request, string $formulationId): JsonResponse
+    {
+        return $this->proxyPost(
+            "{$this->aiBaseUrl()}/kbs/validate/{$formulationId}",
+            $request->all(),
+        );
+    }
+
+    public function kbsRules(): JsonResponse
+    {
+        return $this->proxyGet("{$this->aiBaseUrl()}/kbs/rules", []);
+    }
+
     private function proxyPost(string $url, array $body): JsonResponse
     {
         $baseUrl = $this->aiBaseUrl();

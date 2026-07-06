@@ -1,0 +1,40 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ai-service",
+      "runtimeExecutable": "/Users/mahmoud/Development/DevProjects/pharma-ai/ai-service/.venv/bin/python",
+      "runtimeArgs": [
+        "-m",
+        "uvicorn",
+        "app.main:app",
+        "--port",
+        "9000",
+        "--app-dir",
+        "/Users/mahmoud/Development/DevProjects/pharma-ai/ai-service"
+      ],
+      "port": 9000
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "php",
+      "runtimeArgs": [
+        "/Users/mahmoud/Development/DevProjects/pharma-ai/backend/artisan",
+        "serve",
+        "--port=8000"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "/Users/mahmoud/Development/DevProjects/pharma-ai/frontend",
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    }
+  ]
+}

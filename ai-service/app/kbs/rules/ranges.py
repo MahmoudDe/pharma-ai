@@ -9,6 +9,7 @@ import yaml
 
 from app.kbs.config import DATA_DIR
 from app.kbs.facts import FactContext, is_percent_unit
+from app.kbs.rules.fidelity import amount_near_name
 from app.kbs.schemas import RuleFinding
 
 
@@ -93,14 +94,19 @@ class IngredientRangeRule:
                 continue
             label = ing.raw_name.strip() or (ing.normalized_name or "")
             if ing.amount > category.hard_max:
+                # If the value is printed right next to the name in the source,
+                # the extraction is faithful — the formulation is just unusual
+                # (e.g. anhydrous products). Only untraceable values gate.
+                as_printed = amount_near_name(ing.raw_name, ing.amount, facts.combined_source)
                 findings.append(
                     RuleFinding(
                         rule_id=self.rule_id,
                         family=self.family,
-                        severity="error",
+                        severity="warning" if as_printed else "error",
                         message=(
                             f"'{label}' at {ing.amount}% exceeds the plausible maximum "
                             f"of {category.hard_max}% for {category.name}"
+                            + (" (value matches the source text)" if as_printed else "")
                         ),
                         ingredient=label,
                         field="amount",

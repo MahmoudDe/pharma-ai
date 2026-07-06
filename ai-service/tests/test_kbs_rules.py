@@ -221,8 +221,12 @@ def test_range_rule_passes_clean_record():
     assert run_family([IngredientRangeRule()], make_record()) == []
 
 
-def test_preservative_over_hard_max_is_error():
+def test_preservative_over_hard_max_is_error_when_untraceable():
+    # 8% is implausible for a preservative AND nowhere near the name in the
+    # source -> extraction artifact -> error
     record = make_record(
+        source_text="CREAM BASE\nWater 92.00\nPhenoxyethanol 0.40\nMix well.",
+        vector_text="",
         ingredients=[
             IngredientLine(raw_name="Water", normalized_name="water", amount=92.0, unit="%"),
             IngredientLine(
@@ -231,11 +235,32 @@ def test_preservative_over_hard_max_is_error():
                 amount=8.0,
                 unit="%",
             ),
-        ]
+        ],
     )
     findings = run_family([IngredientRangeRule()], record)
     hits = [f for f in findings if f.ingredient == "Phenoxyethanol"]
     assert len(hits) == 1 and hits[0].severity == "error"
+
+
+def test_implausible_value_printed_in_source_is_warning():
+    # the same implausible value printed right next to the name -> the
+    # extraction is faithful, the formulation is just unusual -> warning
+    record = make_record(
+        source_text="CREAM BASE\nWater 92.00\nPhenoxyethanol 8.0\nMix well.",
+        vector_text="",
+        ingredients=[
+            IngredientLine(raw_name="Water", normalized_name="water", amount=92.0, unit="%"),
+            IngredientLine(
+                raw_name="Phenoxyethanol",
+                normalized_name="phenoxyethanol",
+                amount=8.0,
+                unit="%",
+            ),
+        ],
+    )
+    findings = run_family([IngredientRangeRule()], record)
+    hits = [f for f in findings if f.ingredient == "Phenoxyethanol"]
+    assert len(hits) == 1 and hits[0].severity == "warning"
 
 
 def test_preservative_above_typical_is_warning():

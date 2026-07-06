@@ -286,3 +286,39 @@ def test_registry_describes_builtin_and_yaml_rules():
     assert "fidelity.amount-verbatim" in ids
     assert "consistency.percent-sum" in ids
     assert any(d["source"].endswith("ingredient_ranges.yaml") for d in described)
+
+
+# ---------------------------------------------------------------- chunk fidelity
+
+def test_chunk_drift_rule():
+    from app.kbs.rules.fidelity import ChunkDriftRule
+
+    record = make_record()
+    # matching chunk -> no finding
+    facts = build_facts(record, indexed_chunk_texts=[record.source_text])
+    assert ChunkDriftRule().check(facts) == []
+    # mismatched chunk -> drift warning
+    facts = build_facts(record, indexed_chunk_texts=["Totally different indexed content."])
+    findings = ChunkDriftRule().check(facts)
+    assert len(findings) == 1 and findings[0].rule_id == "fidelity.chunk-drift"
+    # vector store unavailable -> rule skips
+    facts = build_facts(record, indexed_chunk_texts=None)
+    assert ChunkDriftRule().check(facts) == []
+
+
+def test_validate_survives_qdrant_down(kbs_db, monkeypatch):
+    import app.kbs.chunks as kbs_chunks
+
+    kbs_chunks.reset_availability()
+
+    def boom(_ids):
+        raise ConnectionError("qdrant down")
+
+    monkeypatch.setattr(
+        "app.ingestion.index.fetch_chunks_by_formulation_ids", boom, raising=True
+    )
+    report = validate_record(make_record(), markets=[], persist=False)
+    assert report.status == "verified"  # validation unaffected
+    # availability is cached off after the first failure
+    assert kbs_chunks.fetch_indexed_chunk_texts("x") is None
+    kbs_chunks.reset_availability()

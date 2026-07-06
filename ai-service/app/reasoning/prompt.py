@@ -71,12 +71,31 @@ def format_context(chunks: list[RetrievedChunk]) -> str:
     return "\n".join(lines).rstrip()
 
 
-def format_structured_formulations(records: list[FormulationRecord]) -> str:
+def format_structured_formulations(
+    records: list[FormulationRecord],
+    kbs_annotations: dict[str, tuple[float, str, list[str]]] | None = None,
+) -> str:
     if not records:
         return ""
     lines = ["STRUCTURED_FORMULATIONS (verified extracted JSON; prefer for formula_lines when confidence >= 0.7):"]
+    if kbs_annotations and any(a[1] != "verified" for a in kbs_annotations.values()):
+        lines.append(
+            "NOTE: records marked precision=review contain amounts the knowledge-base "
+            "validation could not fully verify — say so explicitly when you use them."
+        )
     for i, rec in enumerate(records, start=1):
-        lines.append(f"[F{i}] id={rec.id} name={rec.name!r} doc={rec.doc_id} pdf_p.{rec.pdf_page} confidence={rec.confidence:.2f}")
+        annotation = (kbs_annotations or {}).get(rec.id)
+        kbs_part = ""
+        if annotation:
+            score, status, _warnings = annotation
+            kbs_part = f" precision={status}({score:.2f})"
+        lines.append(
+            f"[F{i}] id={rec.id} name={rec.name!r} doc={rec.doc_id} pdf_p.{rec.pdf_page} "
+            f"confidence={rec.confidence:.2f}{kbs_part}"
+        )
+        if annotation:
+            for warning in annotation[2]:
+                lines.append(f"  ! {warning}")
         for ing in rec.ingredients[:25]:
             amt = f"{ing.amount}{ing.unit or ''}" if ing.amount is not None else "amount not stated"
             lines.append(f"  - {ing.raw_name}: {amt}")

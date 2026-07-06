@@ -40,6 +40,19 @@ def amount_in_source(amount: float, source: str) -> bool:
     return False
 
 
+def amount_near_name(raw_name: str, amount: float, source: str, window: int = 120) -> bool:
+    """Is the amount stated close to the ingredient's name in the source?"""
+    tokens = _TOKEN_RE.findall(raw_name.lower())
+    if not tokens:
+        return amount_in_source(amount, source)
+    longest = max(tokens, key=len)
+    idx = source.lower().find(longest)
+    if idx < 0:
+        return False
+    # column layouts print the amount before OR after the name
+    return amount_in_source(amount, source[max(0, idx - window) : idx + window])
+
+
 def name_in_source(raw_name: str, source_lower: str) -> bool:
     tokens = _TOKEN_RE.findall(raw_name.lower())
     if not tokens:
@@ -118,5 +131,41 @@ class NameInSourceRule:
         return findings
 
 
+class ChunkDriftRule:
+    """The record's stored source text must still match its indexed chunks.
+
+    Catches records and vector-store chunks drifting apart (e.g. a partial
+    re-ingest updated one but not the other). Skips when the vector store
+    was unavailable or holds no chunk for this record.
+    """
+
+    rule_id = "fidelity.chunk-drift"
+    family = "fidelity"
+
+    def check(self, facts: FactContext) -> list[RuleFinding]:
+        chunks = facts.indexed_chunk_texts
+        if chunks is None or not chunks:
+            return []
+        reference = facts.record.vector_text or facts.record.source_text
+        if not reference.strip():
+            return []
+        probe = re.sub(r"\s+", " ", reference.strip().lower())[:80]
+        for chunk in chunks:
+            if probe in re.sub(r"\s+", " ", chunk.strip().lower()):
+                return []
+        return [
+            RuleFinding(
+                rule_id=self.rule_id,
+                family=self.family,
+                severity="warning",
+                message=(
+                    "Indexed vector-store chunks no longer match this record's "
+                    "stored source text — record and index may be out of sync"
+                ),
+                field="vector_text",
+            )
+        ]
+
+
 def build_rules() -> list:
-    return [AmountVerbatimRule(), NameInSourceRule()]
+    return [AmountVerbatimRule(), NameInSourceRule(), ChunkDriftRule()]

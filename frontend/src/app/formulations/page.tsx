@@ -7,10 +7,13 @@ import { StructuredFormulaPanel } from "@/components/chat/StructuredFormulaPanel
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { Spinner } from "@/components/ui/Spinner";
+import { KbsBadge, KbsReportPanel } from "@/components/formula/KbsBadge";
 import {
   fetchFormulationDetail,
   fetchFormulationSummaries,
+  fetchKbsReport,
   type FormulationSummary,
+  type KbsReport,
 } from "@/lib/formulations";
 import { sourcePdfUrl } from "@/lib/sources";
 import type { StructuredFormulationView } from "@/types/chat";
@@ -22,6 +25,7 @@ export default function FormulationsPage() {
   const [summaries, setSummaries] = useState<FormulationSummary[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<StructuredFormulationView | null>(null);
+  const [kbsReport, setKbsReport] = useState<KbsReport | null>(null);
   const [comparePool, setComparePool] = useState<StructuredFormulationView[]>([]);
   const [loading, setLoading] = useState(true);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -65,6 +69,10 @@ export default function FormulationsPage() {
       })
       .catch((e) => setError(e instanceof Error ? e.message : "Failed to load detail"))
       .finally(() => setDetailLoading(false));
+    setKbsReport(null);
+    fetchKbsReport(selectedId)
+      .then(setKbsReport)
+      .catch(() => setKbsReport(null)); // precision report is optional decoration
   }, [selectedId]);
 
   const selectedSummary = summaries.find((s) => s.formulation_id === selectedId);
@@ -140,7 +148,10 @@ export default function FormulationsPage() {
                                 style={{ background: "var(--brand-gradient-vivid)" }}
                               />
                             ) : null}
-                            <p className="text-sm font-semibold text-text-primary">{item.name}</p>
+                            <p className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                              <span className="min-w-0 flex-1 truncate">{item.name}</span>
+                              <KbsBadge status={item.kbs_status} score={item.precision_score} />
+                            </p>
                             <p className="mt-0.5 text-xs text-text-secondary">
                               {item.product_types.join(", ") || "—"} · {item.ingredient_count}{" "}
                               {t("library.ingredients")}
@@ -175,6 +186,7 @@ export default function FormulationsPage() {
                         {(detail.confidence * 100).toFixed(0)}% · {detail.doc_id}
                       </span>
                     </div>
+                    {kbsReport ? <KbsReportPanel report={kbsReport} /> : null}
                     <StructuredFormulaPanel formulation={detail} />
                   </>
                 ) : !detailLoading && !detail ? (

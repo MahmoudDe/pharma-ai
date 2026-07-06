@@ -59,7 +59,38 @@ class RoutedResponse:
     fallback_stage: FallbackStage = "none"
 
 
-def _structured_view(record: FormulationRecord) -> StructuredFormulationView:
+def _kbs_annotations(
+    records: list[FormulationRecord],
+) -> dict[str, tuple[float, str, list[str]]]:
+    """id -> (precision_score, status, top warning messages); best-effort."""
+    try:
+        from app.kbs import report_store
+
+        verdicts = report_store.get_verdicts([r.id for r in records])
+        annotations: dict[str, tuple[float, str, list[str]]] = {}
+        for record in records:
+            verdict = verdicts.get(record.id)
+            if not verdict:
+                continue
+            score, status = verdict
+            warnings: list[str] = []
+            if status != "verified":
+                report = report_store.get_report(record.id)
+                if report:
+                    warnings = [f.message for f in report.errors()[:2]]
+                    if not warnings:
+                        warnings = [f.message for f in report.warnings()[:2]]
+            annotations[record.id] = (score, status, warnings)
+        return annotations
+    except Exception:  # KBS must never break the chat path
+        logger.exception("KBS annotation lookup failed")
+        return {}
+
+
+def _structured_view(
+    record: FormulationRecord,
+    annotation: tuple[float, str, list[str]] | None = None,
+) -> StructuredFormulationView:
     return StructuredFormulationView(
         formulation_id=record.id,
         name=record.name,
@@ -68,6 +99,9 @@ def _structured_view(record: FormulationRecord) -> StructuredFormulationView:
         pdf_page=record.pdf_page,
         printed_page=record.printed_page,
         confidence=record.confidence,
+        precision_score=annotation[0] if annotation else None,
+        kbs_status=annotation[1] if annotation else None,
+        kbs_warnings=annotation[2] if annotation else [],
         ingredients=[
             {
                 "raw_name": ing.raw_name,
@@ -151,7 +185,8 @@ def _build_response(
     fallback_stage: FallbackStage,
     payload: ChatTurnRequest,
 ) -> ChatTurnResponse:
-    views = [_structured_view(r) for r in structured_records[:5]]
+    annotations = _kbs_annotations(structured_records[:5])
+    views = [_structured_view(r, annotations.get(r.id)) for r in structured_records[:5]]
     return ChatTurnResponse(
         assistant_message=message,
         cited_evidence=_evidence_from_chunks(chunks, structured_records),
@@ -177,7 +212,7 @@ def _run_llm_path(
     on_token: Callable[[str], None] | None = None,
 ) -> RoutedResponse:
     context_block = format_context(chunks)
-    structured_block = format_structured_formulations(structured)
+    structured_block = format_structured_formulations(structured, _kbs_annotations(structured))
     if structured_block:
         context_block = f"{context_block}\n\n{structured_block}"
 

@@ -25,7 +25,12 @@ def validate_record(
     markets: list[str] | None = None,
     persist: bool = True,
 ) -> ValidationReport:
-    facts = build_facts(record)
+    from app.kbs.chunks import fetch_indexed_chunk_texts
+
+    facts = build_facts(
+        record,
+        indexed_chunk_texts=fetch_indexed_chunk_texts(record.id),
+    )
     findings, rules_run = run_rules(facts, get_rules())
     precision_score, family_scores = score_findings(findings)
 
