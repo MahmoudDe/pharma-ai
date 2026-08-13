@@ -118,6 +118,41 @@ export async function fetchFormulationSummaries(params?: {
   return (body as { formulations: FormulationSummary[] }).formulations ?? [];
 }
 
+export async function fetchReviewQueue(limit = 50): Promise<FormulationSummary[]> {
+  const response = await fetch(
+    `${BACKEND_URL}/api/formulations/review?limit=${limit}`,
+    { headers: { Accept: "application/json" } },
+  );
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+  return (body as { formulations: FormulationSummary[] }).formulations ?? [];
+}
+
+export async function patchFormulation(
+  formulationId: string,
+  patch: { name?: string; confidence?: number },
+): Promise<void> {
+  const response = await fetch(`${BACKEND_URL}/api/formulations/${formulationId}`, {
+    method: "PATCH",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+}
+
 export async function fetchFormulationDetail(
   formulationId: string,
 ): Promise<StructuredFormulationView> {

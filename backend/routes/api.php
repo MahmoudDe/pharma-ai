@@ -39,13 +39,16 @@ Route::post('/chat/messages', [ChatController::class, 'messages']);
 Route::post('/chat/messages/stream', [ChatController::class, 'messagesStream']);
 
 Route::get('/corpus/stats', [CorpusController::class, 'stats']);
+Route::get('/corpus/ingest-quality', [CorpusController::class, 'ingestQuality']);
 Route::get('/corpus/manifest', [CorpusController::class, 'manifest']);
 Route::post('/corpus/ingest', [CorpusController::class, 'startIngest']);
 Route::get('/corpus/ingest', [CorpusController::class, 'listIngestJobs']);
 Route::get('/corpus/ingest/{jobId}', [CorpusController::class, 'getIngestJob']);
 Route::get('/formulations', [FormulationController::class, 'index']);
+Route::get('/formulations/review', [FormulationController::class, 'review']);
 Route::post('/formulations/search', [FormulationController::class, 'search']);
 Route::get('/formulations/{formulationId}', [FormulationController::class, 'show']);
+Route::patch('/formulations/{formulationId}', [FormulationController::class, 'patch']);
 Route::post('/formulations/{formulationId}/substitutions', [FormulationController::class, 'substitutions']);
 Route::post('/formulations/{formulationId}/compliance', [FormulationController::class, 'compliance']);
 Route::get('/kbs/report/{formulationId}', [FormulationController::class, 'kbsReport']);

@@ -1,9 +1,11 @@
 from fastapi import APIRouter, HTTPException, Query
 
 from app.formulation.regulatory import check_formulation
+from app.formulation.review import list_review_queue, patch_formulation
 from app.formulation.schemas import (
     FormulationRecord,
     FormulationSearchRequest,
+    IngredientLine,
     StructuredFormulationSummary,
 )
 from app.formulation.store import get_formulation, list_formulations
@@ -23,6 +25,13 @@ class SubstitutionRequest(BaseModel):
 
 class ComplianceRequest(BaseModel):
     markets: list[str] = Field(default_factory=lambda: ["EU"])
+
+
+class FormulationPatchRequest(BaseModel):
+    name: str | None = None
+    ingredients: list[IngredientLine] | None = None
+    procedure: list[str] | None = None
+    confidence: float | None = Field(None, ge=0.0, le=1.0)
 
 
 def _to_summary(
@@ -64,12 +73,35 @@ def list_all(
     }
 
 
+@router.get("/review")
+def review_queue(
+    confidence_max: float = Query(0.75, ge=0.0, le=1.0),
+    limit: int = Query(50, ge=1, le=100),
+) -> dict:
+    items = list_review_queue(confidence_max=confidence_max, limit=limit)
+    return {"formulations": items, "count": len(items)}
+
+
 @router.get("/{formulation_id}")
 def get_one(formulation_id: str) -> FormulationRecord:
     record = get_formulation(formulation_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Formulation not found")
     return record
+
+
+@router.patch("/{formulation_id}")
+def patch_one(formulation_id: str, body: FormulationPatchRequest) -> FormulationRecord:
+    try:
+        return patch_formulation(
+            formulation_id,
+            name=body.name,
+            ingredients=body.ingredients,
+            procedure=body.procedure,
+            confidence=body.confidence,
+        )
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Formulation not found") from None
 
 
 @router.post("/search")

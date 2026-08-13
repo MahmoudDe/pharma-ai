@@ -111,3 +111,28 @@ def count_reports() -> int:
         return conn.execute("SELECT COUNT(*) FROM reports").fetchone()[0]
     finally:
         conn.close()
+
+
+def list_reports_by_status(
+    statuses: list[str],
+    *,
+    limit: int = 100,
+) -> list[tuple[str, float, str]]:
+    if not statuses or not DB_PATH.is_file():
+        return []
+    placeholders = ",".join("?" for _ in statuses)
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        rows = conn.execute(
+            f"""
+            SELECT formulation_id, precision_score, status
+            FROM reports
+            WHERE status IN ({placeholders})
+            ORDER BY precision_score ASC
+            LIMIT ?
+            """,
+            (*statuses, limit),
+        ).fetchall()
+    finally:
+        conn.close()
+    return [(r[0], float(r[1]), r[2]) for r in rows]
