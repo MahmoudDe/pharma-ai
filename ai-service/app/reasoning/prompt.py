@@ -101,3 +101,31 @@ def format_structured_formulations(
             lines.append(f"  - {ing.raw_name}: {amt}")
         lines.append("")
     return "\n".join(lines).rstrip()
+
+
+def format_conversation_history(
+    history: list,
+    *,
+    max_messages: int = 10,
+    max_chars_per_message: int = 600,
+) -> str:
+    """Render prior turns for the LLM (not used for citation)."""
+    if not history:
+        return ""
+    recent = history[-max_messages:]
+    lines = ["CONVERSATION HISTORY (context only; cite SOURCES below, not this block):"]
+    for msg in recent:
+        role = getattr(msg, "role", None) or (msg.get("role") if isinstance(msg, dict) else "")
+        content = getattr(msg, "content", None) or (
+            msg.get("content") if isinstance(msg, dict) else ""
+        )
+        content = str(content).strip()
+        if not content:
+            continue
+        label = "User" if role == "user" else "Assistant"
+        if len(content) > max_chars_per_message:
+            content = content[:max_chars_per_message].rsplit(" ", 1)[0] + " …"
+        lines.append(f"{label}: {content}")
+    if len(lines) <= 1:
+        return ""
+    return "\n".join(lines)

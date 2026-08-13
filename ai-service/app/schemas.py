@@ -35,10 +35,16 @@ class SuggestedNextAction(BaseModel):
     payload: Optional[dict[str, Any]] = None
 
 
+class ChatHistoryMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
 class ChatTurnRequest(BaseModel):
     thread_id: str
     message: str
     structured_brief: Optional[StructuredBrief] = None
+    history: Optional[list[ChatHistoryMessage]] = None
 
 
 class StructuredFormulationView(BaseModel):
@@ -66,6 +72,7 @@ class ChatTurnResponse(BaseModel):
     llm_used: bool = False
     search_confidence: Optional[float] = None
     fallback_stage: Optional[FallbackStage] = None
+    rewritten_query: Optional[str] = None
 
 
 class HealthResponse(BaseModel):

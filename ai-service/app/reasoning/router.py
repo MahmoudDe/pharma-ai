@@ -15,8 +15,14 @@ from app.formulation.search import (
 )
 from app.formulation.store import get_formulation
 from app.reasoning.llm import reason, reason_stream
-from app.reasoning.prompt import SYSTEM_PROMPT, format_context, format_structured_formulations
+from app.reasoning.prompt import (
+    SYSTEM_PROMPT,
+    format_context,
+    format_conversation_history,
+    format_structured_formulations,
+)
 from app.reasoning.query_expand import expand_query
+from app.reasoning.query_rewrite import rewrite_search_query
 from app.reasoning.templates import (
     format_compare_response,
     format_lookup_response,
@@ -184,6 +190,7 @@ def _build_response(
     search_confidence: float | None,
     fallback_stage: FallbackStage,
     payload: ChatTurnRequest,
+    rewritten_query: str | None = None,
 ) -> ChatTurnResponse:
     annotations = _kbs_annotations(structured_records[:5])
     views = [_structured_view(r, annotations.get(r.id)) for r in structured_records[:5]]
@@ -197,6 +204,7 @@ def _build_response(
         llm_used=llm_used,
         search_confidence=search_confidence,
         fallback_stage=fallback_stage,
+        rewritten_query=rewritten_query,
     )
 
 
@@ -209,9 +217,17 @@ def _run_llm_path(
     *,
     fallback_stage: FallbackStage = "none",
     search_confidence: float | None = None,
+    rewritten_query: str | None = None,
     on_token: Callable[[str], None] | None = None,
 ) -> RoutedResponse:
+    settings = get_settings()
+    history_block = format_conversation_history(
+        payload.history or [],
+        max_messages=settings.chat_history_max_messages,
+    )
     context_block = format_context(chunks)
+    if history_block:
+        context_block = f"{history_block}\n\n{context_block}"
     structured_block = format_structured_formulations(structured, _kbs_annotations(structured))
     if structured_block:
         context_block = f"{context_block}\n\n{structured_block}"
@@ -242,6 +258,7 @@ def _run_llm_path(
             search_confidence=search_confidence,
             fallback_stage=fallback_stage,
             payload=payload,
+            rewritten_query=rewritten_query,
         ),
         classification=classify_query(query),
         chunks=chunks,
@@ -304,13 +321,21 @@ def route_chat(
         )
 
     settings = get_settings()
-    search_query = english_search_query(query)
+    rewritten, was_rewritten = rewrite_search_query(query, payload.history or [])
+    search_query = english_search_query(rewritten)
+    rewritten_label = search_query if was_rewritten else None
     classification = classify_query(search_query)
     route = classification.route
     intent = merge_intent_with_brief(classification.intent, payload.structured_brief)
     signals = extract_query_signals(search_query)
 
-    logger.info("Route=%s query=%r search=%r", route, query[:80], search_query[:80])
+    logger.info(
+        "Route=%s query=%r search=%r rewritten=%s",
+        route,
+        query[:80],
+        search_query[:80],
+        was_rewritten,
+    )
 
     if route == "reasoning":
         chunks = search(search_query, top_k=TOP_K, intent=intent)
@@ -326,6 +351,7 @@ def route_chat(
                     search_confidence=None,
                     fallback_stage="failed",
                     payload=payload,
+                    rewritten_query=rewritten_label,
                 ),
                 classification=classification,
                 fallback_stage="failed",
@@ -337,6 +363,7 @@ def route_chat(
             "reasoning",
             payload,
             fallback_stage="none",
+            rewritten_query=rewritten_label,
             on_token=on_token,
         )
 
@@ -392,6 +419,7 @@ def route_chat(
                 search_confidence=struct_result.top_confidence,
                 fallback_stage="none",
                 payload=payload,
+                rewritten_query=rewritten_label,
             ),
             classification=classification,
             structured_result=struct_result,
@@ -419,6 +447,7 @@ def route_chat(
                 payload,
                 fallback_stage="none",
                 search_confidence=struct_result.top_confidence,
+                rewritten_query=rewritten_label,
                 on_token=on_token,
             )
         msg = format_lookup_response(structured_records)
@@ -435,6 +464,7 @@ def route_chat(
                 search_confidence=struct_result.top_confidence,
                 fallback_stage="none",
                 payload=payload,
+                rewritten_query=rewritten_label,
             ),
             classification=classification,
             structured_result=struct_result,
@@ -452,6 +482,7 @@ def route_chat(
                 payload,
                 fallback_stage="vector",
                 search_confidence=struct_result.top_confidence,
+                rewritten_query=rewritten_label,
                 on_token=on_token,
             )
         titles = [
@@ -471,6 +502,7 @@ def route_chat(
                 search_confidence=struct_result.top_confidence,
                 fallback_stage="vector",
                 payload=payload,
+                rewritten_query=rewritten_label,
             ),
             classification=classification,
             structured_result=struct_result,
@@ -502,6 +534,7 @@ def route_chat(
                         search_confidence=struct_alt.top_confidence,
                         fallback_stage="expanded",
                         payload=payload,
+                        rewritten_query=rewritten_label,
                     ),
                     classification=classification,
                     fallback_stage="expanded",
@@ -522,6 +555,7 @@ def route_chat(
                         search_confidence=struct_alt.top_confidence,
                         fallback_stage="expanded",
                         payload=payload,
+                        rewritten_query=rewritten_label,
                     ),
                     classification=classification,
                     chunks=chunks_alt,
@@ -547,6 +581,7 @@ def route_chat(
             search_confidence=struct_result.top_confidence,
             fallback_stage="failed",
             payload=payload,
+            rewritten_query=rewritten_label,
         ),
         classification=classification,
         structured_result=struct_result,

@@ -78,6 +78,10 @@ class Settings(BaseSettings):
     formulation_store: str = "sqlite"
     database_url: str = ""
 
+    # Conversation context (Phase A)
+    chat_history_max_messages: int = 10
+    enable_conversation_rewrite: bool = True
+
     # OCR for scanned PDF pages
     ocr_enabled: bool = True
     ocr_lang: str = "eng"

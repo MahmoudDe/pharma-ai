@@ -77,7 +77,7 @@ flowchart LR
 | FR-RET-07 | Transparent failure message when no grounded sources found | ✅ |
 | FR-RET-08 | Debug retrieval endpoint for developers (`GET /debug/retrieve`) | ✅ |
 | FR-RET-09 | Hybrid BM25 + dense retrieval | ✅ |
-| FR-RET-10 | Persistent query rewriting / conversation-aware retrieval | 🔲 |
+| FR-RET-10 | Persistent query rewriting / conversation-aware retrieval | 🟡 (history + rewrite in router; Laravel passes thread history) |
 | FR-RET-11 | Multilingual retrieval (Arabic queries on English books) | ✅ |
 
 ### 2.4 Chat & reasoning
@@ -128,7 +128,7 @@ flowchart LR
 | FR-UI-10 | Structured brief form (product type, constraints) before send | ✅ |
 | FR-UI-11 | Arabic / English UI with translation files | ✅ |
 | FR-UI-12 | RTL layout for Arabic | ✅ |
-| FR-UI-13 | Admin dashboard for ingest status and corpus stats | ✅ (`/corpus`) |
+| FR-UI-13 | Corpus dashboard for ingest status and knowledge-base stats | ✅ (`/corpus`) |
 | FR-UI-14 | Open source PDF at cited page from evidence panel | ✅ |
 
 ### 2.7 Backend (Laravel)
@@ -148,7 +148,6 @@ flowchart LR
 | FR-API-11 | User authentication (login, API tokens) | 🔲 |
 | FR-API-12 | Per-user thread isolation | 🔲 |
 | FR-API-13 | Rate limiting and abuse protection | 🔲 |
-| FR-API-14 | Role-based access (admin vs formulator vs read-only) | 🔲 |
 
 ### 2.8 Warehouse inventory → product discovery
 
@@ -279,7 +278,7 @@ Rough ordering for 🔲 items above:
 
 | Milestone | Theme | Examples |
 |-----------|--------|----------|
-| **M1 — Auth & multi-user** | Production-ready access | Laravel Sanctum/session auth, per-user threads, rate limits |
+| **M1 — Multi-user (optional)** | Production-ready access | Per-user threads, rate limits (no role tiers) |
 | **M2 — Brief-driven search** | Constraint-aware answers | Wire `structured_brief` into retrieval and banned-ingredient filters |
 | **M3 — Corpus scale** | More sources | OCR, DOCX, PostgreSQL formulations, ingest queue |
 | **M4 — Retrieval v2** | Higher precision | BM25 hybrid, conversation context, Arabic query support |
@@ -294,6 +293,7 @@ Rough ordering for 🔲 items above:
 - Clinical trial management or medical diagnosis
 - GMP batch manufacturing execution (MES)
 - Real-time collaboration / Google Docs-style co-editing
+- Role-based access (admin / formulator / read-only tiers)
 - Training custom foundation models (fine-tuning is 🔲 future research only)
 
 ---

@@ -72,7 +72,7 @@
 | Hybrid retrieval | FR-RET-09, FR-RET-03 | Improves recall; structured-first search already works. |
 | Streaming chat | FR-CHAT-13 | UX polish for reasoning turns. |
 | Formulation tools | FR-TOOL-02, FR-TOOL-07 | Batch calculator and side-by-side compare. |
-| Authentication and tenancy | FR-API-08, FR-API-09, FR-API-10, FR-API-11 | Required before multi-user production. |
+| Authentication and tenancy | FR-API-11, FR-API-12 | Optional before multi-user production (no admin roles). |
 | Security (production) | NFR-SEC-03, NFR-SEC-04, NFR-SEC-06 | Auth, TLS, tenant isolation. |
 | Scale and operations | FR-ING-10, NFR-PERF-06, NFR-MAINT-05, NFR-MAINT-06 | Cron ingest, job queue, metrics, CI. |
 | More sources | FR-ING-11, FR-ING-12 | OCR for scanned PDFs; XLSX/web ingest. |
