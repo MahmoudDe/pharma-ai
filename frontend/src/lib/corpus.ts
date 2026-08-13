@@ -10,6 +10,31 @@ export interface CorpusStats {
   source_documents: { doc_id: string; filename: string }[];
   ingest_manifest?: Record<string, IngestManifestDoc>;
   formulation_store?: string;
+  ocr_pages_total?: number;
+  ocr_documents_count?: number;
+}
+
+export interface IngestQualityReport {
+  passed: boolean;
+  ocr_enabled: boolean;
+  ocr: {
+    documents_with_ocr: number;
+    total_ocr_pages: number;
+    documents: IngestManifestDoc[];
+  };
+  ingest_quality: {
+    total_formulas: number;
+    share_6plus_ingredients: number;
+    share_with_amounts: number;
+    share_with_procedure: number;
+    share_high_confidence: number;
+    share_2_ingredient_only: number;
+    median_ingredients: number;
+    avg_ingredients: number;
+    by_method: Record<string, number>;
+    thin_examples: string[];
+    failures: string[];
+  };
 }
 
 export interface IngestManifestDoc {
@@ -48,6 +73,21 @@ export async function fetchCorpusStats(): Promise<CorpusStats> {
     );
   }
   return body as CorpusStats;
+}
+
+export async function fetchIngestQuality(): Promise<IngestQualityReport> {
+  const response = await fetch(`${BACKEND_URL}/api/corpus/ingest-quality`, {
+    headers: { Accept: "application/json" },
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+  return body as IngestQualityReport;
 }
 
 export async function startIngestJob(options?: {

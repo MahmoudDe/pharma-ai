@@ -19,6 +19,11 @@ class CorpusController extends Controller
         return $this->proxyGet("{$this->aiBaseUrl()}/corpus/manifest");
     }
 
+    public function ingestQuality(): JsonResponse
+    {
+        return $this->proxyGet("{$this->aiBaseUrl()}/corpus/ingest-quality");
+    }
+
     public function startIngest(\Illuminate\Http\Request $request): JsonResponse
     {
         return $this->proxyPost("{$this->aiBaseUrl()}/corpus/ingest", $request->all());

@@ -6,6 +6,7 @@ import sqlite3
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
+from app.eval.corpus_health import build_corpus_health_report
 from app.formulation.store import DB_PATH, count_formulations, get_store
 from app.ingestion.index import collection_stats
 from app.ingestion.jobs import enqueue_and_start, get_job, list_jobs, load_manifest
@@ -39,6 +40,7 @@ def corpus_stats() -> dict:
         )
         conn.close()
     manifest = load_manifest()
+    ocr_pages_total = sum(int(m.get("ocr_pages_count") or 0) for m in manifest.values())
     return {
         "ready": report.ok,
         "dependencies": [
@@ -51,6 +53,38 @@ def corpus_stats() -> dict:
         "source_documents": list_source_documents(),
         "ingest_manifest": manifest,
         "formulation_store": get_store().backend_name(),
+        "ocr_pages_total": ocr_pages_total,
+        "ocr_documents_count": sum(
+            1 for m in manifest.values() if int(m.get("ocr_pages_count") or 0) > 0
+        ),
+    }
+
+
+@router.get("/ingest-quality")
+def ingest_quality() -> dict:
+    health = build_corpus_health_report()
+    iq = health.ingest_quality
+    return {
+        "passed": iq.passed,
+        "ocr_enabled": health.ocr_enabled,
+        "ocr": {
+            "documents_with_ocr": health.ocr.documents_with_ocr,
+            "total_ocr_pages": health.ocr.total_ocr_pages,
+            "documents": health.ocr.documents,
+        },
+        "ingest_quality": {
+            "total_formulas": iq.total_formulas,
+            "share_6plus_ingredients": iq.share_6plus_ingredients,
+            "share_with_amounts": iq.share_with_amounts,
+            "share_with_procedure": iq.share_with_procedure,
+            "share_high_confidence": iq.share_high_confidence,
+            "share_2_ingredient_only": iq.share_2_ingredient_only,
+            "median_ingredients": iq.median_ingredients,
+            "avg_ingredients": iq.avg_ingredients,
+            "by_method": iq.by_method,
+            "thin_examples": iq.thin_examples,
+            "failures": iq.failures,
+        },
     }
 
 

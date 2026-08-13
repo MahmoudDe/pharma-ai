@@ -8,23 +8,31 @@ import { useLocale } from "@/components/i18n/LocaleProvider";
 import {
   fetchCorpusStats,
   fetchIngestJobs,
+  fetchIngestQuality,
   startIngestJob,
   type CorpusStats,
   type IngestJob,
+  type IngestQualityReport,
 } from "@/lib/corpus";
 import { sourcePdfUrl } from "@/lib/sources";
 
 export default function CorpusPage() {
   const { t } = useLocale();
   const [stats, setStats] = useState<CorpusStats | null>(null);
+  const [quality, setQuality] = useState<IngestQualityReport | null>(null);
   const [jobs, setJobs] = useState<IngestJob[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [ingestBusy, setIngestBusy] = useState(false);
 
   const refresh = useCallback(async () => {
-    const [s, j] = await Promise.all([fetchCorpusStats(), fetchIngestJobs()]);
+    const [s, q, j] = await Promise.all([
+      fetchCorpusStats(),
+      fetchIngestQuality(),
+      fetchIngestJobs(),
+    ]);
     setStats(s);
+    setQuality(q);
     setJobs(j);
   }, []);
 
@@ -128,7 +136,48 @@ export default function CorpusPage() {
                 {stats.formulation_store ? (
                   <p className="text-xs text-text-secondary">
                     {t("corpus.storeBackend")}: <span className="font-semibold">{stats.formulation_store}</span>
+                    {(stats.ocr_pages_total ?? 0) > 0 ? (
+                      <span className="ms-2">
+                        · {t("corpus.ocrTotal")}: {stats.ocr_pages_total}
+                      </span>
+                    ) : null}
                   </p>
+                ) : null}
+
+                {quality ? (
+                  <section className="surface-inset p-4">
+                    <h3 className="text-sm font-bold text-text-primary">{t("corpus.qualityTitle")}</h3>
+                    <p
+                      className={`mt-2 text-xs font-semibold ${
+                        quality.passed ? "text-success" : "text-warning"
+                      }`}
+                    >
+                      {quality.passed ? t("corpus.qualityPassed") : t("corpus.qualityFailed")}
+                    </p>
+                    <div className="mt-3 grid gap-2 text-xs text-text-secondary sm:grid-cols-2">
+                      <span>
+                        {t("corpus.qualityMedianIngredients")}:{" "}
+                        {quality.ingest_quality.median_ingredients.toFixed(1)}
+                      </span>
+                      <span>
+                        {t("corpus.qualityWithAmounts")}:{" "}
+                        {(quality.ingest_quality.share_with_amounts * 100).toFixed(0)}%
+                      </span>
+                    </div>
+                    {quality.ingest_quality.failures.length > 0 ? (
+                      <ul className="mt-2 space-y-1 text-xs text-warning">
+                        {quality.ingest_quality.failures.map((f) => (
+                          <li key={f}>{f}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    <Link
+                      href="/formulations/review"
+                      className="mt-3 inline-block text-xs font-semibold text-secondary hover:underline"
+                    >
+                      {t("corpus.reviewLink")} →
+                    </Link>
+                  </section>
                 ) : null}
 
                 <section className="surface-inset p-4">
