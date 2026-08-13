@@ -1,0 +1,3464 @@
+{
+ "description": "KBS calibration golden set. Labels: 'good' = extraction independently verified (every amount verbatim in source, plausible total), 'bad' = clearly defective extraction (implausible totals, non-positive amounts, or mostly missing amounts). Anchored by records manually inspected against their book pages during the 2026-07-06 parser-fix sessions.",
+ "entries": [
+  {
+   "label": "good",
+   "record": {
+    "id": "827e77cb-8a5b-549d-bdd4-75bc7eaa03c2",
+    "name": "Prescription 5.34 Silicone gel (transparent gel)",
+    "product_types": [],
+    "doc_id": "formulas_ingredients_and_production_of_cosmetics_technology_of_skin_and_hair_care_products_in_japan_pdfdrive",
+    "doc_title": "Formulas, Ingredients and Production of Cosmetics_ Technology of Skin- and Hair-Care Products in Japan ( PDFDrive )",
+    "pdf_page": 180,
+    "printed_page": 170,
+    "source_text": "Prescription 5.34 Silicone gel (transparent gel)\n\nIngredient \n % (100 g)\n\n1 \n A1 \n Ceteth-2 \n 1.50 \n 2 \n A1 \n Ceteth-20 \n 4.50 \n 3 \n A1 \n Isostearyl alcohol \n 1.00 \n 4 \n A1 \n Alkyl ethylhexanoate \n 4.00 \n 5 \n A1 \n Isodecyl neopentanoate \n 4.00 \n 6 \n A2 \n Cyclomethicone dimethicone (highly polymerized, 10%) \n 30.00 \n 7 \n A2 \n Dimethicone 50cs \n 10.00 \n 8 \n A2 \n Cyclomethicone \n 20.00 \n 9 \n B1 \n Propylene glycol \n 0.80 \n 10 \n B1 \n Methyl paraben \n 0.10 \n 11 \n B1 \n Propyl paraben \n 0.10 \n 12 \n B2 \n Glycerin \n 6.00 \n 13 \n B2 \n Sodium laureth-4 carboxylate \n 8.00 \n 14 \n B2 \n Sodium benzoate \n 0.20 \n 15 \n B2 \n Puri \ufb01 ed water \n 9.80 \n Directions \n Use homomixer or disperser \n 1) Heat 1, 2, 3, 4, and 5 to 75\u00b0C, and homogenize. Add 6, 7, and 8 and heat to 75\u00b0C. (A) \n 2) Add 10 and 11 to 9, heat to dissolve, add 12, 13 14, and 15, and heat to 75\u00b0C. (B) \n 3) Gradually add B into A while stirring A at a high speed. Stir thoroughly. Water is not to be added",
+    "ingredients": [
+     {
+      "raw_name": "A1 Ceteth-2",
+      "normalized_name": "a1 ceteth-2",
+      "amount": 1.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "A1 Ceteth-20",
+      "normalized_name": "a1 ceteth-20",
+      "amount": 4.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "A1 Isostearyl alcohol",
+      "normalized_name": "isostearyl alcohol",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "A1 Alkyl ethylhexanoate",
+      "normalized_name": "alkyl ethylhexanoate",
+      "amount": 4.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "A1 Isodecyl neopentanoate",
+      "normalized_name": "isodecyl neopentanoate",
+      "amount": 4.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "A2 Cyclomethicone dimethicone (highly polymerized, 10%)",
+      "normalized_name": "cyclomethicone dimethicone highly polymerized",
+      "amount": 30.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "A2 Dimethicone 50cs",
+      "normalized_name": "dimethicone",
+      "amount": 10.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "A2 Cyclomethicone",
+      "normalized_name": "cyclomethicone",
+      "amount": 20.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B1 Propylene glycol",
+      "normalized_name": "propylene glycol",
+      "amount": 0.8,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B1 Methyl paraben",
+      "normalized_name": "methyl paraben",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B1 Propyl paraben",
+      "normalized_name": "propyl paraben",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B2 Glycerin",
+      "normalized_name": "glycerin",
+      "amount": 6.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B2 Sodium laureth-4 carboxylate",
+      "normalized_name": "sodium carboxylate",
+      "amount": 8.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B2 Sodium benzoate",
+      "normalized_name": "sodium benzoate",
+      "amount": 0.2,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B2 Puri \ufb01 ed water",
+      "normalized_name": "puri \ufb01 ed water",
+      "amount": 9.8,
+      "unit": "%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Heat 1, 2, 3, 4, and 5 to 75\u00b0C, and homogenize. Add 6, 7, and 8 and heat to 75\u00b0C. (A)",
+     "Add 10 and 11 to 9, heat to dissolve, add 12, 13 14, and 15, and heat to 75\u00b0C. (B)",
+     "Gradually add B into A while stirring A at a high speed. Stir thoroughly. Water is not to be added"
+    ],
+    "vector_text": "Formula: Prescription 5.34 Silicone gel (transparent gel)\nIngredients (15):\n- a1 ceteth-2 1.5 %\n- a1 ceteth-20 4.5 %\n- isostearyl alcohol 1.0 %\n- alkyl ethylhexanoate 4.0 %\n- isodecyl neopentanoate 4.0 %\n- cyclomethicone dimethicone highly polymerized 30.0 %\n- dimethicone 10.0 %\n- cyclomethicone 20.0 %\n- propylene glycol 0.8 %\n- methyl paraben 0.1 %\n- propyl paraben 0.1 %\n- glycerin 6.0 %\n- sodium carboxylate 8.0 %\n- sodium benzoate 0.2 %\n- puri \ufb01 ed water 9.8 %\nProcedure:\n1. Heat 1, 2, 3, 4, and 5 to 75\u00b0C, and homogenize. Add 6, 7, and 8 and heat to 75\u00b0C. (A)\n2. Add 10 and 11 to 9, heat to dissolve, add 12, 13 14, and 15, and heat to 75\u00b0C. (B)\n3. Gradually add B into A while stirring A at a high speed. Stir thoroughly. Water is not to be added",
+    "extraction_method": "japan_rx",
+    "confidence": 0.9089
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "b5d305b1-671f-5a42-93e3-40156d88697b",
+    "name": "Anti-Aqina Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 70,
+    "printed_page": 47,
+    "source_text": "Anti-Aqina Cream\n\nAlpha Hydroxy Acids oil-in-water cream \nTN and Bentone LT rheological additives. \ncontaining Bentone Gel\n\nwt% \n6.00 \n2.00 \n4.00 \n3.00 \n5.00 \n4.00 \n2.00 \n2.50 \n4.00 \n3.00 \n13.36 \n0.20\n\nInqredients: \nGlyceryl Stearate (and) PEG 100 Stearate \nCetearyl Alcohol \nJojoba Oil \nSunflower Seed Oil \nC12-15 Alkyl Benzoate \nGlycerine USP, Palm Based \nVitamin E Acetate concentrate \nAlmond Protein Partial Hydrolysate \nMixed Fruit Extracts \nBentone Gel TN \nBentone LT (3% dispersion in water) \nPerfume \nMethyldibromoglutaronitrile and Dipropylene Glycol \n0.20 \nDemineralized Water \nBal to 100%\n\nBentone LT dispersion: \nBentone LT \nDeionized Water \n3.00 \n97.00\n\nMethod of Manufacture: \n1. Thoroughly disperse the Bentone Gel TN in the C12-15 Alkyl \nBenzoate, Jojoba Oil and Sunflower Seed Oil, by warming to 40C \nand stirring until uniform. Add the remaining components of \nthe oil phase (GMS, Cetearyl Alcohol, and Vitamin E Acetate) \nand heat to 75-80C. \n2. Heat the aqueous phase (Glycerine, Protein, Bentone LT disper- \nsion and water) to 75-8OC. \n3. Using high shear mixing, add the two phases together and \ncontinue to homogenize. \n4. At 45-50C transfer to a propeller stirrer and cool to 20C. \n5. Add the Mixed Fruit Acids and stir well. Add the perfume and\n\npreservative.\n\nBentone LT Dispersion: \n1. Prepare a 3% dispersion of Bentone LT additive in deionized \nwater using a rotor-stator or similar high-shear mixer \n(e.g. Silverson). \nStart the mixer in the water, steadily add the Bentone LT \nto the vortex and stir until completely dispersed (15-20 \nmins) .\n\n2. Allow the suspension to stand to let any entrapped air\n\nescape.\n\nSOURCE: Rheox, Inc.: Elementis Specialties: Suggested Formula",
+    "ingredients": [
+     {
+      "raw_name": "Glyceryl Stearate (and) PEG 100 Stearate",
+      "normalized_name": "glyceryl stearate peg stearate",
+      "amount": 6.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Cetearyl Alcohol",
+      "normalized_name": "cetearyl alcohol",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Jojoba Oil",
+      "normalized_name": "jojoba oil",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Sunflower Seed Oil",
+      "normalized_name": "sunflower seed oil",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "C12-15 Alkyl Benzoate",
+      "normalized_name": "alkyl benzoate",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Glycerine USP, Palm Based",
+      "normalized_name": "glycerine usp palm based",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Vitamin E Acetate concentrate",
+      "normalized_name": "vitamin e acetate concentrate",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Almond Protein Partial Hydrolysate",
+      "normalized_name": "almond protein partial hydrolysate",
+      "amount": 2.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Mixed Fruit Extracts",
+      "normalized_name": "mixed fruit extract",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Bentone Gel TN",
+      "normalized_name": "bentone gel tn",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Bentone LT (3% dispersion in water)",
+      "normalized_name": "bentone lt dispersion water",
+      "amount": 13.36,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Perfume",
+      "normalized_name": "perfume",
+      "amount": 0.2,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Methyldibromoglutaronitrile and Dipropylene Glycol",
+      "normalized_name": "methyldibromoglutaronitrile dipropylene glycol",
+      "amount": 0.2,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Demineralized Water",
+      "normalized_name": "demineralized water",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Bal to 100%",
+      "normalized_name": "bal",
+      "amount": 97.0,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Heat the aqueous phase (Glycerine, Protein, Bentone LT disper-",
+     "Using high shear mixing, add the two phases together and",
+     "At 45-50C transfer to a propeller stirrer and cool to 20C.",
+     "Add the Mixed Fruit Acids and stir well. Add the perfume and",
+     "Prepare a 3% dispersion of Bentone LT additive in deionized"
+    ],
+    "vector_text": "Formula: Anti-Aqina Cream\nProduct types: cream\nIngredients (15):\n- glyceryl stearate peg stearate 6.0 wt%\n- cetearyl alcohol 2.0 wt%\n- jojoba oil 4.0 wt%\n- sunflower seed oil 3.0 wt%\n- alkyl benzoate 5.0 wt%\n- glycerine usp palm based 4.0 wt%\n- vitamin e acetate concentrate 2.0 wt%\n- almond protein partial hydrolysate 2.5 wt%\n- mixed fruit extract 4.0 wt%\n- bentone gel tn 3.0 wt%\n- bentone lt dispersion water 13.36 wt%\n- perfume 0.2 wt%\n- methyldibromoglutaronitrile dipropylene glycol 0.2 wt%\n- demineralized water 3.0 wt%\n- bal 97.0 wt%\nProcedure:\n1. Heat the aqueous phase (Glycerine, Protein, Bentone LT disper-\n2. Using high shear mixing, add the two phases together and\n3. At 45-50C transfer to a propeller stirrer and cool to 20C.\n4. Add the Mixed Fruit Acids and stir well. Add the perfume and\n5. Prepare a 3% dispersion of Bentone LT additive in deionized",
+    "extraction_method": "leading_amounts",
+    "confidence": 0.9565
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "e01da597-1e87-50e8-bd0e-30946abb3bb7",
+    "name": "Diaper Rash Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 39,
+    "printed_page": 16,
+    "source_text": "Wt% \n53.27 \n1.00 \n0.18 \n0.05 \n15.00 \n5.00 \n3.00 \n4.00 \n3.00 \n0.50 \n15.00\n\nMaterial: \nA Deionized Water \nB Propylene Glycol \nC Methylparaben \nD Propylparaben \nE Petrolatum \nF Cetiol LC (Coco-caprylate/caprate) \nG Glycerol Monoisostearate \nH Paraffin Wax 160/165 \nI Arlacel 83 (Sorbitan sesquioleate) \nJ Vitamin A/D3 \nK Lubrasil DS\n\nProcedure: \n1. Prepare the preservative blend by dissolving the methylparaben \nand propylparaben in the propylene glycol with a small amount \nof heat.",
+    "ingredients": [
+     {
+      "raw_name": "A Deionized Water",
+      "normalized_name": "deionized water",
+      "amount": 53.27,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "B Propylene Glycol",
+      "normalized_name": "b propylene glycol",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "C Methylparaben",
+      "normalized_name": "c methylparaben",
+      "amount": 0.18,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "D Propylparaben",
+      "normalized_name": "d propylparaben",
+      "amount": 0.05,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "E Petrolatum",
+      "normalized_name": "e petrolatum",
+      "amount": 15.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "F Cetiol LC (Coco-caprylate/caprate)",
+      "normalized_name": "f cetiol lc coco caprylate caprate",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "G Glycerol Monoisostearate",
+      "normalized_name": "g glycerol monoisostearate",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "H Paraffin Wax 160/165",
+      "normalized_name": "h paraffin wax",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "I Arlacel 83 (Sorbitan sesquioleate)",
+      "normalized_name": "arlacel sorbitan sesquioleate",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "J Vitamin A/D3",
+      "normalized_name": "j vitamin",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "K Lubrasil DS",
+      "normalized_name": "k lubrasil ds",
+      "amount": 15.0,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Prepare the preservative blend by dissolving the methylparaben"
+    ],
+    "vector_text": "Formula: Diaper Rash Cream\nProduct types: cream\nIngredients (11):\n- deionized water 53.27 wt%\n- b propylene glycol 1.0 wt%\n- c methylparaben 0.18 wt%\n- d propylparaben 0.05 wt%\n- e petrolatum 15.0 wt%\n- f cetiol lc coco caprylate caprate 5.0 wt%\n- g glycerol monoisostearate 3.0 wt%\n- h paraffin wax 4.0 wt%\n- arlacel sorbitan sesquioleate 3.0 wt%\n- j vitamin 0.5 wt%\n- k lubrasil ds 15.0 wt%\nProcedure:\n1. Prepare the preservative blend by dissolving the methylparaben",
+    "extraction_method": "inline_wt",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "5392046f-d9f6-55ff-82ea-ae26f730acf1",
+    "name": "Starting formulation for a hand soap containing d-Limonene",
+    "product_types": [
+     "soap"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 292,
+    "printed_page": null,
+    "source_text": "Soaps and Hand Cleaners 269\n\nd-Limonene Hand Soap \nStarting formulation for a hand soap containing d-Limonene \nas a grease cutter.\n\nWt%\n\nInuredients: \nPhase A: \nWater, DI \nCarbopol 1382 \nTriethanolamine 99%\n\n77.40 \n1.00 \n1.50\n\nPhase B: \nSulfochem ES-2\n\n5.10\n\nPhase C: \nd-Limonene\n\n15.00\n\nBlending Procedure:",
+    "ingredients": [
+     {
+      "raw_name": "Water, DI",
+      "normalized_name": "water di",
+      "amount": 77.4,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Carbopol 1382",
+      "normalized_name": "carbopol",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Triethanolamine 99%",
+      "normalized_name": "triethanolamine",
+      "amount": 1.5,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Sulfochem ES-2",
+      "normalized_name": "sulfochem",
+      "amount": 5.1,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "d-Limonene",
+      "normalized_name": "d limonene",
+      "amount": 15.0,
+      "unit": "wt%",
+      "phase": "C"
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Starting formulation for a hand soap containing d-Limonene\nProduct types: soap\nIngredients (5):\n- water di 77.4 wt% phase A\n- carbopol 1.0 wt% phase A\n- triethanolamine 1.5 wt% phase A\n- sulfochem 5.1 wt% phase B\n- d limonene 15.0 wt% phase C",
+    "extraction_method": "phase_column",
+    "confidence": 0.9952
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "5663d145-60f9-59e3-bba5-9aedaa39fa96",
+    "name": "Barrier Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 133,
+    "printed_page": null,
+    "source_text": "[TABLE]\nInqredients: | Wt%\nA: Emulgator E 2155 | 6 00\n.\nIsopropyl Myristate | 10 00\n.\nStearyl Alcohol | 1 00\n.\nMineral Oil | 3 00\n.\nWacker-Belsil DM 100 | 2 00\n.\nWacker-Belsil SM 6018 | 5 00\n.\nB: Glycerine | 3 00\n.\nWater | 70 00\n.\nPreservatives, fragrances, pigments | q s\n. .\n[/TABLE]",
+    "ingredients": [
+     {
+      "raw_name": "Emulgator E 2155",
+      "normalized_name": "emulgator e",
+      "amount": 6.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Isopropyl Myristate",
+      "normalized_name": "isopropyl myristate",
+      "amount": 10.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Stearyl Alcohol",
+      "normalized_name": "stearyl alcohol",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Mineral Oil",
+      "normalized_name": "mineral oil",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Wacker-Belsil DM 100",
+      "normalized_name": "wacker belsil dm",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Wacker-Belsil SM 6018",
+      "normalized_name": "wacker belsil sm",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Glycerine",
+      "normalized_name": "glycerin",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Water",
+      "normalized_name": "water",
+      "amount": 70.0,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Preservatives, fragrances, pigments",
+      "normalized_name": "preservative fragrance pigment",
+      "amount": null,
+      "unit": "qs",
+      "phase": "B"
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Barrier Cream\nProduct types: cream\nIngredients (9):\n- emulgator e 6.0 wt% phase A\n- isopropyl myristate 10.0 wt% phase A\n- stearyl alcohol 1.0 wt% phase A\n- mineral oil 3.0 wt% phase A\n- wacker belsil dm 2.0 wt% phase A\n- wacker belsil sm 5.0 wt% phase A\n- glycerin 3.0 wt% phase B\n- water 70.0 wt% phase B\n- preservative fragrance pigment phase B",
+    "extraction_method": "part_labeled",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "c675b022-917a-55d8-a9cd-31ea12047566",
+    "name": "A skin softening moisturizing cream utilizing Completech",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 138,
+    "printed_page": null,
+    "source_text": "A skin softening moisturizing cream utilizing Completech \nVCB-SM-H to support the natural defense mechanisms against the \nadverse effects of free radicals.\n\nwt% \n1 \nDeionized Water \n69.15 \nSequence: paw Material/INCI Name:\n\n2 \nKe 1 t ro 1 /Xanthan Gum \n2 \nVeegum/Magnesium Aluminum Silicate\n\n0.25 \n0.20\n\n3 \nUniphen P-23 \n3 \nGlycerine \n3 \nLiponic EG-l/Glycereth-26\n\n0.50 \n1.00 \n1.50\n\nUltrapure L/White Petrolatum USP \nMeadowfoam Seed Oil \nLipomulse 165 \nLiponate NPGC-2/Neopentyl Glycol Dicaprylate/\n\n7.50 \n2.00 \n2.00\n\nDicaprate\n\n2.50 \n1.00 \n1.00 \n1.00 \n0.75 \n0.50\n\nLipovol SAF/Safflower Oil \nLipovol SES/Sesame Oil \nLipocol C/Cetyl Alcohol \nLipopeg 6000-DS/PEG-150 Distearate \nLipowax P/Emulsifying Wax, NF\n\n1.00 \n0.25 \nQS\n\n5 \nDeionized Water \n5 \nUnicide U-l3/Imidazolidinyl Urea \n5 \nCitric Acid(50% sol'n)\n\n6 \nCompletech VCB-SM-H \n6 \nDeionized Water\n\n1.20 \n6.50\n\n7 \nUnistab S-69/Farnesol (and) Linalool \n0.20\n\nProcedure: \n1. Mix Sequence #1 together with overhead mixer while heating",
+    "ingredients": [
+     {
+      "raw_name": "Deionized Water",
+      "normalized_name": "water",
+      "amount": 69.15,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Ke 1 t ro 1 /Xanthan Gum",
+      "normalized_name": "ke t ro gum",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Veegum/Magnesium Aluminum Silicate",
+      "normalized_name": "veegum magnesium aluminum silicate",
+      "amount": 0.25,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Uniphen P-23",
+      "normalized_name": "uniphen",
+      "amount": 3.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Glycerine",
+      "normalized_name": "glycerin",
+      "amount": 3.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Liponic EG-l/Glycereth-26",
+      "normalized_name": "liponic eg l",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Liponate NPGC-2/Neopentyl Glycol Dicaprylate/",
+      "normalized_name": "liponate neopentyl glycol",
+      "amount": 7.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Dicaprate",
+      "normalized_name": "dicaprate",
+      "amount": 2.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Unicide U-l3/Imidazolidinyl Urea",
+      "normalized_name": "unicide u imidazolidinyl urea",
+      "amount": 5.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Completech VCB-SM-H",
+      "normalized_name": "completech vcb sm h",
+      "amount": 6.0,
+      "unit": "%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Mix Sequence #1 together with overhead mixer while heating"
+    ],
+    "vector_text": "Formula: A skin softening moisturizing cream utilizing Completech\nProduct types: cream\nIngredients (10):\n- water 69.15 %\n- ke t ro gum 2.0 %\n- veegum magnesium aluminum silicate 0.25 %\n- uniphen 3.0 %\n- glycerin 3.0 %\n- liponic eg l 0.5 %\n- liponate neopentyl glycol 7.5 %\n- dicaprate 2.5 %\n- unicide u imidazolidinyl urea 5.0 %\n- completech vcb sm h 6.0 %\nProcedure:\n1. Mix Sequence #1 together with overhead mixer while heating",
+    "extraction_method": "table",
+    "confidence": 0.938
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "d3d05aea-c1d7-5fef-bc8e-2171ed92c81f",
+    "name": "cooling while mixing.",
+    "product_types": [
+     "conditioner"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 180,
+    "printed_page": 157,
+    "source_text": "cooling while mixing.\n\n5. At 4OC, add Mackstat DM then Dye and Fragrance; slow mixing\n\ndown close to room temperature and stop mixing at 30C.\n\n6 . Adjust pH to 3.5-4.5 with Citric Acid.\n\nNatural Lipid Conditioner for Professional Salon\n\nRaw Materials: \nWt% \nMackernium SDC-85 (Stearalkonium Chloride) \n1.5 \nMackalene NLC (Oleamidopropyl Dimethylamine Lactate \n(and) Palmitamidopropyl Dimethylamine Lactate (and) \nPalmitoleamidopropyl Dimethylamine Lactate) \n1 .o \nMackpro NLP (Quaternium-79 Hydrolyzed Collagen) \n2.0 \nCetearyl Alcohol \n1.8 \nSteareth-2 \n1.8 \nMackstat DM (DMDM Hydantoin) \nqs \nWater, Dye, Fragrance \nqs to 100.0\n\nProcedure: \n1. Add first five components to water. \n2 . Heat to 70C. \n3 . Cool to 45C and add remaining components.",
+    "ingredients": [
+     {
+      "raw_name": "Mackernium SDC-85 (Stearalkonium Chloride)",
+      "normalized_name": "mackernium stearalkonium chloride",
+      "amount": 1.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Mackpro NLP (Quaternium-79 Hydrolyzed Collagen)",
+      "normalized_name": "mackpro nlp hydrolyzed collagen",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Cetearyl Alcohol",
+      "normalized_name": "cetearyl alcohol",
+      "amount": 1.8,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Steareth-2",
+      "normalized_name": "steareth-2",
+      "amount": 1.8,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Mackstat DM (DMDM Hydantoin)",
+      "normalized_name": "mackstat dm dmdm hydantoin",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Add first five components to water."
+    ],
+    "vector_text": "Formula: cooling while mixing.\nProduct types: conditioner\nIngredients (5):\n- mackernium stearalkonium chloride 1.5 wt%\n- mackpro nlp hydrolyzed collagen 2.0 wt%\n- cetearyl alcohol 1.8 wt%\n- steareth-2 1.8 wt%\n- mackstat dm dmdm hydantoin\nProcedure:\n1. Add first five components to water.",
+    "extraction_method": "phase_inline",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "1d054dad-bc0c-5279-8e19-0a49c002fd81",
+    "name": "Prescription 5.73 Cream of food additive surfactant",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "formulas_ingredients_and_production_of_cosmetics_technology_of_skin_and_hair_care_products_in_japan_pdfdrive",
+    "doc_title": "Formulas, Ingredients and Production of Cosmetics_ Technology of Skin- and Hair-Care Products in Japan ( PDFDrive )",
+    "pdf_page": 225,
+    "printed_page": 215,
+    "source_text": "Prescription 5.73 Cream of food additive surfactant\n\nIngredient \n % (100 g)\n\n1 \n A \n Xanthan gum \n 0.20 \n 2 \n A \n Sucrose stearate (*4) \n 1.20 \n 3 \n A \n Glycerin \n 2.00 \n 4 \n A \n BG \n 2.00 \n 5 \n B \n Sodium isostearoyl lactate \n 0.60 \n 6 \n B \n Glyceryl stearate \n 2.40 \n 7 \n B \n Behenyl alcohol \n 0.80 \n 8 \n B \n Cetyl ethylhexanoate \n 3.00 \n 9 \n B \n Sesame oil \n 1.20\n\n(continued)\n\nPrescription 5.73 (continued)\n\nIngredient \n % (100 g)\n\n10 \n B \n Tocopherol \n 0.10 \n 11 \n B \n 1,2-Pentandiol \n 0.80 \n 12 \n B \n Dimethicone 6cs \n 1.20 \n 13 \n C \n Artemisia capillaris \ufb02 ower extract, clove \ufb02 ower extract, etc. (*32) \n 0.50 \n 14 \n pH \n 50% Lactic acid \n to 100 g \n Puri \ufb01 ed water \n 84.00 \n Directions \n 1) Disperse 1 and 2 into 3 and 4, add into puri \ufb01 ed water, heat to 80\u00b0C and dissolve. (A) \n 2) Heat 5\u201312 to 80\u00b0C, and dissolve. (B) \n 3) Add B to A, and emulsify. (B + A) \n 4) Cool to 45\u00b0C. Add 13. (A + B + C) \n 5) Adjust pH with 14, and add water \n Speci \ufb01 cations \n pH: 5.0\u20136.0 \n Ingredients \n *4: SURFHOPE C-1816 (Mitsubishi Kagaku Foods) \n Note: Sucrose stearate is dif \ufb01 cult to disperse or dissolve in oil and is prone to form lumps \n *32: SY-Plantex (Sakamoto Yakuhin Kogyo)\n\n5.8.6 Gel Cream Not Containing Speci \ufb01 c Ingredients",
+    "ingredients": [
+     {
+      "raw_name": "Xanthan gum",
+      "normalized_name": "xanthan gum",
+      "amount": 0.2,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Sucrose stearate (*4)",
+      "normalized_name": "sucrose stearate",
+      "amount": 1.2,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Glycerin",
+      "normalized_name": "glycerin",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "BG",
+      "normalized_name": "bg",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Sodium isostearoyl lactate",
+      "normalized_name": "sodium isostearoyl lactate",
+      "amount": 0.6,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Glyceryl stearate",
+      "normalized_name": "glyceryl stearate",
+      "amount": 2.4,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Behenyl alcohol",
+      "normalized_name": "behenyl alcohol",
+      "amount": 0.8,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Cetyl ethylhexanoate",
+      "normalized_name": "cetyl ethylhexanoate",
+      "amount": 3.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Sesame oil",
+      "normalized_name": "sesame oil",
+      "amount": 1.2,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Tocopherol",
+      "normalized_name": "tocopherol",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "1,2-Pentandiol",
+      "normalized_name": "pentandiol",
+      "amount": 0.8,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Dimethicone 6cs",
+      "normalized_name": "dimethicone",
+      "amount": 1.2,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Artemisia capillaris \ufb02 ower extract, clove \ufb02 ower extract, etc. (*32)",
+      "normalized_name": "artemisia capillaris \ufb02 ower extract clove",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": "C"
+     },
+     {
+      "raw_name": "pH 50% Lactic acid",
+      "normalized_name": "ph lactic acid",
+      "amount": null,
+      "unit": "qs",
+      "phase": "C"
+     },
+     {
+      "raw_name": "Puri \ufb01 ed water",
+      "normalized_name": "puri \ufb01 ed water",
+      "amount": 84.0,
+      "unit": "%",
+      "phase": "C"
+     }
+    ],
+    "procedure": [
+     "Disperse 1 and 2 into 3 and 4, add into puri \ufb01 ed water, heat to 80\u00b0C and dissolve. (A)",
+     "Heat 5\u201312 to 80\u00b0C, and dissolve. (B)",
+     "Add B to A, and emulsify. (B + A)",
+     "Cool to 45\u00b0C. Add 13. (A + B + C)",
+     "Adjust pH with 14, and add water"
+    ],
+    "vector_text": "Formula: Prescription 5.73 Cream of food additive surfactant\nProduct types: cream\nIngredients (15):\n- xanthan gum 0.2 % phase A\n- sucrose stearate 1.2 % phase A\n- glycerin 2.0 % phase A\n- bg 2.0 % phase A\n- sodium isostearoyl lactate 0.6 % phase B\n- glyceryl stearate 2.4 % phase B\n- behenyl alcohol 0.8 % phase B\n- cetyl ethylhexanoate 3.0 % phase B\n- sesame oil 1.2 % phase B\n- tocopherol 0.1 % phase B\n- pentandiol 0.8 % phase B\n- dimethicone 1.2 % phase B\n- artemisia capillaris \ufb02 ower extract clove 0.5 % phase C\n- ph lactic acid phase C\n- puri \ufb01 ed water 84.0 % phase C\nProcedure:\n1. Disperse 1 and 2 into 3 and 4, add into puri \ufb01 ed water, heat to 80\u00b0C and dissolve. (A)\n2. Heat 5\u201312 to 80\u00b0C, and dissolve. (B)\n3. Add B to A, and emulsify. (B + A)\n4. Cool to 45\u00b0C. Add 13. (A + B + C)\n5. Adjust pH with 14, and add water",
+    "extraction_method": "japan_rx",
+    "confidence": 0.9947
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "1f3d4517-f432-5c02-b7cd-d1f4d0907960",
+    "name": "Deodorant Stick with PhospholiDid CDM",
+    "product_types": [],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 29,
+    "printed_page": 6,
+    "source_text": "Deodorant Stick with PhospholiDid CDM\n\nWt% \n50.50 \n6.00 \n7.00 \n1.00 \n0.25 \n2.50 \n2.00 \n6.00 \n24.75\n\nInqredient: \nPropylene Glycol \nCarbowax 1540 (PEG-32) \nPromidium SY (PPG-3 Hydroxyethyl Soyamide) \nPhospholipid CDM (COCO PG-Dimonium Chloride Phosphate) \nTr i c losan \nMonateric CLV (Disodium Cocoarnphodiacetate) \nFragrance \nSodium Stearate \nWater\n\nProcedure:",
+    "ingredients": [
+     {
+      "raw_name": "Propylene Glycol",
+      "normalized_name": "propylene glycol",
+      "amount": 50.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Carbowax 1540 (PEG-32)",
+      "normalized_name": "carbowax",
+      "amount": 6.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Promidium SY (PPG-3 Hydroxyethyl Soyamide)",
+      "normalized_name": "promidium sy hydroxyethyl soyamide",
+      "amount": 7.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Phospholipid CDM (COCO PG-Dimonium Chloride Phosphate)",
+      "normalized_name": "phospholipid cdm coco pg dimonium chloride",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Tr i c losan",
+      "normalized_name": "tr c losan",
+      "amount": 0.25,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Monateric CLV (Disodium Cocoarnphodiacetate)",
+      "normalized_name": "monateric clv disodium cocoarnphodiacetate",
+      "amount": 2.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Fragrance",
+      "normalized_name": "fragrance",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Sodium Stearate",
+      "normalized_name": "sodium stearate",
+      "amount": 6.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Water",
+      "normalized_name": "water",
+      "amount": 24.75,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Deodorant Stick with PhospholiDid CDM\nIngredients (9):\n- propylene glycol 50.5 wt%\n- carbowax 6.0 wt%\n- promidium sy hydroxyethyl soyamide 7.0 wt%\n- phospholipid cdm coco pg dimonium chloride 1.0 wt%\n- tr c losan 0.25 wt%\n- monateric clv disodium cocoarnphodiacetate 2.5 wt%\n- fragrance 2.0 wt%\n- sodium stearate 6.0 wt%\n- water 24.75 wt%",
+    "extraction_method": "column_wt",
+    "confidence": 0.9107
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "53646c2b-333b-5057-bb03-6c634112a43e",
+    "name": "W/O Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 223,
+    "printed_page": 200,
+    "source_text": "200 \nCosmetic and Toile& Formulations\n\nMilky Lotion\n\nRaw Materials: \nA: Polyoxyethylene Sorbitan Monostearate (20EO) \nSorbitan Monostearate \nPolyoxyethylene Sorbitan Tetraoleate (40EO) \nStearic Acid \nCetanol \nBehenyl Alcohol \nMyristyl Myristate \nMITD (Isotridecyl Myristate) \nLiquid paraffin \nAlpha-Bisabolol \nButyl Parahydroxybenzoate\n\nWt$ \n1.0 \n0.5 \n1.0 \n1.0 \n0.5 \n0.5 \n2.0 \n5.0 \n10.0 \n0.2 \n0.1\n\nB: Isoprene Glycol \nMethyl Parahydroxybenzoate \nPurified Water\n\n5.0 \n0.1 \nup to 100\n\n1) Heat ( A ) to 80C and mix it. \n2 ) Mix IPG with purified water and heat it to 80C. Dissolve \nMethyl Paraben into it. \n3 . Mix A and B. Then cool it to room temp.\n\nLotion\n\nRaw Materials: \nPOE (60) Hydrogenated Castor Oil \nPOE (20) POP (6) Decyl Tetradecylether \nSqualane \nEthanol \nIsoprene Glycol \nSodium dl-Pyrrolidone Carboxylate \nCitric Acid \nAlpha-Bisabolol \nPurified Water \n*Adjust pH to 5-6 with Citric Acid.\n\nWt% \n0.5 \n0.5 \n0.1 \n5.0 \n5.0 \n2.0\n\n0.1 \n*\n\nup to 100",
+    "ingredients": [
+     {
+      "raw_name": "Polyoxyethylene Sorbitan Monostearate (20EO)",
+      "normalized_name": "polyoxyethylene sorbitan monostearate",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Sorbitan Monostearate",
+      "normalized_name": "sorbitan monostearate",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Polyoxyethylene Sorbitan Tetraoleate (40EO)",
+      "normalized_name": "polyoxyethylene sorbitan tetraoleate",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Stearic Acid",
+      "normalized_name": "stearic acid",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Cetanol",
+      "normalized_name": "cetanol",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Behenyl Alcohol",
+      "normalized_name": "behenyl alcohol",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Myristyl Myristate",
+      "normalized_name": "myristyl myristate",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "MITD (Isotridecyl Myristate)",
+      "normalized_name": "mitd isotridecyl myristate",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Liquid paraffin",
+      "normalized_name": "liquid paraffin",
+      "amount": 10.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Alpha-Bisabolol",
+      "normalized_name": "alpha bisabolol",
+      "amount": 0.2,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Butyl Parahydroxybenzoate",
+      "normalized_name": "butyl parahydroxybenzoate",
+      "amount": 0.1,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Isoprene Glycol",
+      "normalized_name": "isoprene glycol",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Methyl Parahydroxybenzoate",
+      "normalized_name": "methyl parahydroxybenzoate",
+      "amount": 0.1,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "up to 100",
+      "normalized_name": "up to 100",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Methyl Paraben into it.",
+      "normalized_name": "methyl paraben",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "POE (60) Hydrogenated Castor Oil",
+      "normalized_name": "poe hydrogenated castor oil",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "POE (20) POP (6) Decyl Tetradecylether",
+      "normalized_name": "poe pop decyl tetradecylether",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Squalane",
+      "normalized_name": "squalane",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": "B"
+     }
+    ],
+    "procedure": [
+     "Heat ( A ) to 80C and mix it."
+    ],
+    "vector_text": "Formula: W/O Lotion\nProduct types: lotion\nIngredients (18):\n- polyoxyethylene sorbitan monostearate 1.0 wt% phase A\n- sorbitan monostearate 0.5 wt% phase A\n- polyoxyethylene sorbitan tetraoleate 1.0 wt% phase A\n- stearic acid 1.0 wt% phase A\n- cetanol 0.5 wt% phase A\n- behenyl alcohol 0.5 wt% phase A\n- myristyl myristate 2.0 wt% phase A\n- mitd isotridecyl myristate 5.0 wt% phase A\n- liquid paraffin 10.0 wt% phase A\n- alpha bisabolol 0.2 wt% phase A\n- butyl parahydroxybenzoate 0.1 wt% phase A\n- isoprene glycol 5.0 wt% phase B\n- methyl parahydroxybenzoate 0.1 wt% phase B\n- up to 100 0.5 wt% phase B\n- methyl paraben 0.5 wt% phase B\n- poe hydrogenated castor oil 5.0 wt% phase B\n- poe pop decyl tetradecylether 5.0 wt% phase B\n- squalane 2.0 wt% phase B\nProcedure:\n1. Heat ( A ) to 80C and mix it.",
+    "extraction_method": "phase_inline",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "52046b08-2fe1-5ddd-8f86-3f21018494a1",
+    "name": "___",
+    "product_types": [
+     "conditioner"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 165,
+    "printed_page": null,
+    "source_text": "___ \nClear Conditioner with Wheat Germ Cationic \n__._\n\n.\n_\n~\n_\n_\n_\n_\n \nRaw Materials: \nwt%:\n\nMackalene 716 (Wheatgermamidopropyl Dimethylamine Lactate) 1.0\n\nHydroxyethylcellulose \n1.0 \nMackstat DM (DMDM Hydantoin) \nqs \nWater, Dye, Fragrance \nqs to 100.0\n\nProcedure: \n1. Completely disperse Hydroxyethylcellulose in cold water. \n2. Heat to 45C and add Mackalene 716. \n3 . Adjust pH to 5.0 with Lactic Acid. \n4. Blend until clear. \n5 . Add remaining components. \n6. Cool to room temperature.",
+    "ingredients": [
+     {
+      "raw_name": "Hydroxyethylcellulose",
+      "normalized_name": "hydroxyethylcellulose",
+      "amount": 1.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Fragrance \nqs to",
+      "normalized_name": "fragrance qs",
+      "amount": 100.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "etely disperse Hydroxyethylcellulose in cold water.",
+      "normalized_name": "etely disperse hydroxyethylcellulose cold water",
+      "amount": 2.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Adjust pH to",
+      "normalized_name": "adjust ph",
+      "amount": 5.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "with Lactic Acid.",
+      "normalized_name": "lactic acid",
+      "amount": 4.0,
+      "unit": "wtg",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Completely disperse Hydroxyethylcellulose in cold water.",
+     "Heat to 45C and add Mackalene 716.",
+     "Blend until clear.",
+     "Cool to room temperature."
+    ],
+    "vector_text": "Formula: ___\nProduct types: conditioner\nIngredients (5):\n- hydroxyethylcellulose 1.0 wtg\n- fragrance qs 100.0 wtg\n- etely disperse hydroxyethylcellulose cold water 2.0 wtg\n- adjust ph 5.0 wtg\n- lactic acid 4.0 wtg\nProcedure:\n1. Completely disperse Hydroxyethylcellulose in cold water.\n2. Heat to 45C and add Mackalene 716.\n3. Blend until clear.\n4. Cool to room temperature.",
+    "extraction_method": "wtg",
+    "confidence": 0.9711
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "2b5d5970-5b1f-5c76-ab02-016b0b03c1bf",
+    "name": "Chapstick Prototme",
+    "product_types": [],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 72,
+    "printed_page": 49,
+    "source_text": "Chapstick Prototme\n\nwt% \n48.0 \n6.0 \n16.5 \n4.5 \n25.0\n\nInqredients/CTFA Name: \nPetrolatum \nIsopropyl Lanolate \nOzoker i te \nCandelilla Wax \nSchercemol DID/Diisopropyl Dimer Dilinoleate\n\nProcedure :",
+    "ingredients": [
+     {
+      "raw_name": "Petrolatum",
+      "normalized_name": "petrolatum",
+      "amount": 48.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Isopropyl Lanolate",
+      "normalized_name": "isopropyl lanolate",
+      "amount": 6.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Ozoker i te",
+      "normalized_name": "ozoker te",
+      "amount": 16.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Candelilla Wax",
+      "normalized_name": "candelilla wax",
+      "amount": 4.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Schercemol DID/Diisopropyl Dimer Dilinoleate",
+      "normalized_name": "schercemol diisopropyl dimer dilinoleate",
+      "amount": 25.0,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Chapstick Prototme\nIngredients (5):\n- petrolatum 48.0 wt%\n- isopropyl lanolate 6.0 wt%\n- ozoker te 16.5 wt%\n- candelilla wax 4.5 wt%\n- schercemol diisopropyl dimer dilinoleate 25.0 wt%",
+    "extraction_method": "inline_wt",
+    "confidence": 0.9348
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "7e348341-fb3e-5b62-9d48-a2e9de89f31f",
+    "name": "Appearance: Viscous Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 67,
+    "printed_page": 44,
+    "source_text": "Wt% \n0.40 \n0.50 \n4.00 \n45.90 \n30.00 \n5.00 \n0.50 \n2.00 \nSulfate \n4.00 \nq.s. \nq.s. \n5 \n2 \n0\n\nRecipe: \nA Allantoin \nPolymer JR 40O/Polyquaternium-10 \nHostapon SCID/Sodium Cocoyl Isethionate \nB Water \nC Genapol LRO liquid/Sodium Laureth Sulfate \nHostapon KCG/Sodiurn Cocoyl Glutamate \nFragrance \nCetiol HE/PEG-7 Glyceryl Cocoate \nGenapol TSM/PEG-J Distearate, Sodium Laureth \nDyestuff solution \nPreservative \nGenagen CAB/Cocamidopropyl Betaine \nGenapol L-3/Laureth-3 \nD Sodium chloride\n\n00 \n00 \n70\n\nProcedure: \n1. Dissolve the components of A by stirring into B and heat \nto amrox. 6 0 C .",
+    "ingredients": [
+     {
+      "raw_name": "Sulfate",
+      "normalized_name": "sulfate",
+      "amount": 4.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "q.s. \nq.s.",
+      "normalized_name": "q.s. q.s.",
+      "amount": 5.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "A Allantoin \nPolymer JR",
+      "normalized_name": "allantoin polymer jr",
+      "amount": 40.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "l Betaine \nGenapol L-3/Laureth-3 \nD Sodium chloride",
+      "normalized_name": "l betaine genapol d sodium chloride",
+      "amount": 0.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "ponents of A by stirring into B and heat \nto amrox.",
+      "normalized_name": "ponent stir b heat amrox",
+      "amount": 6.0,
+      "unit": "wtg",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Dissolve the components of A by stirring into B and heat"
+    ],
+    "vector_text": "Formula: Appearance: Viscous Lotion\nProduct types: lotion\nIngredients (5):\n- sulfate 4.0 wtg\n- q.s. q.s. 5.0 wtg\n- allantoin polymer jr 40.0 wtg\n- l betaine genapol d sodium chloride 0.0 wtg\n- ponent stir b heat amrox 6.0 wtg\nProcedure:\n1. Dissolve the components of A by stirring into B and heat",
+    "extraction_method": "wtg",
+    "confidence": 0.8931
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "25494815-6465-5f90-ab99-a31bf7b71a98",
+    "name": "Inqredient/Function:",
+    "product_types": [
+     "conditioner"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 168,
+    "printed_page": 145,
+    "source_text": "Inqredient/Function: \nWt8 \nPart A: \nDeionized Water/Diluent \n88.10 \nQuaternium-l5/Preservative \n0.20 \nStearamidopropyl Dimethylamine/Conditioner \n0.50 \nAcetic Acid/pH adjuster \n0.19 \nSodium Acetate/Buffer \n0.11 \nPart B: \nFragrance \n0.75 \nOctoxynol-40/Surfactant \n0.85 \nIsolaureth-6/Surfactant \n1.96 \nGlycerin/Humectant \n1.09 \nPart C: \nTrimethylsilylamodirnethicone (and) Octoxynol-40 (and) \nIsolaureth-6 (and) Glycerin (SM7.115) (l)/Color sealant/ \nConditioner \n6.25 \nProcedure: \n1. Combine Part A wit.h moderate propeller agitation and heat to \n60C. Continue stirring for 15 minutes. Remove from heat. \n2. Combine Part B ingredients and add to Part A with moderate \npropeller agitation. \n3 . Slowly add Part C to Part AB and continue mixing 15 minutes. \nTrade Names/Suppliers: \n(1) GE Silicones \nFormula CP 112",
+    "ingredients": [
+     {
+      "raw_name": "Wt8",
+      "normalized_name": "wt8",
+      "amount": 88.1,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Deionized Water",
+      "normalized_name": "water",
+      "amount": 0.2,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Quaternium-l5",
+      "normalized_name": "quaternium",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Stearamidopropyl Dimethylamine",
+      "normalized_name": "stearamidopropyl dimethylamine",
+      "amount": 0.19,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Acetic Acid",
+      "normalized_name": "acetic acid",
+      "amount": 0.11,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Fragrance",
+      "normalized_name": "fragrance",
+      "amount": 0.75,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Octoxynol-40",
+      "normalized_name": "octoxynol-40",
+      "amount": 0.85,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Isolaureth-6",
+      "normalized_name": "isolaureth-6",
+      "amount": 1.96,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Glycerin",
+      "normalized_name": "glycerin",
+      "amount": 1.09,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Trimethylsilylamodirnethicone (and) Octoxynol-40 (and)",
+      "normalized_name": "trimethylsilylamodirnethicone",
+      "amount": 6.25,
+      "unit": "wt%",
+      "phase": "C"
+     }
+    ],
+    "procedure": [
+     "Combine Part A wit.h moderate propeller agitation and heat to",
+     "Combine Part B ingredients and add to Part A with moderate"
+    ],
+    "vector_text": "Formula: Inqredient/Function:\nProduct types: conditioner\nIngredients (10):\n- wt8 88.1 wt% phase A\n- water 0.2 wt% phase A\n- quaternium 0.5 wt% phase A\n- stearamidopropyl dimethylamine 0.19 wt% phase A\n- acetic acid 0.11 wt% phase A\n- fragrance 0.75 wt% phase B\n- octoxynol-40 0.85 wt% phase B\n- isolaureth-6 1.96 wt% phase B\n- glycerin 1.09 wt% phase B\n- trimethylsilylamodirnethicone 6.25 wt% phase C\nProcedure:\n1. Combine Part A wit.h moderate propeller agitation and heat to\n2. Combine Part B ingredients and add to Part A with moderate",
+    "extraction_method": "part_function",
+    "confidence": 0.98
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "1c14c3ae-9c9c-5435-8155-da8e5fcff132",
+    "name": "Prototype formulation for a mild, high-foaming conditioning",
+    "product_types": [
+     "shampoo",
+     "conditioner"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 254,
+    "printed_page": 231,
+    "source_text": "Formulation No. F1009\n\nConditioninq Shamwo \nPrototype formulation for a mild, high-foaming conditioning \nshampoo.\n\nWt% \n40.00 \nq.s. \n1.20 \n1.00 \nto 100 \n0.75 \n0.65 \nq.s. \n0.50 \n0.75\n\nInqredients: \nSulfochem DLS \nPreservative \nAmidex CME \nEGDS \nWater, soft \nAXS \nPropylene glycol \nFragrance, color, etc. \nQuatrex S \nDimethicone\n\nBlending Procedure:",
+    "ingredients": [
+     {
+      "raw_name": "Sulfochem DLS",
+      "normalized_name": "sulfochem dls",
+      "amount": 40.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Preservative",
+      "normalized_name": "preservative",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     },
+     {
+      "raw_name": "Amidex CME",
+      "normalized_name": "amidex cme",
+      "amount": 1.2,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "EGDS",
+      "normalized_name": "egds",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Water, soft",
+      "normalized_name": "water soft",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     },
+     {
+      "raw_name": "AXS",
+      "normalized_name": "axs",
+      "amount": 0.75,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Propylene glycol",
+      "normalized_name": "propylene glycol",
+      "amount": 0.65,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Fragrance, color, etc.",
+      "normalized_name": "fragrance color etc",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     },
+     {
+      "raw_name": "Quatrex S",
+      "normalized_name": "quatrex s",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Dimethicone",
+      "normalized_name": "dimethicone",
+      "amount": 0.75,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Prototype formulation for a mild, high-foaming conditioning\nProduct types: shampoo, conditioner\nIngredients (10):\n- sulfochem dls 40.0 wt%\n- preservative\n- amidex cme 1.2 wt%\n- egds 1.0 wt%\n- water soft\n- axs 0.75 wt%\n- propylene glycol 0.65 wt%\n- fragrance color etc\n- quatrex s 0.5 wt%\n- dimethicone 0.75 wt%",
+    "extraction_method": "leading_amounts",
+    "confidence": 0.98
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "0a93735c-98e6-5c2d-9940-b9deeeea2e0e",
+    "name": "Formulation NO. 1",
+    "product_types": [],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 64,
+    "printed_page": 41,
+    "source_text": "Formulation NO. 1\n\nShower Soae \n___- \nRaw Materials: \nwt% \nMackanate EL (Disodium Laureth Sulfosuccinate) \n20.0 \nMackanate OM (Disodium Oleamido MEA Sulfosuccinate) \n15.0 \nSodium Lauryl Sulfate (30%) \n10.0 \nMackamide LLM (Lauramide DEA) \n6.0 \nMackpearl 202 (Pearling Agent) \n3.0 \nMackernium 007 (Polyquaternium 7) \n2.5 \nParagon I11 (Phenoxyethanol (and) DMDM Hydantoin (and) \nMethylparaben (and) Propylparaben) \nqs \nWater, Dye, Fragrance \nqs to 100.0\n\nProcedure: \n1. Disperse Mackerniuni 00'7 in waier. \n2. Add remaining components. \n3 . Heat to 40C. \n4. Adjust pH to 6.0 with Citric Acid. \n5. Adjust viscosity to 10,000 cps with Sodium Chloride. \n6. Cool to room temperature.",
+    "ingredients": [
+     {
+      "raw_name": "Mackanate EL (Disodium Laureth Sulfosuccinate)",
+      "normalized_name": "mackanate el disodium laureth sulfosuccinate",
+      "amount": 20.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Mackanate OM (Disodium Oleamido MEA Sulfosuccinate)",
+      "normalized_name": "mackanate om disodium oleamido mea sulfosuccinate",
+      "amount": 15.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Sodium Lauryl Sulfate (30%)",
+      "normalized_name": "sodium lauryl sulfate",
+      "amount": 10.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Mackamide LLM (Lauramide DEA)",
+      "normalized_name": "mackamide llm lauramide dea",
+      "amount": 6.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Mackpearl 202 (Pearling Agent)",
+      "normalized_name": "mackpearl pearl agent",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Mackernium 007 (Polyquaternium 7)",
+      "normalized_name": "mackernium polyquaternium",
+      "amount": 2.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Methylparaben (and) Propylparaben)",
+      "normalized_name": "methylparaben propylparaben",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Disperse Mackerniuni 00'7 in waier.",
+     "Add remaining components.",
+     "Adjust pH to 6.0 with Citric Acid.",
+     "Adjust viscosity to 10,000 cps with Sodium Chloride.",
+     "Cool to room temperature."
+    ],
+    "vector_text": "Formula: Formulation NO. 1\nIngredients (7):\n- mackanate el disodium laureth sulfosuccinate 20.0 wt%\n- mackanate om disodium oleamido mea sulfosuccinate 15.0 wt%\n- sodium lauryl sulfate 10.0 wt%\n- mackamide llm lauramide dea 6.0 wt%\n- mackpearl pearl agent 3.0 wt%\n- mackernium polyquaternium 2.5 wt%\n- methylparaben propylparaben\nProcedure:\n1. Disperse Mackerniuni 00'7 in waier.\n2. Add remaining components.\n3. Adjust pH to 6.0 with Citric Acid.\n4. Adjust viscosity to 10,000 cps with Sodium Chloride.\n5. Cool to room temperature.",
+    "extraction_method": "phase_inline",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "9458116a-6631-55ac-995c-566e9fb5e1c9",
+    "name": "Prescription 5.16 Coating and moisturizing conditioner",
+    "product_types": [
+     "conditioner"
+    ],
+    "doc_id": "formulas_ingredients_and_production_of_cosmetics_technology_of_skin_and_hair_care_products_in_japan_pdfdrive",
+    "doc_title": "Formulas, Ingredients and Production of Cosmetics_ Technology of Skin- and Hair-Care Products in Japan ( PDFDrive )",
+    "pdf_page": 163,
+    "printed_page": 153,
+    "source_text": "Prescription 5.16 Coating and moisturizing conditioner\n\nPart Ingredient \n %(100 g)\n\n1 \n A \n Steartrimonium chloride (70%) \n 0.80 \n 2 \n A \n Behetrimonium chloride (80%) \n 1.60 \n 3 \n A \n Disteartrimonium chloride (75%) \n 0.90 \n 4 \n A \n Cetanol \n 4.80 \n 5 \n A \n Glyceryl stearate \n 1.20 \n 6 \n A \n Microcrystalline wax \n 2.40 \n 7 \n A \n Ethylhexyl palmitate \n 0.80 \n 8 \n A \n Dimer dilinoleyl dimer dilionoleate, glyceryl tri-hydrogenated rosinate *3 1.60 \n 9 \n A \n Propyl paraben \n 0.10 \n 10 \n A \n Methyl paraben \n 0.10 \n 11 \n B \n Dimethicone 10cs, dimethicone (highly polymerized, 10%) \n 2.00 \n 12 \n B \n Dimethicone 1000cs \n 1.00 \n C \n Puri \ufb01 ed water \n to 100 g \n Directions \n 1) Heat 1\u201310 to 80\u00b0C and dissolve. (A) \n 2) Heat puri \ufb01 ed water to 80\u00b0C, mix with A and emulsify. (C + A) \n 3) Cool to 50\u00b0C or below, add B and water. (C + A + B) \n Ingredient \n *3 Lusplan DA-R (Nippon Fine Chemical Co., Ltd.)",
+    "ingredients": [
+     {
+      "raw_name": "Steartrimonium chloride (70%)",
+      "normalized_name": "steartrimonium chloride",
+      "amount": 0.8,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Behetrimonium chloride (80%)",
+      "normalized_name": "behetrimonium chloride",
+      "amount": 1.6,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Disteartrimonium chloride (75%)",
+      "normalized_name": "disteartrimonium chloride",
+      "amount": 0.9,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Cetanol",
+      "normalized_name": "cetanol",
+      "amount": 4.8,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Glyceryl stearate",
+      "normalized_name": "glyceryl stearate",
+      "amount": 1.2,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Microcrystalline wax",
+      "normalized_name": "microcrystalline wax",
+      "amount": 2.4,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Ethylhexyl palmitate",
+      "normalized_name": "ethylhexyl palmitate",
+      "amount": 0.8,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Propyl paraben",
+      "normalized_name": "propyl paraben",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Methyl paraben",
+      "normalized_name": "methylparaben",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Dimethicone 10cs, dimethicone (highly polymerized, 10%)",
+      "normalized_name": "dimethicone dimethicone highly polymerized",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Dimethicone 1000cs",
+      "normalized_name": "dimethicone",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Puri \ufb01 ed water",
+      "normalized_name": "puri \ufb01 ed water",
+      "amount": null,
+      "unit": "qs",
+      "phase": "C"
+     }
+    ],
+    "procedure": [
+     "Heat 1\u201310 to 80\u00b0C and dissolve. (A)",
+     "Heat puri \ufb01 ed water to 80\u00b0C, mix with A and emulsify. (C + A)",
+     "Cool to 50\u00b0C or below, add B and water. (C + A + B)"
+    ],
+    "vector_text": "Formula: Prescription 5.16 Coating and moisturizing conditioner\nProduct types: conditioner\nIngredients (12):\n- steartrimonium chloride 0.8 % phase A\n- behetrimonium chloride 1.6 % phase A\n- disteartrimonium chloride 0.9 % phase A\n- cetanol 4.8 % phase A\n- glyceryl stearate 1.2 % phase A\n- microcrystalline wax 2.4 % phase A\n- ethylhexyl palmitate 0.8 % phase A\n- propyl paraben 0.1 % phase A\n- methylparaben 0.1 % phase A\n- dimethicone dimethicone highly polymerized 2.0 % phase B\n- dimethicone 1.0 % phase B\n- puri \ufb01 ed water phase C\nProcedure:\n1. Heat 1\u201310 to 80\u00b0C and dissolve. (A)\n2. Heat puri \ufb01 ed water to 80\u00b0C, mix with A and emulsify. (C + A)\n3. Cool to 50\u00b0C or below, add B and water. (C + A + B)",
+    "extraction_method": "japan_rx",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "6a41a58a-1aad-519e-885d-5ee9b4b0c652",
+    "name": "This formulation, based on Lubrajel MS, is a classic display",
+    "product_types": [],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 74,
+    "printed_page": 51,
+    "source_text": "Eve Firmins Gel\n\nThis formulation, based on Lubrajel MS, is a classic display \nof the complementary properties of Lubrajel and liquid crystals. \nThis Eye Firming Gel is visually very appealing. The Lubrajel MS \nis the sole moisturizing agent and viscosifier, while the liquid \ncrystals add artistic elegance and moisture retention.\n\nwt% \n25.00 \n73.15 \n1.75 \n0.08 \n0.02 \nQS\n\nMaterial : \nA Lubrajel MS \nB Deionized Water \nC Propylene Glycol, USP \nD Methylparaben \nE Propylparaben \nF Liquid Crystal CN/G9\n\nProcedure: \n1. Dissolve components D and E in component C. Use a small amount",
+    "ingredients": [
+     {
+      "raw_name": "A Lubrajel MS",
+      "normalized_name": "lubrajel ms",
+      "amount": 25.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "B Deionized Water",
+      "normalized_name": "b deionize water",
+      "amount": 73.15,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "C Propylene Glycol, USP",
+      "normalized_name": "c propylene glycol usp",
+      "amount": 1.75,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "D Methylparaben",
+      "normalized_name": "d methylparaben",
+      "amount": 0.08,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "E Propylparaben",
+      "normalized_name": "e propylparaben",
+      "amount": 0.02,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "F Liquid Crystal CN/G9",
+      "normalized_name": "f liquid crystal cn",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Dissolve components D and E in component C. Use a small amount"
+    ],
+    "vector_text": "Formula: This formulation, based on Lubrajel MS, is a classic display\nIngredients (6):\n- lubrajel ms 25.0 wt%\n- b deionize water 73.15 wt%\n- c propylene glycol usp 1.75 wt%\n- d methylparaben 0.08 wt%\n- e propylparaben 0.02 wt%\n- f liquid crystal cn\nProcedure:\n1. Dissolve components D and E in component C. Use a small amount",
+    "extraction_method": "inline_wt",
+    "confidence": 0.98
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "ba20d534-9c56-528e-b0fe-96180db27852",
+    "name": "Solimate 'E' is used to microemulsify the sunscreen along",
+    "product_types": [
+     "sunscreen"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 84,
+    "printed_page": 61,
+    "source_text": "A \nB \nC \nD \nE \nF \nG \nH \nI \nJ \nK \nL\n\nLip Moisturizer\n\nUtilizing Lubrajel CG and Solimate 'E', this formulation \nexhibits excellent lip moisturization, a pleasant taste and UV \nprotection. \nSolimate 'E' is used to microemulsify the sunscreen along \nwith the peppermint and spearmint oils. The ultimate choice in \nmoisturization is Lubrajel CG, which is used at a significant \nconcentration for this purpose.\n\nWt% \n50.00 \n46.72 \n2.50 \n0 . 5 0 \n0.05 \n0.05 \n0.18\n\nMaterial : \nA Lubrajel CG \nB Deionized Water \nC Solimate 'E' \nD Octyl Salicylate \nE Peppermint Oil, USP \nF Spearmint Oil, USP \nG FD&C Blue #1 (100ppm) \nProcedure: \n1. Premix components A and B and label as \"Phase I.\" \n2. Premix components C,D,E and F and label as \"Phase 11. \n3. Premix component G (prepare the lOOppm solution) and",
+    "ingredients": [
+     {
+      "raw_name": "A Lubrajel CG",
+      "normalized_name": "lubrajel cg",
+      "amount": 50.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "B Deionized Water",
+      "normalized_name": "b deionize water",
+      "amount": 46.72,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "C Solimate 'E'",
+      "normalized_name": "c solimate e",
+      "amount": 2.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "D Octyl Salicylate",
+      "normalized_name": "d octyl salicylate",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "E Peppermint Oil, USP",
+      "normalized_name": "e peppermint oil usp",
+      "amount": 0.05,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "F Spearmint Oil, USP",
+      "normalized_name": "f spearmint oil usp",
+      "amount": 0.05,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Premix components A and B and label as \"Phase I.\"",
+     "Premix components C,D,E and F and label as \"Phase 11.",
+     "Premix component G (prepare the lOOppm solution) and"
+    ],
+    "vector_text": "Formula: Solimate 'E' is used to microemulsify the sunscreen along\nProduct types: sunscreen\nIngredients (6):\n- lubrajel cg 50.0 wt%\n- b deionize water 46.72 wt%\n- c solimate e 2.5 wt%\n- d octyl salicylate 0.5 wt%\n- e peppermint oil usp 0.05 wt%\n- f spearmint oil usp 0.05 wt%\nProcedure:\n1. Premix components A and B and label as \"Phase I.\"\n2. Premix components C,D,E and F and label as \"Phase 11.\n3. Premix component G (prepare the lOOppm solution) and",
+    "extraction_method": "inline_wt",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "84c638b8-a596-57d5-99b8-a691b7808d29",
+    "name": "Prescription 5.50 Damage-care hair mist (milky)",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "formulas_ingredients_and_production_of_cosmetics_technology_of_skin_and_hair_care_products_in_japan_pdfdrive",
+    "doc_title": "Formulas, Ingredients and Production of Cosmetics_ Technology of Skin- and Hair-Care Products in Japan ( PDFDrive )",
+    "pdf_page": 202,
+    "printed_page": 192,
+    "source_text": "Prescription 5.50 Damage-care hair mist (milky)\n\nIngredient \n % (100 g)\n\n1 \n A \n Cetostearyl alcohol \n 0.30 \n 2 \n A \n Ceteth-2 \n 0.20 \n 3 \n A \n PPG-4 ceteth-10 \n 1.50 \n 4 \n A \n Jojoba oil \n 0.50 \n 5 \n A \n Steartrimonium chloride (70%) \n 1.00 \n 6 \n A \n BG \n 2.00 \n 7 \n A \n Phenoxyethanol \n 0.50 \n 8 \n A \n Methyl paraben \n 0.10 \n 9 \n B \n Amodimethicone, steartrimonium chloride,\n\n2.00\n\ncocodimonium chloride (*9)\n\n10 \n B \n Polyquaternium-64 (*4) \n 0.50 \n 11 \n pH \n 50% Lactic acid or sodium lactate \n 12 \n Puri \ufb01 ed water \n to 100 g \n External appearance \n Milky lotion\n\nSensory characteristics \n Texture \n Smooth\n\nlubrication \n Tackiness \n Slightly tacky \n Hair setting performance \n None \n Directions \n 1) Heat 1\u20138 to 80\u00b0C and homogenize. (A) \n 2) Heat puri \ufb01 ed water to 80\u00b0C. Add A and emulsify (350 rpm, 20 min). (A) \n 3) Cool to 45\u00b0C. Add 9 and 10. Adjust pH with 11, and add water. (A + B) \n Speci \ufb01 cations \n pH: 4.5\u20136.0 \n Ingredients \n *9: SM8904 Cosmetic emulsion (Dawcorning Toray Co., Ltd.) \n *4: Lipidure-C (NOF corporation)",
+    "ingredients": [
+     {
+      "raw_name": "Cetostearyl alcohol",
+      "normalized_name": "cetostearyl alcohol",
+      "amount": 0.3,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Ceteth-2",
+      "normalized_name": "ceteth-2",
+      "amount": 0.2,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "PPG-4 ceteth-10",
+      "normalized_name": "ppg-4 ceteth-10",
+      "amount": 1.5,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Jojoba oil",
+      "normalized_name": "jojoba oil",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Steartrimonium chloride (70%)",
+      "normalized_name": "steartrimonium chloride",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "BG",
+      "normalized_name": "bg",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Phenoxyethanol",
+      "normalized_name": "phenoxyethanol",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Methyl paraben",
+      "normalized_name": "methylparaben",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Amodimethicone, steartrimonium chloride,",
+      "normalized_name": "amodimethicone steartrimonium chloride",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Polyquaternium-64 (*4)",
+      "normalized_name": "polyquaternium-64 (*4)",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "pH 50% Lactic acid or sodium lactate Puri \ufb01 ed water",
+      "normalized_name": "ph lactic acid sodium lactate puri",
+      "amount": null,
+      "unit": "qs",
+      "phase": "B"
+     }
+    ],
+    "procedure": [
+     "Heat 1\u20138 to 80\u00b0C and homogenize. (A)",
+     "Heat puri \ufb01 ed water to 80\u00b0C. Add A and emulsify (350 rpm, 20 min). (A)",
+     "Cool to 45\u00b0C. Add 9 and 10. Adjust pH with 11, and add water. (A + B)"
+    ],
+    "vector_text": "Formula: Prescription 5.50 Damage-care hair mist (milky)\nProduct types: lotion\nIngredients (11):\n- cetostearyl alcohol 0.3 % phase A\n- ceteth-2 0.2 % phase A\n- ppg-4 ceteth-10 1.5 % phase A\n- jojoba oil 0.5 % phase A\n- steartrimonium chloride 1.0 % phase A\n- bg 2.0 % phase A\n- phenoxyethanol 0.5 % phase A\n- methylparaben 0.1 % phase A\n- amodimethicone steartrimonium chloride 2.0 % phase B\n- polyquaternium-64 (*4) 0.5 % phase B\n- ph lactic acid sodium lactate puri phase B\nProcedure:\n1. Heat 1\u20138 to 80\u00b0C and homogenize. (A)\n2. Heat puri \ufb01 ed water to 80\u00b0C. Add A and emulsify (350 rpm, 20 min). (A)\n3. Cool to 45\u00b0C. Add 9 and 10. Adjust pH with 11, and add water. (A + B)",
+    "extraction_method": "japan_rx",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "d9c61dac-0537-5049-98e4-f888da3e21d3",
+    "name": "Hand-Protection Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 221,
+    "printed_page": null,
+    "source_text": "Body Lotioq\n\nWt% \n8.00 \n10.00 \n10.00 \n72.00 \nq.s.\n\nInsredients: \nA: Hostacerin WO\n\nWacker-Belsil CM 1000 \nIsopropyl Palmitate\n\n8: Water\n\nPreservatives, perfume, pigments",
+    "ingredients": [
+     {
+      "raw_name": "Hostacerin WO",
+      "normalized_name": "hostacerin wo",
+      "amount": 8.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Wacker-Belsil CM 1000",
+      "normalized_name": "wacker belsil cm",
+      "amount": 10.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Isopropyl Palmitate",
+      "normalized_name": "isopropyl palmitate",
+      "amount": 10.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Preservatives, perfume, pigments",
+      "normalized_name": "preservative perfume pigment",
+      "amount": 72.0,
+      "unit": "wt%",
+      "phase": "A"
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Hand-Protection Lotion\nProduct types: lotion\nIngredients (4):\n- hostacerin wo 8.0 wt% phase A\n- wacker belsil cm 10.0 wt% phase A\n- isopropyl palmitate 10.0 wt% phase A\n- preservative perfume pigment 72.0 wt% phase A",
+    "extraction_method": "phase_inline",
+    "confidence": 0.9348
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "b7397da2-29a3-5f18-9d52-52aa706ed820",
+    "name": "Prescription 5.24 Cream (combination of anionic and nonionic surfactants)",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "formulas_ingredients_and_production_of_cosmetics_technology_of_skin_and_hair_care_products_in_japan_pdfdrive",
+    "doc_title": "Formulas, Ingredients and Production of Cosmetics_ Technology of Skin- and Hair-Care Products in Japan ( PDFDrive )",
+    "pdf_page": 171,
+    "printed_page": 161,
+    "source_text": "Prescription 5.24 Cream (combination of anionic and nonionic surfactants)\n\nPart \n Ingredient \n % (100 g)\n\n1 \n A \n Sodium isostearoyl lactate \n 4.00 \n 2 \n A \n Cetyl ethylhexanoate \n 4.00 \n 3 \n A \n Cetanol \n 6.00 \n 4 \n A \n Squalane \n 1.00 \n 5 \n A \n PEG-15 glyceryl stearate \n 2.00 \n 6 \n A \n Glyceryl stearate \n 1.00 \n 7 \n A \n Dimethicone 6cs \n 1.00 \n 8 \n A \n Methyl paraben \n 0.20 \n 9 \n A \n Propyl paraben \n 0.10 \n 10 \n Acidity regulator \n 10% Sodium hydroxide \n 1.00 \n 11 \n B \n Xanthan gum \n 2.00 \n 12 \n B \n Glycerin \n 4.00 \n 13 \n B \n BG \n 0.20 \n B \n Puri \ufb01 ed water \n to 100 g\n\nViscosity \n High \n Sensory \n Retained lubrication \n pH \n 6.4 \n Directions \n 1) Heat 1\u20139 to 80\u00b0C, dissolve, and homogenize. (A) \n 2) Disperse 13 into 11 and 12, add water, heat to 80\u00b0C and dissolve. (B) \n 3) Add B to A, add 10 and emulsify. (B + A) \n 4) Cool and add water",
+    "ingredients": [
+     {
+      "raw_name": "Sodium isostearoyl lactate",
+      "normalized_name": "sodium isostearoyl lactate",
+      "amount": 4.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Cetyl ethylhexanoate",
+      "normalized_name": "cetyl ethylhexanoate",
+      "amount": 4.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Cetanol",
+      "normalized_name": "cetanol",
+      "amount": 6.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Squalane",
+      "normalized_name": "squalane",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "PEG-15 glyceryl stearate",
+      "normalized_name": "glyceryl stearate",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Dimethicone 6cs",
+      "normalized_name": "dimethicone",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Methyl paraben",
+      "normalized_name": "methylparaben",
+      "amount": 0.2,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Propyl paraben",
+      "normalized_name": "propyl paraben",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Acidity regulator 10% Sodium hydroxide",
+      "normalized_name": "acidity regulator sodium hydroxide",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Xanthan gum",
+      "normalized_name": "xanthan gum",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Glycerin",
+      "normalized_name": "glycerin",
+      "amount": 4.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "BG",
+      "normalized_name": "bg",
+      "amount": 0.2,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Puri \ufb01 ed water",
+      "normalized_name": "puri \ufb01 ed water",
+      "amount": null,
+      "unit": "qs",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Viscosity High Sensory Retained lubrication pH",
+      "normalized_name": "viscosity high sensory retained lubrication ph",
+      "amount": 6.4,
+      "unit": "%",
+      "phase": "B"
+     }
+    ],
+    "procedure": [
+     "Heat 1\u20139 to 80\u00b0C, dissolve, and homogenize. (A)",
+     "Disperse 13 into 11 and 12, add water, heat to 80\u00b0C and dissolve. (B)",
+     "Add B to A, add 10 and emulsify. (B + A)",
+     "Cool and add water"
+    ],
+    "vector_text": "Formula: Prescription 5.24 Cream (combination of anionic and nonionic surfactants)\nProduct types: cream\nIngredients (14):\n- sodium isostearoyl lactate 4.0 % phase A\n- cetyl ethylhexanoate 4.0 % phase A\n- cetanol 6.0 % phase A\n- squalane 1.0 % phase A\n- glyceryl stearate 2.0 % phase A\n- dimethicone 1.0 % phase A\n- methylparaben 0.2 % phase A\n- propyl paraben 0.1 % phase A\n- acidity regulator sodium hydroxide 1.0 % phase A\n- xanthan gum 2.0 % phase B\n- glycerin 4.0 % phase B\n- bg 0.2 % phase B\n- puri \ufb01 ed water phase B\n- viscosity high sensory retained lubrication ph 6.4 % phase B\nProcedure:\n1. Heat 1\u20139 to 80\u00b0C, dissolve, and homogenize. (A)\n2. Disperse 13 into 11 and 12, add water, heat to 80\u00b0C and dissolve. (B)\n3. Add B to A, add 10 and emulsify. (B + A)\n4. Cool and add water",
+    "extraction_method": "japan_rx",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "ca66afbb-e60c-537f-905d-16fd50c97ac5",
+    "name": "Moisture Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 97,
+    "printed_page": 74,
+    "source_text": "Moisture Lotion \nStaqe: Material: \nwt%\n\nOil Phase:\n\n1 \nLight Mineral Oil \n7.000 \n2 \nSuperhartolan \n2 . 0 0 0 \n3 \nAEC Dimethicone VlOO \n1.200 \n4 \nAmerchol LlOl \n3.000 \n5 \nStearic Acid-Triple Pressed \n5.000\n\nAqueous Phase:\n\n6 \nWater; Pure \n74.284 \n7 \nGlycerine BP \n3.000 \n8 \nCarbopol 934 \n0.166 \n9 \nTriethanolamine 99% \n2.500 \n10 \nAdd preservative(s) & colour to suit \n0.500\n\nCooling Cycle:\n\n11 \nFragrance \n0.350\n\nMixing Instructions:\n\nThis is an oil-in-water emulsion. \nHeat the Oil Phase to 70/75C and mix well, ensure all waxes\n\nare melted.\n\nHeat the Aqueous Phase to 70/75C, carefully dispersing the\n\nCarbopol and mix well.\n\nCarefully add the hot oil phase to the hot aqueous phase\n\nwith mixing.\n\nCool with continual slow mixing, when below 35C add the\n\nfragrance and homogenise. \nFormula Ref.: 536\" \nSOURCE: A&E Connock Ltd.: Suggested Formulations",
+    "ingredients": [
+     {
+      "raw_name": "Light Mineral Oil",
+      "normalized_name": "light mineral oil",
+      "amount": 7.0,
+      "unit": "wt%",
+      "phase": "Oil"
+     },
+     {
+      "raw_name": "Superhartolan",
+      "normalized_name": "superhartolan",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": "Oil"
+     },
+     {
+      "raw_name": "AEC Dimethicone VlOO",
+      "normalized_name": "aec dimethicone vloo",
+      "amount": 1.2,
+      "unit": "wt%",
+      "phase": "Oil"
+     },
+     {
+      "raw_name": "Amerchol LlOl",
+      "normalized_name": "amerchol llol",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": "Oil"
+     },
+     {
+      "raw_name": "Stearic Acid-Triple Pressed",
+      "normalized_name": "stearic acid triple press",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": "Oil"
+     },
+     {
+      "raw_name": "Water; Pure",
+      "normalized_name": "water pure",
+      "amount": 74.284,
+      "unit": "wt%",
+      "phase": "Aqueous"
+     },
+     {
+      "raw_name": "Glycerine BP",
+      "normalized_name": "glycerine bp",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": "Aqueous"
+     },
+     {
+      "raw_name": "Carbopol 934",
+      "normalized_name": "carbopol",
+      "amount": 0.166,
+      "unit": "wt%",
+      "phase": "Aqueous"
+     },
+     {
+      "raw_name": "Triethanolamine 99%",
+      "normalized_name": "triethanolamine",
+      "amount": 2.5,
+      "unit": "wt%",
+      "phase": "Aqueous"
+     },
+     {
+      "raw_name": "Fragrance",
+      "normalized_name": "fragrance",
+      "amount": 0.35,
+      "unit": "wt%",
+      "phase": "Cooling"
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Moisture Lotion\nProduct types: lotion\nIngredients (10):\n- light mineral oil 7.0 wt% phase Oil\n- superhartolan 2.0 wt% phase Oil\n- aec dimethicone vloo 1.2 wt% phase Oil\n- amerchol llol 3.0 wt% phase Oil\n- stearic acid triple press 5.0 wt% phase Oil\n- water pure 74.284 wt% phase Aqueous\n- glycerine bp 3.0 wt% phase Aqueous\n- carbopol 0.166 wt% phase Aqueous\n- triethanolamine 2.5 wt% phase Aqueous\n- fragrance 0.35 wt% phase Cooling",
+    "extraction_method": "numbered_stage",
+    "confidence": 0.98
+   }
+  },
+  {
+   "label": "good",
+   "record": {
+    "id": "e7cb51bf-a150-5c54-8aea-3fd53b59237a",
+    "name": "Sprayable Hair Milk",
+    "product_types": [],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 190,
+    "printed_page": 167,
+    "source_text": "Sprayable Hair Milk\n\nComponent: \nwt% \nDehyquart L 80/Dicocoylethyl Hydroxyethylmonium Metho- \nsulfate (and) Propylene Glycol \n2.0 \nLamesoft PO 65/Coco-Glucoside (and) Glyceryl Oleate \n2.0 \nWater \nad 100 \nPreservatives \nq . s .\n\npH Value: 3.5\n\nMix the ingredients at room temperature. \nPreparation in the Laboratory:\n\nFormulation No.: 97/203/4",
+    "ingredients": [
+     {
+      "raw_name": "Dehyquart L 80/Dicocoylethyl Hydroxyethylmonium Methosulfate (and) Propylene",
+      "normalized_name": "dehyquart l dicocoylethyl hydroxyethylmonium methosulfate propylene",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Lamesoft PO 65/Coco-Glucoside (and) Glyceryl Oleate",
+      "normalized_name": "lamesoft po coco glucoside glyceryl oleate",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Water",
+      "normalized_name": "water",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     },
+     {
+      "raw_name": "Preservatives",
+      "normalized_name": "preservative",
+      "amount": null,
+      "unit": "qs",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Sprayable Hair Milk\nIngredients (4):\n- dehyquart l dicocoylethyl hydroxyethylmonium methosulfate propylene 2.0 wt%\n- lamesoft po coco glucoside glyceryl oleate 2.0 wt%\n- water\n- preservative",
+    "extraction_method": "component_wt",
+    "confidence": 0.992
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "fed0a397-0d43-5445-9d4e-b527fbf69771",
+    "name": "heparin solution are emulsified into the cream.",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 350,
+    "printed_page": 327,
+    "source_text": "Miscellaneous \n327\n\nRheumatism Ointment\n\nRaw Materials: \nA. Benzyl Nicotinate\n\n&% 0.3\n\nB. Imwitor 780K (Isostearyl Diglyceryl Succinate) \nMiglyol Gel B \nMineral Oil\n\n5 \n25 \n15\n\nC. Camphor\n\n2 \n3\n\nMiglyol 812 (Caprylic/Capric Triglyceride)\n\nD. Heparin sodium\n\n5000 I.E. \n100\n\nAqua conservans ad\n\nPreparation: \nB is homogeneously stirred first and then melted at about \n75C. The heparin is dissolved in a part of water. The water \nresidue, after heating to about 75C, is compounded with B to \nan emulsion. Phase C is heated until camphor is dissolved and \nis then added to the hot ointment. After cooling down A and the \nheparin solution are emulsified into the cream.\n\nNasal Ointmmt\n\nWt% \n0.05 \n0.15 \n0.30 \n0.90 \n0.60\n\nRaw Materials: \nA. Ephedrine-HC1 \nCamphor \nPeppermint Oil \nEucalyptus Oil \nFennel Oil\n\nB. Miglyol Gel B \n10 \nImwitor 780K (Isostearyl Diglyceryl Succinate) \n5 \nMineral Oil \n17 \nParaffin \n3\n\nC. Aqua conservans ad \n100\n\nPreparation: \nEphedrine-HC1 is dissolved in a small amount of water. B is \nheated up to approx. 75C and then homogenized. C is brought to \nthe same temperature and emulsified into B. After cooling down \nto below 40C the ephedrine solution and the mixture of the re- \nmaining components of A are admixed.\n\nSOURCE: Hule Aktiengesellechaft: Suggested Formulations",
+    "ingredients": [
+     {
+      "raw_name": "Mineral Oil",
+      "normalized_name": "mineral oil",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "C. Camphor",
+      "normalized_name": "camphor",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "D. Heparin sodium",
+      "normalized_name": "heparin sodium",
+      "amount": 100.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Nasal Ointmmt",
+      "normalized_name": "nasal ointmmt",
+      "amount": 0.05,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "B. Miglyol Gel B",
+      "normalized_name": "miglyol gel b",
+      "amount": 10.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Imwitor 780K (Isostearyl Diglyceryl Succinate)",
+      "normalized_name": "imwitor k isostearyl diglyceryl succinate",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Paraffin",
+      "normalized_name": "paraffin",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "C. Aqua conservans ad",
+      "normalized_name": "aqua conservan ad",
+      "amount": 100.0,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: heparin solution are emulsified into the cream.\nProduct types: cream\nIngredients (8):\n- mineral oil 5.0 wt%\n- camphor 2.0 wt%\n- heparin sodium 100.0 wt%\n- nasal ointmmt 0.05 wt%\n- miglyol gel b 10.0 wt%\n- imwitor k isostearyl diglyceryl succinate 5.0 wt%\n- paraffin 3.0 wt%\n- aqua conservan ad 100.0 wt%",
+    "extraction_method": "phase_inline",
+    "confidence": 0.9168
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "095ec776-ea63-5b85-90e5-1a90dc3af824",
+    "name": "Appearance: Viscous Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 72,
+    "printed_page": 49,
+    "source_text": "Inqredients/CTFA Name: \nWt%\n\nSchercemol NGDC/Neopentyl Glycol Dicaprate \n20.00 \nA-A1 Arlacel 165/Glyceryl Stearate (and) PEG 100 Stearate 1.50\n\nB-B1 Deionized Water \nPropylene Glycol \nCarbopol 941 2% Aq. Sln.\n\n37.00 \n3.00 \n25.00\n\nKeltrol/Xanthan Gum \nB2 Deionized Water\n\n10.00 \n0.20\n\n83 Triethanolamine \n0.50\n\nB4 Schercomid AME-lOO/Acetamide MEA \n1.50\n\nC- \nGermaben I1 \n1.00\n\nD- \nFragrance \n0.30\n\nE- \nCucumber Extract \nq.s.\n\nProcedure: \nPhase B: \nIn the main beaker, disperse B1 at 75C. \nDisperse B2 in a separate beaker at ambient temperature. \nAdd B2 to B1. \nAdd B3 to the main beaker at 75C. \nAdd B4 to the main beaker at 75C. \nPhase A: \nBlend A together at 75C. \nAdd Phase A to Phase B at 75C with continuous mixing until a",
+    "ingredients": [
+     {
+      "raw_name": "Schercemol NGDC/Neopentyl Glycol Dicaprate",
+      "normalized_name": "schercemol ngdc neopentyl glycol dicaprate",
+      "amount": 20.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Keltrol/Xanthan Gum \nB2 Deionized Water",
+      "normalized_name": "keltrol xanthan gum deionize water",
+      "amount": 10.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "B4 Schercomid AME-lOO/Acetamide MEA",
+      "normalized_name": "schercomid ame loo acetamide mea",
+      "amount": 1.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "C- \nGermaben I1",
+      "normalized_name": "germaben",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "D- \nFragrance",
+      "normalized_name": "fragrance",
+      "amount": 0.3,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "zed Water \nPropylene Glycol \nCarbopol 941",
+      "normalized_name": "ze water propylene glycol carbopol",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Appearance: Viscous Lotion\nProduct types: lotion\nIngredients (6):\n- schercemol ngdc neopentyl glycol dicaprate 20.0 %\n- keltrol xanthan gum deionize water 10.0 %\n- schercomid ame loo acetamide mea 1.5 %\n- germaben 1.0 %\n- fragrance 0.3 %\n- ze water propylene glycol carbopol 2.0 %",
+    "extraction_method": "table",
+    "confidence": 0.8937
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "70e1ed2c-ad5b-52f9-8625-323e1a62a57b",
+    "name": "Sun Protection Cream (W/O)",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 324,
+    "printed_page": 301,
+    "source_text": "Sun Care Products \n301\n\nSun Protection Cream (W/O) \nSPF 22 (Sun Protection Factor. Colioa Method with 5 Volunteers)\n\nRaw Materials: \nEusolex OCR (Art. No. 1.05377) (Octocrylene) \nEusolex 9020 (Art. No. 1.05844) (Butyl Methoxydi- \nbenzoylmethane) \nElfacos E 200 (Methoxy PEG-22/Dodecyl Glycol \nCopolymer) \nElfacos ST 9 (PEG-IS/Dodecyl Glycol Copolymer) \nElfacos C 26 (Hydroxyoctacosanyl Hydroxystearate) \nParaffin Oil Liquid (Art. No. 1.071621 (Mineral Oil) \nIeopropyl Stearate \nDL-d,- Tocopherol acetate (Art. No. 5.00952) (Toco-\n\nWt$ \n3.00\n\nA:\n\n1.50\n\n1.00 \n3.00 \n5.00 \n0.00 \n9.00\n\npheryl Acetate)\n\n0.50\n\nEusoflex 232 (Art. No. 1.05372) (Phenylbezimidazole\n\nB:\n\n2 .oo\n\nSulfonic Acid)\n\nTris(hydroxymethy1)-aminomethane (Art. No. 1.08386)\n\n(Tromethamine)\n\n0.89 \n0.10 \n0.10 \n3.00 \n9.8. \nWater, demineralized \nad 100.-00\n\nTritiplex 111 (Art. No. 1.06421) (Disodium EDTA) \nAllantoin (Art. No. 1.01015) \nGlycerine (Art. No. 1.04093) \nPreservatives\n\nProcedure: \nTo neutralize Eusolex 232 dissolve Tris(hydroxymethy1)-amino- \nmethane in the water of phase B and add Eusolex 232 while stirr- \ning. When uniform add the remaining ingredients of phase B and \nheat to 8OC. Heat phase A to 75C. Add phase B slowly to phase A \nwhile stirring. Homogenize and cool down while stirring.",
+    "ingredients": [
+     {
+      "raw_name": "DL-d,- Tocopherol acetate (Art. No. 5.00952) (Toco-",
+      "normalized_name": "dl tocopherol acetate art",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "A:",
+      "normalized_name": "a:",
+      "amount": 1.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "pheryl Acetate)",
+      "normalized_name": "pheryl acetate",
+      "amount": 0.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Tris(hydroxymethy1)-aminomethane (Art. No. 1.08386)",
+      "normalized_name": "art",
+      "amount": 0.89,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Sun Protection Cream (W/O)\nProduct types: cream\nIngredients (4):\n- dl tocopherol acetate art 3.0 wt%\n- a: 1.5 wt%\n- pheryl acetate 0.5 wt%\n- art 0.89 wt%",
+    "extraction_method": "phase_inline",
+    "confidence": 0.9201
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "0bf912c1-f916-5490-b09c-6ed5a3658372",
+    "name": "Prescription 5.15 Zein shampoo",
+    "product_types": [
+     "shampoo"
+    ],
+    "doc_id": "formulas_ingredients_and_production_of_cosmetics_technology_of_skin_and_hair_care_products_in_japan_pdfdrive",
+    "doc_title": "Formulas, Ingredients and Production of Cosmetics_ Technology of Skin- and Hair-Care Products in Japan ( PDFDrive )",
+    "pdf_page": 148,
+    "printed_page": 138,
+    "source_text": "Prescription 5.15 Zein shampoo\n\nPart \n Ingredient \n % (100 g)\n\n1 \n A \n Polyquaternium-10 (high viscosity, high amine) \n 0.60 \n 2 \n A \n EDTA-2Na \n 0.10 \n 3 \n A \n Betaine \n 0.30 \n 4 \n A \n Methyl paraben \n 0.20 \n 5 \n A \n Propyl paraben \n 0.10 \n 6 \n B \n Sodium methyl cocoyl taurate (30%) \n 9.00 \n 7 \n B \n TEA-cocoyl glutamate \n 27.00 \n 8 \n B \n Cocamide propyl betaine (30%) \n 9.00 \n 9 \n B \n Lauramidopropyl dimethylamine oxide \n 3.60 \n 10 \n B \n PPG-2 cocamide \n 2.40 \n 11 \n C \n 10% sodium hydroxide \n 0.50\n\n(continued)",
+    "ingredients": [
+     {
+      "raw_name": "Polyquaternium-10 (high viscosity, high amine)",
+      "normalized_name": "high viscosity high amine",
+      "amount": 0.6,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "EDTA-2Na",
+      "normalized_name": "edta-2na",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Betaine",
+      "normalized_name": "betaine",
+      "amount": 0.3,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Methyl paraben",
+      "normalized_name": "methylparaben",
+      "amount": 0.2,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Propyl paraben",
+      "normalized_name": "propyl paraben",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Sodium methyl cocoyl taurate (30%)",
+      "normalized_name": "sodium methyl cocoyl taurate",
+      "amount": 9.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "TEA-cocoyl glutamate",
+      "normalized_name": "tea cocoyl glutamate",
+      "amount": 27.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Cocamide propyl betaine (30%)",
+      "normalized_name": "cocamide propyl betaine",
+      "amount": 9.0,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Lauramidopropyl dimethylamine oxide",
+      "normalized_name": "lauramidopropyl dimethylamine oxide",
+      "amount": 3.6,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "PPG-2 cocamide",
+      "normalized_name": "cocamide",
+      "amount": 2.4,
+      "unit": "%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "10% sodium hydroxide",
+      "normalized_name": "sodium hydroxide",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": "C"
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Prescription 5.15 Zein shampoo\nProduct types: shampoo\nIngredients (11):\n- high viscosity high amine 0.6 % phase A\n- edta-2na 0.1 % phase A\n- betaine 0.3 % phase A\n- methylparaben 0.2 % phase A\n- propyl paraben 0.1 % phase A\n- sodium methyl cocoyl taurate 9.0 % phase B\n- tea cocoyl glutamate 27.0 % phase B\n- cocamide propyl betaine 9.0 % phase B\n- lauramidopropyl dimethylamine oxide 3.6 % phase B\n- cocamide 2.4 % phase B\n- sodium hydroxide 0.5 % phase C",
+    "extraction_method": "japan_rx",
+    "confidence": 0.9168
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "552bd93d-4d8e-5b41-9996-27e487765426",
+    "name": "Elnullierit Bath Gelee",
+    "product_types": [],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 45,
+    "printed_page": 22,
+    "source_text": "to 35-40C.\n\n3. Add Mackol 70NS and mix thoroughly. \n4 . Blend slowly and adjust pH to 6.0-6.5 with Citric Acid. \n5. When product is completely homogeneous, add Paragon 111. \n6. Add Fragrance then cool and fill.\n\nElnullierit Bath Gelee \n- \nRaw Materials: \nWtP6 \nSodium Laureth Sulfate (60%) \n20.0 \nMackamide LLM (Lauramide DEA) \n2 0 . 0 \nMackanate EL (Disodium Laureth Sulfosuccinate) \n20.0 \nMackanate WGD (Wheatgermamido PEG-2 Sulfosuccinate) \n10.0 \nMackstat DM (DMDM Hydantoin) \nqs \nWater, Dye, Fragrance \nqs to 100.0\n\nProcedure: \n1. Add Mackaniide LLM to Sodium Laureth Sulfate. \n2 . Add remaining components. \n3. Heat to 45C. \n4 . Blend until homogeneous. \n5. Adjust pH to 6.5-7.0 with Citric Acid. \n6. Cool to room temperature.",
+    "ingredients": [
+     {
+      "raw_name": "to 35-40C.\n\n3. Add Mackol 70NS and mix thoroughly.",
+      "normalized_name": "add mackol mix thoroughly",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Elnullierit Bath Gelee \n-",
+      "normalized_name": "elnullierit bath gelee",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "WtP6",
+      "normalized_name": "wtp6",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "qs to 100.0",
+      "normalized_name": "qs",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Add Mackaniide LLM to Sodium Laureth Sulfate.",
+     "Heat to 45C.",
+     "Adjust pH to 6.5-7.0 with Citric Acid.",
+     "Cool to room temperature."
+    ],
+    "vector_text": "Formula: Elnullierit Bath Gelee\nIngredients (4):\n- add mackol mix thoroughly\n- elnullierit bath gelee\n- wtp6\n- qs\nProcedure:\n1. Add Mackaniide LLM to Sodium Laureth Sulfate.\n2. Heat to 45C.\n3. Adjust pH to 6.5-7.0 with Citric Acid.\n4. Cool to room temperature.",
+    "extraction_method": "list",
+    "confidence": 0.9204
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "cfc10268-4a44-5d3e-b971-2387b7a8a527",
+    "name": "Aloe Baby Lotion",
+    "product_types": [
+     "baby",
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 32,
+    "printed_page": 9,
+    "source_text": "Aloe Baby Lotion\n\nA gentle moisturizing lotion containing Liponate TDTM to \nprovide a cushioning effect and extended slip with various \nnatural oils to moisturize the skin.\n\nWt% \n76.50 \n1.75 \n0.65 \n1.00 \n0.05\n\nSeauence: Raw Material/INCI Name: \n1 \nDeionized Water \n1 \nAloe Vera Gel/Aloe Barbadensis Gel \n1 \nUniphen P-23 \n1 \nLiponic EG-l/Glycereth-26 \n1 \nHampene Na3T/Trisodium EDTA\n\n2 \nCarbopol 2984(2%)/Carbomer \n12.50\n\n3 \n3 \nLip0 Stearic Acid \nLiponate NPGC-2 \nLipovol CO/Castor Oil \nLipomulse 165/Glyceryl Stearate (and) PEG-\n\n1.25 \n1.75 \n0.25\n\n100\n\nStearate\n\n1.50 \n0.60 \n0.25 \n0.25 \n0.60 \n0.25 \n0.25 \n0.05\n\nLipocol C/Cetyl Alcohol \nLiponate TDTM/Tridecyl Trimellitate \nLipowax P/Emulsifying Wax, NF \nLipovol SAF/Safflower Oil \nLipovol MAC/Macademia Ternifolia Nut Oil \nShea Butter \nVitamin E Acetate/Tocopheryl Acetate\n\n4 \nSodium Hydroxide (18%) \n0.50\n\n5 \nGorgonium Extract*/Sea Whip Extract \n0.05 \n*Patent #4,849,410 (and) 4,145,104\n\nProcedure: \n1. Heat Sequence #1 to 76C on overhead mixer at medium/high \nspeed. \n2. Heat Sequence #2 to 60C and add to Sequence #1 with medium/ \nhigh speed on overhead mixer with holding batch temperature \nat 76C. \n3 . Heat premixed Sequence # 3 to 78C until clear and add to batch \nwith medium/high speed on overhead mixer. \n4. Add Sequence # 4 to batch with medium/high speed. Cool to 40C. \n5. At 40C, add Sequence #5. Cool to room temperature.",
+    "ingredients": [
+     {
+      "raw_name": "Deionized Water",
+      "normalized_name": "water",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Aloe Vera Gel/Aloe Barbadensis Gel",
+      "normalized_name": "aloe vera gel aloe barbadensis gel",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Uniphen P-23",
+      "normalized_name": "uniphen",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Liponic EG-l/Glycereth-26",
+      "normalized_name": "liponic eg l",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Hampene Na3T/Trisodium EDTA",
+      "normalized_name": "hampene trisodium edta",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Stearate",
+      "normalized_name": "stearate",
+      "amount": 1.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Shea Butter \nVitamin E Acetate/Tocopheryl Acetate",
+      "normalized_name": "shea butter vitamin e acetate tocopheryl",
+      "amount": 4.0,
+      "unit": "%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Heat Sequence #1 to 76C on overhead mixer at medium/high",
+     "Heat Sequence #2 to 60C and add to Sequence #1 with medium/",
+     "Add Sequence # 4 to batch with medium/high speed. Cool to 40C.",
+     "At 40C, add Sequence #5. Cool to room temperature."
+    ],
+    "vector_text": "Formula: Aloe Baby Lotion\nProduct types: baby, lotion\nIngredients (7):\n- water 1.0 %\n- aloe vera gel aloe barbadensis gel 1.0 %\n- uniphen 1.0 %\n- liponic eg l 1.0 %\n- hampene trisodium edta 2.0 %\n- stearate 1.5 %\n- shea butter vitamin e acetate tocopheryl 4.0 %\nProcedure:\n1. Heat Sequence #1 to 76C on overhead mixer at medium/high\n2. Heat Sequence #2 to 60C and add to Sequence #1 with medium/\n3. Add Sequence # 4 to batch with medium/high speed. Cool to 40C.\n4. At 40C, add Sequence #5. Cool to room temperature.",
+    "extraction_method": "table",
+    "confidence": 0.8226
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "50ad741a-4968-5385-aa17-8160340eb24b",
+    "name": "Facial Cleansins Lotion",
+    "product_types": [
+     "conditioner",
+     "lotion",
+     "makeup"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 215,
+    "printed_page": null,
+    "source_text": "192 Cosmetic and Toiletry Formulations\n\nFacial Cleansins Lotion\n\nDual purpose make-up remover and skin conditioner for every \nday use. The lotion provides mild cleansing, emollience and skin \nprotection. The inclusion of Akoline MCM offers anti-microbial \nproperties to the formulation and helps solubilising impurities \non the skin. Lipex Canola-U adds natural tocopherols and phyto- \nsterols to protect and reduce skin irritancy from environmental \nstress and other aggressions against the skin. Akorex L and \nLipex together with Lipex Canola-U imparts a nice soft skin \nfeel.\n\nwt% \nad 100.00 \n5.00\n\nRaw Material/INCI Name: \n1. Water, dem./Aqua \nGlycerin 99.5%\n\n2. Pationic SCL/Sodium Cocoyl Lactylate \nRita Cetearyl Alcohol \nRita GMS/Glyceryl Stearate \nAkoline MCM/Caprylic/capric glycerides \nAkomed R/Caprylic/capric triglycerides \nLipex Canola-U/Canola oil unsaponifiables \nAkorex L/Hydrogenated Canola oil \nLipex 203/Mango (Magnifera Indica) seed oil \nArlamol HD/Isohexadecane\n\n0.50 \n2.50 \n4.00 \n2.00 \n2.50 \n2.00 \n0.50 \n0.50 \n8.00\n\n3. Euxyl K 400/Methyldibrome Glutaronitrile (and) \nPhenoxyethanol \n0.20 \nTrimaran 61636/Parfum \n0.07\n\n4. Sicovit Patentblau 85 E131/C.I.42051/Acid Blue 3 \nq.s.\n\nManufacturing Procedure:\n\nTake the ingredients for Position 1. Heat to 80-85C. Melt the\n\ningredients for Position 2 at a temperature of 80-85C. Once the \nproduct has reached the prescribed temperature, slowly work \nPosition 1 into Position 2, stirring and homogenising all the \ntime. Stir while cooling down. Once a temperature of 30C has \nbeen reached, add the ingredients for Position 3. Finally add \nPosition 4 as a solution in a small amount of water from Pos- \nition 1. Cool down to 28C, stirring all the time.\n\nAppearance: Smooth, shiny, blue colored lotion.",
+    "ingredients": [
+     {
+      "raw_name": "ad",
+      "normalized_name": "ad",
+      "amount": 100.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Glycerin",
+      "normalized_name": "glycerin",
+      "amount": 99.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Arlamol HD/Isohexadecane",
+      "normalized_name": "arlamol hd isohexadecane",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Phenoxyethanol",
+      "normalized_name": "phenoxyethanol",
+      "amount": 0.2,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Trimaran 61636/Parfum",
+      "normalized_name": "trimaran parfum",
+      "amount": 0.07,
+      "unit": "%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Facial Cleansins Lotion\nProduct types: conditioner, lotion, makeup\nIngredients (5):\n- ad 100.0 %\n- glycerin 99.5 %\n- arlamol hd isohexadecane 0.5 %\n- phenoxyethanol 0.2 %\n- trimaran parfum 0.07 %",
+    "extraction_method": "table",
+    "confidence": 0.8494
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "32670595-c7dd-523e-99dd-e4ef05d4edce",
+    "name": "Natural Mild Conditionina Shampoo",
+    "product_types": [
+     "shampoo"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 277,
+    "printed_page": 254,
+    "source_text": "254 \nCosmetic and Toiletry Formulations\n\nShamDoo with UniSDhereS YE-501\n\nRaw Materials: \nA 1 Water \n52.30 \n2 Propylene Glycol \n0.75 \n3 Uniphen P-23 \n0.25 \n4 Disodium EDTA \n0.10 \n5 Unicide U-13 \n0.40 \n6 Acrylates/ClO-30 Alkyl Acrylate Crosspolymer \n1.00\n\nB 7 Sodium Laureth Sulfate \n8 Uniphen P-23 \n9 Fragrance\n\n40.00 \n0.50 \n0.40\n\nC 10 Sodium Hydroxide \n11 FD&C Blue No. (C.I. 42090)\n\n3.50 \n0.20\n\nD 12 Unispheres YE-501 Yellow \n0.60\n\nProcedure:",
+    "ingredients": [
+     {
+      "raw_name": "ShamDoo with UniSDhereS YE-501",
+      "normalized_name": "shamdoo unisdheres",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "A 1 Water \n52.30 \n2 Propylene Glycol \n0.75",
+      "normalized_name": "water propylene glycol",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "B 7 Sodium Laureth Sulfate \n8 Uniphen P-23",
+      "normalized_name": "b sodium laureth sulfate uniphen",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "C 10 Sodium Hydroxide",
+      "normalized_name": "c sodium hydroxide",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "D 12 Unispheres YE-501 Yellow \n0.60",
+      "normalized_name": "d unispheres yellow",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Natural Mild Conditionina Shampoo\nProduct types: shampoo\nIngredients (5):\n- shamdoo unisdheres\n- water propylene glycol\n- b sodium laureth sulfate uniphen\n- c sodium hydroxide\n- d unispheres yellow",
+    "extraction_method": "list",
+    "confidence": 0.8741
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "f667e3cc-494c-53f0-a587-873372488667",
+    "name": "Insect ReDellent Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 350,
+    "printed_page": 327,
+    "source_text": "[TABLE]\nRaw Materials: | Wt%\nA Ephedrine-HC1\n. | 0 05\n.\nCamphor | 0 15\n.\nPeppermint Oil | 0 30\n.\nEucalyptus Oil | 0 90\n.\nFennel Oil | 0 60\n.\nB Miglyol Gel B\n. | 10\nImwitor 780K (Isostearyl Diglyceryl Succinate) | 5\nMineral Oil | 17\nParaffin | 3\nC . Aqua conservans ad | 100\n[/TABLE]",
+    "ingredients": [
+     {
+      "raw_name": "A Ephedrine-HC1",
+      "normalized_name": "ephedrine",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "B Miglyol Gel B",
+      "normalized_name": "b miglyol gel b",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Imwitor",
+      "normalized_name": "imwitor",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Insect ReDellent Lotion\nProduct types: lotion\nIngredients (3):\n- ephedrine\n- b miglyol gel b\n- imwitor",
+    "extraction_method": "list",
+    "confidence": 0.9198
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "502f472c-a37d-5eca-a93b-61cbf8abee4c",
+    "name": "Tube-Dispensed Hand Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 161,
+    "printed_page": 138,
+    "source_text": "[TABLE]\nRaw Materials: | wt%\nA Softisan 378 (Caprylic/Capric/Stearic Triglyceride)\n. | 50\nMiglyol 812 (Caprylic/CapricTriglyceride) | 20\nPetrolatum | 20\nMineral Oil | 10\nB Fragrance\n. | q.s.\nPreparation: | \nA is completely melted and stirred cold B is stirred\n. | in at\nabout 40C Homogenisation is convenient prior to filling.\n. | \n[/TABLE]",
+    "ingredients": [
+     {
+      "raw_name": "A Softisan",
+      "normalized_name": "softisan",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Miglyol",
+      "normalized_name": "miglyol",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "B Fragrance",
+      "normalized_name": "b fragrance",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "about",
+      "normalized_name": "about",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Tube-Dispensed Hand Cream\nProduct types: cream\nIngredients (4):\n- softisan\n- miglyol\n- b fragrance\n- about",
+    "extraction_method": "list",
+    "confidence": 0.897
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "2faf8c1d-621d-5b3a-878a-3859734f911e",
+    "name": "Appearance: Viscous Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 66,
+    "printed_page": 43,
+    "source_text": "[TABLE]\nRaw Materials: | | Wt%\nMackam HPC-32 (Sodium Cocoainphoacetate) | | 14 0\n.\nMackanate LO (DisodiurnLauryl Sulfosuccinate) | | 30 0\n.\nMackam 35-UL (Cocamidopropyl Betaine) | | 10 0\n.\nMackalene 426 (Isosteararnidopropyl Morpholine Lactate) | | 6 0\n.\nMackester EGDS (GlycolDistearate) | | 3 5\n.\nMackernium 007 (Polyquaternium-7) | | 3 0\n.\nSodium Chloride | | qs\nParagon I11 (Phenoxyethanol (and)DMDM Hydantoin (and) | | \nMethylparaben (and) Propylparaben) | | \u00b6S\nFragrance, Water | qs to | 100 0\n.\n[/TABLE]",
+    "ingredients": [
+     {
+      "raw_name": "Mackam",
+      "normalized_name": "mackam",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Mackalene",
+      "normalized_name": "mackalene",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Mackernium",
+      "normalized_name": "mackernium",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Appearance: Viscous Lotion\nProduct types: lotion\nIngredients (3):\n- mackam\n- mackalene\n- mackernium",
+    "extraction_method": "list",
+    "confidence": 0.9198
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "56dfd64e-cd3d-580c-b2a5-3482cbed52e9",
+    "name": "Hand and Nail Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 141,
+    "printed_page": null,
+    "source_text": "11 8 \nCosmetic and Toiletry Formulations\n\nHand and Nail Cream\n\nA rich textured, nourishing, water-in-oil hand and nail \ncream containing Bentone Gel VS-5\n\nInqredients: \nLaurylmethicone Copolyol \nCyclomethicone \nIsopropyl Palmitate \nGlyceryl Tricaprylate/caprate \nSweet Almond Oil \nSilk Protein Gydrolysate \nSodium Chloride \nBentone Gel VS-5 \nPerfume \nPreservative \nEDTA Disodium \nDemineralized Water\n\nwtq; \n2 . 0 0 \n7 . 0 0 \n2.00 \n6 . 0 0 \n2 . 0 0 \n1.00 \n2 . 0 0 \n4.00 \n0.15 \n0.10 \n0.10 \nBal to 100%\n\nMethod of Manufacture: \n1. Mix together the silk protein, Sodium Chloride, EDTA, glycer- \nine and water. \n2. Mix the Bentone Gel VS-5 thoroughly with the cyclomethicone. \nThis is a simple blending operation and does not require \nheating. \n3 . Add the gel pre-mix to the rest of the oil phase and blend \nthoroughly. \n4. Using high-shear mixing, slowly add approximately 1% of the \nwater phase to the oil phase and continue to homogenize for \nseveral minutes before further addition. Very slowly add the \nremainder of the water phase, a little at a time, waiting \nuntil the previous addition has been incorporated into the \nsystem before further water is added. Continue to homogenize \nfor several minutes after the addition is complete. \n5. Add perfume and preservative.\n\nWater-in-oil creams of this type tend to be somewhat heavy \ni n texture and have residual tack. The use of Bentone Gel VS-5 \nretains a rich texture, yet gives the cream a light feel and \neliminates both the greasy feel and tack.\n\nSOURCE: Rheox, Inc.: Elementis Specialties: Suggested Formulas",
+    "ingredients": [
+     {
+      "raw_name": "Laurylmethicone Copolyol",
+      "normalized_name": "laurylmethicone copolyol",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Cyclomethicone",
+      "normalized_name": "cyclomethicone",
+      "amount": 7.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Isopropyl Palmitate",
+      "normalized_name": "isopropyl palmitate",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Glyceryl Tricaprylate/caprate",
+      "normalized_name": "glyceryl tricaprylate caprate",
+      "amount": 6.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Sweet Almond Oil",
+      "normalized_name": "sweet almond oil",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Silk Protein Gydrolysate",
+      "normalized_name": "silk protein gydrolysate",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Sodium Chloride",
+      "normalized_name": "sodium chloride",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Bentone Gel VS-5",
+      "normalized_name": "bentone gel",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Perfume",
+      "normalized_name": "perfume",
+      "amount": 0.15,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Preservative",
+      "normalized_name": "preservative",
+      "amount": 0.1,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "EDTA Disodium",
+      "normalized_name": "edta disodium",
+      "amount": 0.1,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "Mix together the silk protein, Sodium Chloride, EDTA, glycer-",
+     "Mix the Bentone Gel VS-5 thoroughly with the cyclomethicone.",
+     "Using high-shear mixing, slowly add approximately 1% of the",
+     "Add perfume and preservative."
+    ],
+    "vector_text": "Formula: Hand and Nail Cream\nProduct types: cream\nIngredients (11):\n- laurylmethicone copolyol 2.0 wt%\n- cyclomethicone 7.0 wt%\n- isopropyl palmitate 2.0 wt%\n- glyceryl tricaprylate caprate 6.0 wt%\n- sweet almond oil 2.0 wt%\n- silk protein gydrolysate 1.0 wt%\n- sodium chloride 2.0 wt%\n- bentone gel 4.0 wt%\n- perfume 0.15 wt%\n- preservative 0.1 wt%\n- edta disodium 0.1 wt%\nProcedure:\n1. Mix together the silk protein, Sodium Chloride, EDTA, glycer-\n2. Mix the Bentone Gel VS-5 thoroughly with the cyclomethicone.\n3. Using high-shear mixing, slowly add approximately 1% of the\n4. Add perfume and preservative.",
+    "extraction_method": "column_wt",
+    "confidence": 0.9168
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "5574ec75-bb50-55ba-84dc-3c7e472555df",
+    "name": "Cleansinq Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 130,
+    "printed_page": 707,
+    "source_text": "Cleansinq Cream\n\nConcept Statement:\n\nand smoothness, and a pleasant feel. \nA cleansing cream with Pationic SCL to provide skin moisture\n\n-edients/Fu_nction: \nWt% \n1. Rita GMS (Glyceryl Stearate)/Emulsifier \n4.00 \n2 . Rita Cetearyl Alcohol 5 0 / 5 0 (Cetearyl Alcohol)/ \nEmulsifier \n1.60 \n3. Pationic SCL (Sodium Cocoyl Lactylate)/Lactylate \n0.50 \n4. Mineral Oil/Emollient \n20.00 \n5. Ritachol (Mineral Oil and Lanolin Alcohol)/Emollient \n4.00 \n6. Distilled/Deionized Water/Vehicle \n64.70 \n7. Glycerine/Humectant \n5.00 \n8. DMDM Hydantoin/Preservative \n0.20\n\nCompounding Procedure: \nCombine items 1-5 and heat to 8OC. Combine items 6 and I \nand heat to 8OC. Add oil phase to water phase. Cool to 35C and \nadd item 8 . \nLI Ref. No. 124-32\n\nSOURCE: R.I.T.A. Corp.: Facial Care Formulations",
+    "ingredients": [
+     {
+      "raw_name": "Emulsifier",
+      "normalized_name": "emulsifier",
+      "amount": 4.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Rita Cetearyl Alcohol",
+      "normalized_name": "rita cetearyl alcohol",
+      "amount": 5.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Lactylate",
+      "normalized_name": "lactylate",
+      "amount": 0.5,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Mineral Oil/Emollient",
+      "normalized_name": "mineral oil emollient",
+      "amount": 20.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Emollient",
+      "normalized_name": "emollient",
+      "amount": 4.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Distilled/Deionized Water/Vehicle",
+      "normalized_name": "distilled deionized water vehicle",
+      "amount": 64.7,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Glycerine/Humectant",
+      "normalized_name": "glycerine humectant",
+      "amount": 5.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "DMDM Hydantoin/Preservative",
+      "normalized_name": "dmdm hydantoin preservative",
+      "amount": 0.2,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "Combine items",
+      "normalized_name": "combine item",
+      "amount": 1.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "and heat to",
+      "normalized_name": "heat",
+      "amount": 8.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "OC. Combine items",
+      "normalized_name": "oc combine item",
+      "amount": 6.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "OC. Add oil phase to water phase. Cool to",
+      "normalized_name": "oc add oil phase water phase",
+      "amount": 35.0,
+      "unit": "wtg",
+      "phase": null
+     },
+     {
+      "raw_name": "C and \nadd item",
+      "normalized_name": "c add item",
+      "amount": 8.0,
+      "unit": "wtg",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Cleansinq Cream\nProduct types: cream\nIngredients (13):\n- emulsifier 4.0 wtg\n- rita cetearyl alcohol 5.0 wtg\n- lactylate 0.5 wtg\n- mineral oil emollient 20.0 wtg\n- emollient 4.0 wtg\n- distilled deionized water vehicle 64.7 wtg\n- glycerine humectant 5.0 wtg\n- dmdm hydantoin preservative 0.2 wtg\n- combine item 1.0 wtg\n- heat 8.0 wtg\n- oc combine item 6.0 wtg\n- oc add oil phase water phase 35.0 wtg\n- c add item 8.0 wtg",
+    "extraction_method": "wtg",
+    "confidence": 0.8943
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "f6ec5546-27ec-5dc8-b0bb-a889e8bbc9ea",
+    "name": "Suntan Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 330,
+    "printed_page": null,
+    "source_text": "Suntan Cream \nCreamy. Easy to distribute, good absorption.\n\nWt% \n2.50 \n2.00 \n4.00 \n3.00\n\nInqredients: \nA Wacker-Belsil DM lOO/Dimethicone \nCetyl Alcohol \nStearic Acid \nEusolex 6300/Methylbenzylidene Camphor \nWacker-Belsil TMS 3069 VP/Dimethicone, \nTrimethylsiloxysilicate\n\n5.00\n\n1.50 \n0.90 \n80.10\n\nB Glycerine \nTriethanolamine \nWater\n\nq.s.\n\nPreservative, fragrances, pigments\n\nHeat A and B each to 8OC. Stir A into B and stir cold. \nFormulation 435/2 AH\n\nSOURCE: Wacker-Chemie GmbH: Formulas for Beauty",
+    "ingredients": [
+     {
+      "raw_name": "Wacker-Belsil DM lOO/Dimethicone",
+      "normalized_name": "wacker belsil dm loo dimethicone",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": "A"
+     },
+     {
+      "raw_name": "Glycerine",
+      "normalized_name": "glycerin",
+      "amount": null,
+      "unit": "qs",
+      "phase": "B"
+     },
+     {
+      "raw_name": "Preservative, fragrances, pigments",
+      "normalized_name": "preservative fragrance pigment",
+      "amount": 2.5,
+      "unit": "wt%",
+      "phase": "B"
+     },
+     {
+      "raw_name": "SOURCE: Wacker-Chemie GmbH: Formulas for Beauty",
+      "normalized_name": "source wacker chemie gmbh formulas beauty",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": "B"
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Suntan Cream\nProduct types: cream\nIngredients (4):\n- wacker belsil dm loo dimethicone 5.0 wt% phase A\n- glycerin phase B\n- preservative fragrance pigment 2.5 wt% phase B\n- source wacker chemie gmbh formulas beauty 4.0 wt% phase B",
+    "extraction_method": "phase_inline",
+    "confidence": 0.9696
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "2acf1843-e50e-533c-b287-e58e62ffe3b1",
+    "name": "Moisturiser with W Protection",
+    "product_types": [],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 97,
+    "printed_page": 74,
+    "source_text": "74 \nCosmetic and Toiletry Formulations\n\nMoisturiser with W Protection \nStaqe:. Material : \nOil Phase: \nWt%\n\n1 \nCaprylic/Capric Triglyceride \n5.000 \n2 \nAEC Dimethicone VlOO \n1.000\n\n4 \nGMS NSE \n5.000 \n3 \nCetearyl Alcohol \n1.000\n\n5 \nAmphisol K \n2.000\n\nAqueous Phase:\n\n6 \nWater; Pure \n71.600 \n7 \nVeegum Ultra \n2.000 \n8 \nPropylene Glycol USP \n5 . 0 0 0 \n9 \nSodium PCA \n0.500 \n10 \nLactic Acid \n0.100 \n11 \nTioveil AQ N \n6.000 \n12 \nAdd preservative(s) & colour to suit \n0 . 5 0 0\n\nCooling Cycle:\n\n13 \nFragrance \n0.300\n\nMixing Instructions: \nHeat the Oil Phase to 70C. \nDisperse the Xanthan Gum and Veegum in the Water and heat to \n70C, adding the remaining Aqueous Phase ingredients while doing \nso and with continuous stirring, only use a Silverson briefly to \nform an emulsion at start and to homogenise at finish, use a \nslow speed mixer while cooling. \npH: 6.0-6.5 \nFormula Ref.: 400\"",
+    "ingredients": [
+     {
+      "raw_name": "Caprylic/Capric Triglyceride",
+      "normalized_name": "caprylic capric triglyceride",
+      "amount": 5.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "AEC Dimethicone VlOO",
+      "normalized_name": "aec dimethicone vloo",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "GMS NSE",
+      "normalized_name": "gms nse",
+      "amount": 5.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Cetearyl Alcohol",
+      "normalized_name": "cetearyl alcohol",
+      "amount": 1.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Amphisol K",
+      "normalized_name": "amphisol k",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Veegum Ultra",
+      "normalized_name": "veegum ultra",
+      "amount": 2.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Propylene Glycol USP",
+      "normalized_name": "propylene glycol usp",
+      "amount": 5.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Sodium PCA",
+      "normalized_name": "sodium pca",
+      "amount": 0.5,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Lactic Acid",
+      "normalized_name": "lactic acid",
+      "amount": 0.1,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Tioveil AQ N",
+      "normalized_name": "tioveil aq n",
+      "amount": 6.0,
+      "unit": "%",
+      "phase": null
+     },
+     {
+      "raw_name": "Fragrance",
+      "normalized_name": "fragrance",
+      "amount": 0.3,
+      "unit": "%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Moisturiser with W Protection\nIngredients (11):\n- caprylic capric triglyceride 5.0 %\n- aec dimethicone vloo 1.0 %\n- gms nse 5.0 %\n- cetearyl alcohol 1.0 %\n- amphisol k 2.0 %\n- veegum ultra 2.0 %\n- propylene glycol usp 5.0 %\n- sodium pca 0.5 %\n- lactic acid 0.1 %\n- tioveil aq n 6.0 %\n- fragrance 0.3 %",
+    "extraction_method": "table",
+    "confidence": 0.9168
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "ae0db8cd-926a-586b-9acb-1f288a96aa4a",
+    "name": "Care Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 135,
+    "printed_page": null,
+    "source_text": "[TABLE]\nInqredients: | wt%\na) Arlamol HD | 10 00\n.\nArlamol M 812 | 5 00\n.\nStearyl alcohol | 5 00\n.\nArlacel 60 | 2 00\n.\nPhenonip | 0 30\n.\nb) Water, distilled | 65 30\n.\nPhenonip | 0 30\n.\nG 2330\n- | 1 50\n.\nKeltrol | 0 10\n.\nArlatone 2121 | 5 50\n.\nc) Lactokine Fluid | 5 00\n.\n[/TABLE]",
+    "ingredients": [
+     {
+      "raw_name": "Arlamol M",
+      "normalized_name": "arlamol m",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Arlacel",
+      "normalized_name": "arlacel",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "G 2330",
+      "normalized_name": "g",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Arlatone",
+      "normalized_name": "arlatone",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Care Cream\nProduct types: cream\nIngredients (4):\n- arlamol m\n- arlacel\n- g\n- arlatone",
+    "extraction_method": "list",
+    "confidence": 0.897
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "ca5566af-6a6e-59df-b8ea-663c7b4e317c",
+    "name": "Cocoa Butter Skin Cream",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 142,
+    "printed_page": 119,
+    "source_text": "[TABLE]\nRaw Materials: | Wt$\nA Miglyol 812 (Caprylic/Capric/Triglyceride)\n. | 4\nImwitor 928 (GlycerylCocoate) | 1\nMiglyol 840 (PropyleneGlycol Dicaprylate/Dicaprate) | 8\nDynacerin 660 (Oleyl Erucate) | 4\nImwitor 960 flakes (Glyceryl Stearate SE) | 8\nImwitor 375 (Glyceryl Citrate/Lactate/Linoleate/Oleate) | 2\nPCL liquid (Syntheticrump fat) | 2\nCetyl Alcohol | 0 5\n.\nB Glycerol\n. | 6\nAllantoin | 0 2\n.\nPreservative | q.s.\nWater ad | 100\n[/TABLE]",
+    "ingredients": [
+     {
+      "raw_name": "A Miglyol",
+      "normalized_name": "miglyol",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Imwitor",
+      "normalized_name": "imwitor",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "Dynacerin",
+      "normalized_name": "dynacerin",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     },
+     {
+      "raw_name": "B Glycerol",
+      "normalized_name": "b glycerol",
+      "amount": null,
+      "unit": null,
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Cocoa Butter Skin Cream\nProduct types: cream\nIngredients (4):\n- miglyol\n- imwitor\n- dynacerin\n- b glycerol",
+    "extraction_method": "list",
+    "confidence": 0.897
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "dc2d90b3-4e35-5ab2-880b-8321917f06f3",
+    "name": "Peeliris Cream IO/Wl with Allantoin",
+    "product_types": [
+     "cream"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 147,
+    "printed_page": 124,
+    "source_text": "Peeliris Cream IO/Wl with Allantoin\n\nRaw Materials: \nWt% \nA Emulsifier E 2155/Stearyl Alcohol (and) Steareth-7 (and) \nSteareth-10 \n2.00 \nTeginacid \u20acI/Glyceryl Stearate (and) Ceteth-20 \n2.00 \nLuvitol EHO/Cetearyl Octanoate \n10.00 \nIniwitor 900/Glyceryl Stearate \n3.00 \nCetiol/Oleyl Oleate \n5.00 \nLunacera M/Microwax \n1.00 \nMiglyol 812 neutral oil/Caprylic/Capric Triglyceride \n3.00 \nB Allantoin \n20.00 \nPropanediol-l,2/Propylene Glycol \n4.00 \nPreservatives \n9.S. \nWater, demineralized \nad 100.00 \nProcedure: \nHeat phase A to 75C, phase B to 8OC. Add phase B slowly to \nphase A while stirring. Homogenize. Cool down while stirring. \nAdd perfume at 40C as required. \nNote: \nSamples contain as preservatives: \n0.05% Propyl-4-hydroxybenzoate (Merck-Art.-No. 107427) \n0.15% Methyl-4-hydroxybenaoate (Merck-Art.-No. 106757)",
+    "ingredients": [
+     {
+      "raw_name": "Steareth-10",
+      "normalized_name": "steareth-10",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Teginacid \u20acI/Glyceryl Stearate (and) Ceteth-20",
+      "normalized_name": "teginacid glyceryl stearate",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Luvitol EHO/Cetearyl Octanoate",
+      "normalized_name": "luvitol eho cetearyl octanoate",
+      "amount": 10.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Iniwitor 900/Glyceryl Stearate",
+      "normalized_name": "iniwitor glyceryl stearate",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Cetiol/Oleyl Oleate",
+      "normalized_name": "cetiol oleyl oleate",
+      "amount": 5.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Lunacera M/Microwax",
+      "normalized_name": "lunacera m microwax",
+      "amount": 1.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Miglyol 812 neutral oil/Caprylic/Capric Triglyceride",
+      "normalized_name": "miglyol neutral oil caprylic capric triglyceride",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "B Allantoin",
+      "normalized_name": "b allantoin",
+      "amount": 20.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Propanediol-l,2/Propylene Glycol",
+      "normalized_name": "propanediol propylene glycol",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [],
+    "vector_text": "Formula: Peeliris Cream IO/Wl with Allantoin\nProduct types: cream\nIngredients (9):\n- steareth-10 2.0 wt%\n- teginacid glyceryl stearate 2.0 wt%\n- luvitol eho cetearyl octanoate 10.0 wt%\n- iniwitor glyceryl stearate 3.0 wt%\n- cetiol oleyl oleate 5.0 wt%\n- lunacera m microwax 1.0 wt%\n- miglyol neutral oil caprylic capric triglyceride 3.0 wt%\n- b allantoin 20.0 wt%\n- propanediol propylene glycol 4.0 wt%",
+    "extraction_method": "phase_inline",
+    "confidence": 0.9168
+   }
+  },
+  {
+   "label": "bad",
+   "record": {
+    "id": "1cd2dc41-8046-536a-b323-1312bbf1e7ab",
+    "name": "Skin Liahteninu Lotion",
+    "product_types": [
+     "lotion"
+    ],
+    "doc_id": "cosmetic_and_toiletry_formulations_volume_8_second_editon_cosmetic_toiletry_formulations_pdfdrive",
+    "doc_title": "Cosmetic and Toiletry Formulations Volume 8, Second Editon (Cosmetic & Toiletry Formulations) ( PDFDrive )",
+    "pdf_page": 236,
+    "printed_page": null,
+    "source_text": "Lotions 273\n\nSkin Liahteninu Lotion\n\nWt%\n\nInsredients: \nPhase A: \nWater deionised \nStabileze 06\n\n40.70 \n0.80\n\nPhase B: \nGlyceryl Stearate and PEG-100 Stearate \nGlyceryl stearate (Cerasynt SD) \nIsocetyl stearate (Ceraphyl 494) \nOctyldodecyl Stearoyl Stearate (Ceraphyl 847) \nDiisopropyl Adipate (Ceraphyl 230) \nOctyl palmitate (Ceraphyl 368) \nOctyl methoxy cinnamate (Escacol 557) \nBenzophenone (Escacol 567) \nOctyl Salicylate (Escacol 587)\n\n6.50 \n4.00 \n2.00 \n2.00 \n2.50 \n3.00 \n4.00 \n3.00 \n3.00\n\nPhase C: \nWater, deionised \nPolyvinylpyrrolidone (Poviderm SK3) \nDiazolidinyl Urea (Germall Plus) \nLactic acid (Purac PH 90) \nSodium lactate (Purasal S/PF 60) \nPropylene Glycol \nFragrance\n\n10.00 \n1.00 \n0.20 \n4.50 \n9.00 \n3.00 \nq.s.\n\nProcedure: \n1. In phase A, disperse Stabileze 06 in water and heat to 80",
+    "ingredients": [
+     {
+      "raw_name": "Phase A:",
+      "normalized_name": "phase",
+      "amount": 40.7,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Water deionised",
+      "normalized_name": "water deionise",
+      "amount": 0.8,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Stabileze 06",
+      "normalized_name": "stabileze",
+      "amount": 6.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Phase B:",
+      "normalized_name": "phase b",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Glyceryl Stearate and PEG-100 Stearate",
+      "normalized_name": "glyceryl stearate stearate",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Glyceryl stearate (Cerasynt SD)",
+      "normalized_name": "glyceryl stearate cerasynt sd",
+      "amount": 2.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Isocetyl stearate (Ceraphyl 494)",
+      "normalized_name": "isocetyl stearate ceraphyl",
+      "amount": 2.5,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Octyldodecyl Stearoyl Stearate (Ceraphyl 847)",
+      "normalized_name": "octyldodecyl stearoyl stearate ceraphyl",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Diisopropyl Adipate (Ceraphyl 230)",
+      "normalized_name": "diisopropyl adipate ceraphyl",
+      "amount": 4.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Octyl palmitate (Ceraphyl 368)",
+      "normalized_name": "octyl palmitate ceraphyl",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Octyl methoxy cinnamate (Escacol 557)",
+      "normalized_name": "octyl methoxy cinnamate escacol",
+      "amount": 3.0,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Benzophenone (Escacol 567)",
+      "normalized_name": "benzophenone escacol",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Octyl Salicylate (Escacol 587)",
+      "normalized_name": "octyl salicylate escacol",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Phase C:",
+      "normalized_name": "phase c",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Polyvinylpyrrolidone (Poviderm SK3)",
+      "normalized_name": "polyvinylpyrrolidone poviderm",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Diazolidinyl Urea (Germall Plus)",
+      "normalized_name": "diazolidinyl urea germall plus",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Lactic acid (Purac PH 90)",
+      "normalized_name": "lactic acid purac ph",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Sodium lactate (Purasal S/PF 60)",
+      "normalized_name": "sodium lactate purasal s pf",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     },
+     {
+      "raw_name": "Propylene Glycol",
+      "normalized_name": "propylene glycol",
+      "amount": null,
+      "unit": "wt%",
+      "phase": null
+     }
+    ],
+    "procedure": [
+     "In phase A, disperse Stabileze 06 in water and heat to 80"
+    ],
+    "vector_text": "Formula: Skin Liahteninu Lotion\nProduct types: lotion\nIngredients (19):\n- phase 40.7 wt%\n- water deionise 0.8 wt%\n- stabileze 6.5 wt%\n- phase b 4.0 wt%\n- glyceryl stearate stearate 2.0 wt%\n- glyceryl stearate cerasynt sd 2.0 wt%\n- isocetyl stearate ceraphyl 2.5 wt%\n- octyldodecyl stearoyl stearate ceraphyl 3.0 wt%\n- diisopropyl adipate ceraphyl 4.0 wt%\n- octyl palmitate ceraphyl 3.0 wt%\n- octyl methoxy cinnamate escacol 3.0 wt%\n- benzophenone escacol\n- octyl salicylate escacol\n- phase c\n- polyvinylpyrrolidone poviderm\n- diazolidinyl urea germall plus\n- lactic acid purac ph\n- sodium lactate purasal s pf\n- propylene glycol\nProcedure:\n1. In phase A, disperse Stabileze 06 in water and heat to 80",
+    "extraction_method": "part_labeled",
+    "confidence": 0.7038
+   }
+  }
+ ]
+}

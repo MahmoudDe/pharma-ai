@@ -217,6 +217,14 @@ class SQLiteFormulationStore:
             row = conn.execute("SELECT COUNT(*) FROM formulations").fetchone()
         return int(row[0] if row else 0)
 
+    def delete(self, formulation_id: str) -> bool:
+        self.init_db()
+        with _connect() as conn:
+            conn.execute("DELETE FROM ingredients WHERE formulation_id = ?", (formulation_id,))
+            cur = conn.execute("DELETE FROM formulations WHERE id = ?", (formulation_id,))
+            conn.commit()
+        return cur.rowcount > 0
+
     def clear_all(self) -> int:
         self.init_db()
         with _connect() as conn:

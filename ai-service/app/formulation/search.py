@@ -8,6 +8,8 @@ from typing import Literal
 from app.formulation.schemas import FormulationRecord
 from app.formulation.store import list_formulations
 from app.reasoning.brief import (
+    brief_markets,
+    formulation_compliance_status,
     merge_intent_with_brief,
     normalize_brief_terms,
     preferred_ingredient_score,
@@ -171,6 +173,15 @@ def score_formulation(
     if brief:
         preferred = normalize_brief_terms(brief.preferred_ingredients)
         breakdown["preferred_ingredients"] = preferred_ingredient_score(record, preferred)
+        markets = brief_markets(brief)
+        if markets:
+            compliance = formulation_compliance_status(record, markets)
+            if compliance == "fail":
+                breakdown["compliance"] = -100.0
+            elif compliance == "warn":
+                breakdown["compliance"] = -12.0
+            else:
+                breakdown["compliance"] = 4.0
 
     breakdown["ingredient_match"] = _ingredient_match_score(record, signals)
     breakdown["named_formula"] = _named_formula_score(record, signals)
@@ -283,6 +294,12 @@ def structured_search(
             seen_names[key] = r
 
     ranked = sorted(seen_names.values(), key=lambda x: x.score, reverse=True)
+
+    markets = brief_markets(brief)
+    if markets:
+        ranked = [
+            r for r in ranked if formulation_compliance_status(r.record, markets) != "fail"
+        ]
 
     if _query_hand_cream(query):
         def _hand_cream_rank(r: RankedFormulation) -> tuple[int, float]:

@@ -48,6 +48,8 @@ class ChatController extends Controller
                     $thread->save();
                 }
 
+                $validated['history'] = $this->chatHistoryForThread($thread->id);
+
                 ChatMessage::query()->create([
                     'thread_id' => $thread->id,
                     'role' => 'user',
@@ -148,6 +150,8 @@ class ChatController extends Controller
                 $thread->title = Str::limit($validated['message'], 60);
                 $thread->save();
             }
+
+            $validated['history'] = $this->chatHistoryForThread($thread->id);
 
             ChatMessage::query()->create([
                 'thread_id' => $thread->id,
@@ -270,5 +274,27 @@ class ChatController extends Controller
         }
 
         return $message;
+    }
+
+    /**
+     * @return list<array{role: string, content: string}>
+     */
+    private function chatHistoryForThread(string $threadId, int $limit = 10): array
+    {
+        $rows = ChatMessage::query()
+            ->where('thread_id', $threadId)
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get(['role', 'content']);
+
+        return $rows
+            ->reverse()
+            ->values()
+            ->map(fn (ChatMessage $message) => [
+                'role' => $message->role,
+                'content' => $message->content,
+            ])
+            ->all();
     }
 }

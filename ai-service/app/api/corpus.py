@@ -1,4 +1,4 @@
-"""Corpus / index statistics and ingest operations for admin UI."""
+"""Corpus / index statistics and ingest operations for the corpus dashboard."""
 from __future__ import annotations
 
 import sqlite3

@@ -45,6 +45,7 @@ export interface ChatTurnRequest {
   thread_id: string;
   message: string;
   structured_brief?: StructuredBrief;
+  history?: Array<{ role: ChatRole; content: string }>;
 }
 
 export interface StructuredIngredient {
@@ -86,6 +87,7 @@ export interface ChatTurnResponse {
   llm_used?: boolean;
   search_confidence?: number | null;
   fallback_stage?: FallbackStage | null;
+  rewritten_query?: string | null;
 }
 
 export interface ChatThreadSummary {

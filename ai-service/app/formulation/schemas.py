@@ -12,6 +12,10 @@ ExtractionMethod = Literal[
     "wtg",
     "column_wt",
     "inline_wt",
+    "numbered_stage",
+    "phase_column",
+    "component_wt",
+    "leading_amounts",
     "part_function",
     "part_labeled",
     "phase_inline",
@@ -61,3 +65,5 @@ class StructuredFormulationSummary(BaseModel):
     printed_page: int | None = None
     ingredient_count: int
     confidence: float
+    precision_score: float | None = None
+    kbs_status: str | None = None

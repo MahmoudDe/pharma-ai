@@ -153,5 +153,12 @@
   "worksheet.phase": "Phase",
   "history.recent": "Recent",
   "history.expand": "Expand history",
-  "history.collapse": "Collapse"
+  "history.collapse": "Collapse",
+  "kbs.verified": "Verified",
+  "kbs.review": "Review",
+  "kbs.lowPrecision": "Low precision",
+  "kbs.badgeTitle": "Knowledge-base precision validation",
+  "kbs.panelTitle": "KBS precision check",
+  "kbs.compliance": "Compliance",
+  "kbs.noFindings": "All knowledge rules passed — amounts verified against the source."
 }

@@ -39,7 +39,7 @@ def _parse_part_column_block(part_text: str, phase: str | None) -> list[Ingredie
         if not ln or ln.lower().startswith("part "):
             continue
         if _QS_AMOUNT.match(ln):
-            amounts.append((100.0, "wtg"))
+            amounts.append((None, "qs"))
         elif _AMOUNT.match(ln):
             amounts.append((float(ln), "wtg"))
 

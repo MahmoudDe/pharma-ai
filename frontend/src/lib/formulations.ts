@@ -55,6 +55,43 @@ export interface FormulationSummary {
   printed_page?: number | null;
   ingredient_count: number;
   confidence: number;
+  precision_score?: number | null;
+  kbs_status?: "verified" | "review" | "low_precision" | null;
+}
+
+export interface KbsFinding {
+  rule_id: string;
+  family: string;
+  severity: "info" | "warning" | "error";
+  message: string;
+  ingredient?: string | null;
+}
+
+export interface KbsReport {
+  formulation_id: string;
+  formulation_name: string;
+  precision_score: number;
+  status: "verified" | "review" | "low_precision";
+  compliance_status: "pass" | "warn" | "fail" | "skipped";
+  extraction_method: string;
+  findings: KbsFinding[];
+  validated_at: string;
+}
+
+export async function fetchKbsReport(formulationId: string): Promise<KbsReport | null> {
+  const response = await fetch(`${BACKEND_URL}/api/kbs/report/${formulationId}`, {
+    headers: { Accept: "application/json" },
+  });
+  if (response.status === 404) return null;
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+  return body as KbsReport;
 }
 
 export async function fetchFormulationSummaries(params?: {

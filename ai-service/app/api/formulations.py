@@ -7,6 +7,7 @@ from app.formulation.schemas import (
     StructuredFormulationSummary,
 )
 from app.formulation.store import get_formulation, list_formulations
+from app.kbs.report_store import get_verdicts
 from app.formulation.substitution import suggest_substitutions
 from app.schemas import StructuredBrief
 from pydantic import BaseModel, Field
@@ -24,7 +25,11 @@ class ComplianceRequest(BaseModel):
     markets: list[str] = Field(default_factory=lambda: ["EU"])
 
 
-def _to_summary(record: FormulationRecord) -> StructuredFormulationSummary:
+def _to_summary(
+    record: FormulationRecord,
+    verdicts: dict[str, tuple[float, str]] | None = None,
+) -> StructuredFormulationSummary:
+    verdict = (verdicts or {}).get(record.id)
     return StructuredFormulationSummary(
         formulation_id=record.id,
         name=record.name,
@@ -34,6 +39,8 @@ def _to_summary(record: FormulationRecord) -> StructuredFormulationSummary:
         printed_page=record.printed_page,
         ingredient_count=len(record.ingredients),
         confidence=record.confidence,
+        precision_score=verdict[0] if verdict else None,
+        kbs_status=verdict[1] if verdict else None,
     )
 
 
@@ -50,8 +57,9 @@ def list_all(
         doc_id=doc_id,
         limit=limit,
     )
+    verdicts = get_verdicts([r.id for r in records])
     return {
-        "formulations": [_to_summary(r) for r in records],
+        "formulations": [_to_summary(r, verdicts) for r in records],
         "count": len(records),
     }
 

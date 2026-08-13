@@ -267,7 +267,7 @@ See [../REQUIREMENTS.md](../REQUIREMENTS.md) for the full list. Highlights still
 - PostgreSQL formula store + SQL pre-filters (banned ingredients, cost).
 - Conversation-aware retrieval; `structured_brief` wired into search.
 - Batch calculator, substitution, cost estimator, regulatory checks.
-- Auth on the Laravel proxy; per-user thread isolation.
+- Optional per-user thread isolation on the Laravel proxy (no role tiers).
 - OCR for scanned PDFs.
 
 Done in this service: hybrid BM25+vector (RRF), cross-encoder rerank, structured SQLite formulations, intent routing.

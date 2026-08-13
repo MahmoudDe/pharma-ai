@@ -78,6 +78,10 @@ class Settings(BaseSettings):
     formulation_store: str = "sqlite"
     database_url: str = ""
 
+    # Conversation context (Phase A)
+    chat_history_max_messages: int = 10
+    enable_conversation_rewrite: bool = True
+
     # OCR for scanned PDF pages
     ocr_enabled: bool = True
     ocr_lang: str = "eng"
@@ -95,4 +99,12 @@ def get_settings() -> Settings:
         hf_home_path = (PROJECT_ROOT / hf_home_path).resolve()
     hf_home_path.mkdir(parents=True, exist_ok=True)
     os.environ.setdefault("HF_HOME", str(hf_home_path))
+
+    # Resolve a relative docs_dir against the project root, not the process
+    # CWD — the API server and the CLI run from different directories, and a
+    # relative DOCS_DIR (e.g. "../docs") would otherwise point somewhere that
+    # only exists for one of them, silently failing UI-triggered ingests.
+    docs_path = Path(settings.docs_dir)
+    if not docs_path.is_absolute():
+        settings.docs_dir = str((PROJECT_ROOT / docs_path).resolve())
     return settings

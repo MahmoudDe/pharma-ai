@@ -35,10 +35,16 @@ class SuggestedNextAction(BaseModel):
     payload: Optional[dict[str, Any]] = None
 
 
+class ChatHistoryMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
 class ChatTurnRequest(BaseModel):
     thread_id: str
     message: str
     structured_brief: Optional[StructuredBrief] = None
+    history: Optional[list[ChatHistoryMessage]] = None
 
 
 class StructuredFormulationView(BaseModel):
@@ -49,6 +55,9 @@ class StructuredFormulationView(BaseModel):
     pdf_page: int
     printed_page: Optional[int] = None
     confidence: float = 0.0
+    kbs_status: Optional[str] = None
+    precision_score: Optional[float] = None
+    kbs_warnings: list[str] = Field(default_factory=list)
     ingredients: list[dict[str, Any]] = Field(default_factory=list)
     procedure: list[str] = Field(default_factory=list)
 
@@ -63,6 +72,7 @@ class ChatTurnResponse(BaseModel):
     llm_used: bool = False
     search_confidence: Optional[float] = None
     fallback_stage: Optional[FallbackStage] = None
+    rewritten_query: Optional[str] = None
 
 
 class HealthResponse(BaseModel):

@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 
 from app.formulation.normalize import normalize_ingredient_name
+from app.formulation.regulatory import check_formulation
 from app.formulation.schemas import FormulationRecord
 from app.retrieval.intent import QueryIntent
 from app.schemas import StructuredBrief
@@ -67,13 +68,29 @@ def preferred_ingredient_score(record: FormulationRecord, preferred: list[str]) 
     return min(score, 24.0)
 
 
+def brief_markets(brief: StructuredBrief | None) -> list[str]:
+    if brief is None or not brief.markets:
+        return []
+    return [m.strip().upper() for m in brief.markets if m and m.strip()]
+
+
+def formulation_compliance_status(record: FormulationRecord, markets: list[str]) -> str:
+    if not markets:
+        return "pass"
+    return check_formulation(record, markets).status
+
+
 def apply_brief_filters(
     records: list[FormulationRecord],
     brief: StructuredBrief | None,
 ) -> list[FormulationRecord]:
     if brief is None:
         return records
+    out = records
     banned = normalize_brief_terms(brief.banned_ingredients)
-    if not banned:
-        return records
-    return [r for r in records if not formulation_has_banned(r, banned)]
+    if banned:
+        out = [r for r in out if not formulation_has_banned(r, banned)]
+    markets = brief_markets(brief)
+    if markets:
+        out = [r for r in out if formulation_compliance_status(r, markets) != "fail"]
+    return out

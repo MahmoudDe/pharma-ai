@@ -48,6 +48,9 @@ Route::post('/formulations/search', [FormulationController::class, 'search']);
 Route::get('/formulations/{formulationId}', [FormulationController::class, 'show']);
 Route::post('/formulations/{formulationId}/substitutions', [FormulationController::class, 'substitutions']);
 Route::post('/formulations/{formulationId}/compliance', [FormulationController::class, 'compliance']);
+Route::get('/kbs/report/{formulationId}', [FormulationController::class, 'kbsReport']);
+Route::post('/kbs/validate/{formulationId}', [FormulationController::class, 'kbsValidate']);
+Route::get('/kbs/rules', [FormulationController::class, 'kbsRules']);
 Route::get('/sources/{docId}', [SourceController::class, 'show'])->where('docId', '[A-Za-z0-9_\-]+');
 
 Route::post('/warehouse/upload', [WarehouseController::class, 'upload']);

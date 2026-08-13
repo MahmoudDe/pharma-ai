@@ -1,0 +1,13 @@
+{
+  "id": "802c7090-c210-4dd9-a6b8-1b67c9ade66a",
+  "status": "failed",
+  "force": false,
+  "sqlite_only": false,
+  "pdf_only": false,
+  "docs_dir": null,
+  "created_at": "2026-07-06T11:44:28.411044+00:00",
+  "started_at": "2026-07-06T11:44:28.411918+00:00",
+  "finished_at": "2026-07-06T11:44:28.412862+00:00",
+  "error": "Ingest exited with code 1",
+  "result": {}
+}

@@ -20,7 +20,8 @@ _SKIP = re.compile(
 def _parse_amount_token(raw: str) -> tuple[float | None, str]:
     s = raw.strip().lower()
     if s.startswith("to 100"):
-        return 100.0, "%"
+        # "to 100" is a quantum-satis fill, not an amount of 100
+        return None, "qs"
     m = re.match(r"^(\d+(?:\.\d+)?)", raw.strip())
     if m:
         return float(m.group(1)), "%"

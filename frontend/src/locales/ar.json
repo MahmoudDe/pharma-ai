@@ -153,5 +153,12 @@
   "worksheet.phase": "الطور",
   "history.recent": "الأخيرة",
   "history.expand": "توسيع السجل",
-  "history.collapse": "طي"
+  "history.collapse": "طي",
+  "kbs.verified": "موثّق",
+  "kbs.review": "بحاجة لمراجعة",
+  "kbs.lowPrecision": "دقة منخفضة",
+  "kbs.badgeTitle": "التحقق من الدقة عبر نظام قواعد المعرفة",
+  "kbs.panelTitle": "فحص الدقة (KBS)",
+  "kbs.compliance": "الامتثال",
+  "kbs.noFindings": "اجتازت جميع قواعد المعرفة — الكميات موثّقة من المصدر."
 }

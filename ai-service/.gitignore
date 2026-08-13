@@ -12,3 +12,4 @@ data/hf-cache/
 data/models/
 .DS_Store
 *.egg-info/
+data/kbs_reports.db
