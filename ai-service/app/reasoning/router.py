@@ -340,6 +340,32 @@ def route_chat(
         was_rewritten,
     )
 
+    # Chitchat / meta / off-topic: do not recycle the previous formula from hybrid search.
+    if (
+        route == "unknown"
+        and not intent.wants_formula
+        and not intent.product_types
+        and not payload.structured_brief
+    ):
+        return RoutedResponse(
+            response=_build_response(
+                message=(
+                    "Ask me for a cosmetic formula (for example: baby shampoo, "
+                    "hand cream, or sulfate-free shampoo) and I will pull a cited "
+                    "recipe from the library."
+                ),
+                route="unknown",
+                llm_used=False,
+                structured_records=[],
+                chunks=[],
+                search_confidence=None,
+                fallback_stage="none",
+                payload=payload,
+                rewritten_query=rewritten_label,
+            ),
+            classification=classification,
+        )
+
     if route == "reasoning":
         chunks = search(search_query, top_k=TOP_K, intent=intent)
         structured = _hydrate_chunks(chunks)

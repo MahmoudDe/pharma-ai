@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ChatMessage;
 use App\Models\ChatThread;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
 
 class ChatController extends Controller
@@ -38,11 +39,14 @@ class ChatController extends Controller
             );
         }
 
+        $user = $request->user();
+        if (! $user instanceof User) {
+            abort(401);
+        }
+
         try {
-            return DB::transaction(function () use ($validated, $baseUrl, $timeout) {
-                $thread = ChatThread::query()->firstOrCreate(
-                    ['id' => $validated['thread_id']],
-                );
+            return DB::transaction(function () use ($validated, $baseUrl, $timeout, $user) {
+                $thread = $this->resolveThreadForUser($user, $validated['thread_id']);
 
                 if ($thread->title === null) {
                     $thread->title = Str::limit($validated['message'], 60);
@@ -145,9 +149,12 @@ class ChatController extends Controller
         }
 
         try {
-            $thread = ChatThread::query()->firstOrCreate(
-                ['id' => $validated['thread_id']],
-            );
+            $user = $request->user();
+            if (! $user instanceof User) {
+                abort(401);
+            }
+
+            $thread = $this->resolveThreadForUser($user, $validated['thread_id']);
 
             if ($thread->title === null) {
                 $thread->title = Str::limit($validated['message'], 60);
@@ -272,8 +279,12 @@ class ChatController extends Controller
             'user_message' => ['sometimes', 'string', 'nullable'],
         ]);
 
-        $message = ChatMessage::query()->find($messageId);
+        $message = ChatMessage::query()->with('thread')->find($messageId);
         if ($message === null || $message->role !== 'assistant') {
+            return response()->json(['message' => 'Assistant message not found.'], 404);
+        }
+
+        if ($message->thread === null || (int) $message->thread->user_id !== (int) $request->user()->id) {
             return response()->json(['message' => 'Assistant message not found.'], 404);
         }
 
@@ -314,6 +325,24 @@ class ChatController extends Controller
         }
 
         return $message;
+    }
+
+    private function resolveThreadForUser(User $user, string $threadId): ChatThread
+    {
+        $thread = ChatThread::query()->find($threadId);
+
+        if ($thread === null) {
+            return ChatThread::query()->create([
+                'id' => $threadId,
+                'user_id' => $user->id,
+            ]);
+        }
+
+        if ((int) $thread->user_id !== (int) $user->id) {
+            abort(404, 'Thread not found.');
+        }
+
+        return $thread;
     }
 
     /**

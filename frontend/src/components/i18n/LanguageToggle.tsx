@@ -16,7 +16,7 @@ export function LanguageToggle() {
 
   return (
     <div
-      className="flex items-center gap-0.5 rounded-xl border border-border bg-[var(--panel-muted)] p-0.5"
+      className="flex h-9 shrink-0 items-center gap-0.5 rounded-xl border border-border bg-[var(--panel-muted)] p-0.5"
       role="group"
       aria-label="Language"
     >
@@ -28,7 +28,7 @@ export function LanguageToggle() {
             type="button"
             onClick={() => setLocale(id)}
             aria-pressed={active}
-            className={`min-w-[2.25rem] rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide transition-all duration-200 ${
+            className={`inline-flex h-8 min-w-[2.25rem] items-center justify-center rounded-lg px-2.5 text-[10px] font-bold uppercase tracking-wide transition-all duration-200 ${
               active ? "text-white shadow-sm" : "text-text-secondary hover:text-text-primary"
             }`}
             style={active ? { background: AppColors.buttonGradient } : undefined}

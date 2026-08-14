@@ -4,6 +4,8 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AppHeader } from "@/components/ui/AppHeader";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { ChatComposer } from "@/components/chat/ChatComposer";
 import { ChatLayout } from "@/components/chat/ChatLayout";
 import { ChatThread } from "@/components/chat/ChatThread";
@@ -40,16 +42,13 @@ import type {
 type BackendStatus = "checking" | "ok" | "down";
 type CorpusStatus = "unknown" | "ready" | "degraded";
 
-/** One bootstrap per full page load (avoids duplicate threads in React Strict Mode). */
-let hasBootstrappedChat = false;
-
 function createMessage(
   role: "user" | "assistant",
   content: string,
   extras?: Partial<ChatMessage>,
 ): ChatMessage {
   return {
-    id: extras?.id ?? `${role}-${crypto.randomUUID()}`,
+    id: extras?.id ?? crypto.randomUUID(),
     role,
     content,
     createdAt: extras?.createdAt ?? new Date().toISOString(),
@@ -104,6 +103,7 @@ function latestAssistantPanels(messages: ChatMessage[]): {
 
 function ChatPageContent() {
   const { t } = useLocale();
+  const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [threadId, setThreadId] = useState<string | null>(null);
@@ -135,18 +135,29 @@ function ChatPageContent() {
     }
   }, []);
 
-  const applyThreadDetail = useCallback((detail: Awaited<ReturnType<typeof fetchChatThread>>) => {
-    const mapped = detail.messages.map(mapStoredMessage);
-    const panels = latestAssistantPanels(mapped);
-    setThreadId(detail.id);
-    setStoredActiveThreadId(detail.id);
-    router.replace(`/chat?thread=${detail.id}`, { scroll: false });
-    setMessages(mapped);
-    setLatestEvidence(panels.evidence);
-    setLatestStructured(panels.structured);
-    setLatestStructuredList(panels.structuredList);
-    setLatestActions(panels.actions);
-  }, [router]);
+  const syncThreadUrl = useCallback(
+    (id: string) => {
+      if (searchParams.get("thread") === id) return;
+      router.replace(`/chat?thread=${id}`, { scroll: false });
+    },
+    [router, searchParams],
+  );
+
+  const applyThreadDetail = useCallback(
+    (detail: Awaited<ReturnType<typeof fetchChatThread>>) => {
+      const mapped = detail.messages.map(mapStoredMessage);
+      const panels = latestAssistantPanels(mapped);
+      setThreadId(detail.id);
+      setStoredActiveThreadId(detail.id, user?.id);
+      syncThreadUrl(detail.id);
+      setMessages(mapped);
+      setLatestEvidence(panels.evidence);
+      setLatestStructured(panels.structured);
+      setLatestStructuredList(panels.structuredList);
+      setLatestActions(panels.actions);
+    },
+    [syncThreadUrl, user?.id],
+  );
 
   const startNewChat = useCallback(async () => {
     setErrorMessage(null);
@@ -160,15 +171,15 @@ function ChatPageContent() {
     try {
       const id = await createChatThread();
       setThreadId(id);
-      setStoredActiveThreadId(id);
-      router.replace(`/chat?thread=${id}`, { scroll: false });
+      setStoredActiveThreadId(id, user?.id);
+      syncThreadUrl(id);
       await refreshThreads();
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to create a new chat.";
       setErrorMessage(message);
     }
-  }, [refreshThreads, router]);
+  }, [refreshThreads, syncThreadUrl, user?.id]);
 
   useEffect(() => {
     fetchBackendHealth()
@@ -180,11 +191,17 @@ function ChatPageContent() {
       .catch(() => setCorpusStatus("degraded"));
   }, []);
 
+  // Bootstrap once per user mount — do not depend on searchParams/router or
+  // applyThreadDetail's URL sync will re-trigger this forever.
+  const userId = user?.id ?? null;
   useEffect(() => {
-    if (hasBootstrappedChat) return;
-    hasBootstrappedChat = true;
+    if (userId == null) return;
 
     let cancelled = false;
+    const fromUrl =
+      typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("thread")
+        : null;
 
     async function bootstrap() {
       setIsLoadingThreads(true);
@@ -194,8 +211,7 @@ function ChatPageContent() {
         if (cancelled) return;
         setThreads(list);
 
-        const fromUrl = searchParams.get("thread");
-        const stored = getStoredActiveThreadId();
+        const stored = getStoredActiveThreadId(userId);
         const preferred = fromUrl || stored;
         const existing =
           preferred && list.some((th) => th.id === preferred) ? preferred : list[0]?.id ?? null;
@@ -208,8 +224,8 @@ function ChatPageContent() {
           const id = await createChatThread();
           if (cancelled) return;
           setThreadId(id);
-          setStoredActiveThreadId(id);
-          router.replace(`/chat?thread=${id}`, { scroll: false });
+          setStoredActiveThreadId(id, userId);
+          syncThreadUrl(id);
           const refreshed = await fetchChatThreads();
           if (!cancelled) setThreads(refreshed);
         }
@@ -231,7 +247,9 @@ function ChatPageContent() {
     return () => {
       cancelled = true;
     };
-  }, [applyThreadDetail, router, searchParams]);
+    // applyThreadDetail / syncThreadUrl intentionally omitted — URL sync must not re-bootstrap.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   useEffect(() => {
     const prompt = searchParams.get("prompt");
@@ -298,9 +316,22 @@ function ChatPageContent() {
   };
 
   const executeTurn = async (rawMessage: string) => {
-    if (!threadId) {
-      return;
+    let activeThreadId = threadId;
+    if (!activeThreadId) {
+      try {
+        activeThreadId = await createChatThread();
+        setThreadId(activeThreadId);
+        setStoredActiveThreadId(activeThreadId, user?.id);
+        syncThreadUrl(activeThreadId);
+        await refreshThreads();
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error ? error.message : "Failed to create a new chat.",
+        );
+        return;
+      }
     }
+
     const userMessage = createMessage("user", rawMessage);
     const streamAssistant = createMessage("assistant", "");
     setMessages((previous) => [...previous, userMessage, streamAssistant]);
@@ -318,7 +349,7 @@ function ChatPageContent() {
       structuredBrief.batch_size != null;
 
     const payload: ChatTurnRequest = {
-      thread_id: threadId,
+      thread_id: activeThreadId,
       message: rawMessage,
       assistant_message_id: streamAssistant.id,
       ...(hasBrief ? { structured_brief: structuredBrief } : {}),
@@ -473,7 +504,7 @@ function ChatPageContent() {
             value={messageInput}
             onChange={setMessageInput}
             onSubmit={handleSubmit}
-            disabled={isLoading || isInitializing || !threadId}
+            disabled={isLoading}
             errorMessage={errorMessage}
             onRetry={lastFailedMessage ? handleRetry : undefined}
           />
@@ -495,16 +526,18 @@ function ChatPageContent() {
 
 export default function ChatPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="app-mesh-bg flex min-h-screen items-center justify-center">
-          <div className="glass-panel animate-pulse rounded-2xl px-8 py-6 text-sm text-text-secondary">
-            Loading chat…
+    <AuthGuard>
+      <Suspense
+        fallback={
+          <div className="app-mesh-bg flex min-h-screen items-center justify-center">
+            <div className="glass-panel animate-pulse rounded-2xl px-8 py-6 text-sm text-text-secondary">
+              Loading chat…
+            </div>
           </div>
-        </div>
-      }
-    >
-      <ChatPageContent />
-    </Suspense>
+        }
+      >
+        <ChatPageContent />
+      </Suspense>
+    </AuthGuard>
   );
 }

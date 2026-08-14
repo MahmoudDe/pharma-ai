@@ -21,7 +21,7 @@ const TEXT: Record<StatusPillProps["variant"], string> = {
 export function StatusPill({ label, variant, pulse = false }: StatusPillProps) {
   return (
     <span
-      className={`inline-flex max-w-[200px] items-center gap-1.5 truncate rounded-full border border-border/80 bg-background/80 px-2.5 py-1 text-xs font-medium backdrop-blur-sm ${TEXT[variant]}`}
+      className={`inline-flex h-9 max-w-[200px] items-center gap-1.5 truncate rounded-xl border border-border/80 bg-background/80 px-2.5 text-xs font-medium backdrop-blur-sm ${TEXT[variant]}`}
       title={label}
     >
       <span

@@ -93,7 +93,7 @@ export function ThemeToggle() {
       onClick={toggle}
       aria-label={label}
       title={label}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border/80 bg-background/80 text-text-primary shadow-sm transition-all duration-300 hover:scale-105 hover:border-secondary/50 hover:shadow-[var(--shadow-glow)] hover:text-secondary active:scale-95"
+      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border/80 bg-background/80 text-text-primary shadow-sm transition-all duration-300 hover:scale-105 hover:border-secondary/50 hover:shadow-[var(--shadow-glow)] hover:text-secondary active:scale-95"
     >
       {/* Render a neutral icon on the server so SSR markup is stable; swap after hydration. */}
       {!mounted ? <SunIcon /> : theme === "dark" ? <SunIcon /> : <MoonIcon />}

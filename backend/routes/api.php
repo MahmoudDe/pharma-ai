@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\ChatThreadController;
 use App\Http\Controllers\Api\CorpusController;
 use App\Http\Controllers\Api\FormulationController;
 use App\Http\Controllers\Api\SourceController;
 use App\Http\Controllers\Api\WarehouseController;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health', static function () {
@@ -21,23 +23,37 @@ Route::get('/health/ready', static function () {
         return response()->json(['ready' => false, 'message' => 'AI_SERVICE_URL is not configured.'], 503);
     }
     try {
-        $response = \Illuminate\Support\Facades\Http::timeout(10)
+        $response = Http::timeout(10)
             ->acceptJson()
             ->get("{$baseUrl}/health/ready");
+
         return response()->json($response->json() ?? [], $response->status());
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
         return response()->json(['ready' => false, 'message' => $e->getMessage()], 502);
     }
 });
 
-Route::get('/chat/threads', [ChatThreadController::class, 'index']);
-Route::post('/chat/threads', [ChatThreadController::class, 'store']);
-Route::get('/chat/threads/{id}', [ChatThreadController::class, 'show']);
-Route::patch('/chat/threads/{id}', [ChatThreadController::class, 'update']);
-Route::delete('/chat/threads/{id}', [ChatThreadController::class, 'destroy']);
-Route::post('/chat/messages', [ChatController::class, 'messages']);
-Route::post('/chat/messages/stream', [ChatController::class, 'messagesStream']);
-Route::post('/chat/messages/{messageId}/feedback', [ChatController::class, 'feedback']);
+Route::middleware('throttle:auth')->group(static function () {
+    Route::post('/auth/register', [AuthController::class, 'register']);
+    Route::post('/auth/login', [AuthController::class, 'login']);
+});
+
+Route::middleware('auth:sanctum')->group(static function () {
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::patch('/auth/profile', [AuthController::class, 'updateProfile']);
+    Route::patch('/auth/password', [AuthController::class, 'updatePassword']);
+    Route::delete('/auth/account', [AuthController::class, 'destroy']);
+
+    Route::get('/chat/threads', [ChatThreadController::class, 'index']);
+    Route::post('/chat/threads', [ChatThreadController::class, 'store']);
+    Route::get('/chat/threads/{id}', [ChatThreadController::class, 'show']);
+    Route::patch('/chat/threads/{id}', [ChatThreadController::class, 'update']);
+    Route::delete('/chat/threads/{id}', [ChatThreadController::class, 'destroy']);
+    Route::post('/chat/messages', [ChatController::class, 'messages']);
+    Route::post('/chat/messages/stream', [ChatController::class, 'messagesStream']);
+    Route::post('/chat/messages/{messageId}/feedback', [ChatController::class, 'feedback']);
+});
 
 Route::get('/corpus/stats', [CorpusController::class, 'stats']);
 Route::get('/corpus/ingest-quality', [CorpusController::class, 'ingestQuality']);

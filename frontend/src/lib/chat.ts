@@ -1,3 +1,4 @@
+import { apiFetch, parseJsonResponse, readApiError } from "@/lib/api";
 import type {
   ChatThreadDetail,
   ChatThreadSummary,
@@ -5,27 +6,14 @@ import type {
   ChatTurnResponse,
 } from "@/types/chat";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8000";
 const CHAT_TIMEOUT_MS = 45000;
 
 function buildApiError(status: number, body: unknown): Error {
-  if (body && typeof body === "object" && "message" in body) {
-    return new Error(String((body as { message: unknown }).message));
-  }
-
-  return new Error(`Request failed with status ${status}`);
-}
-
-async function parseJsonResponse(response: Response): Promise<unknown> {
-  try {
-    return await response.json();
-  } catch {
-    return null;
-  }
+  return new Error(readApiError(body, `Request failed with status ${status}`));
 }
 
 export async function fetchChatThreads(): Promise<ChatThreadSummary[]> {
-  const response = await fetch(`${BACKEND_URL}/api/chat/threads`, {
+  const response = await apiFetch(`/api/chat/threads`, {
     method: "GET",
     headers: { Accept: "application/json" },
   });
@@ -44,7 +32,7 @@ export async function fetchChatThreads(): Promise<ChatThreadSummary[]> {
 }
 
 export async function createChatThread(): Promise<string> {
-  const response = await fetch(`${BACKEND_URL}/api/chat/threads`, {
+  const response = await apiFetch(`/api/chat/threads`, {
     method: "POST",
     headers: { Accept: "application/json" },
   });
@@ -63,7 +51,7 @@ export async function createChatThread(): Promise<string> {
 }
 
 export async function fetchChatThread(threadId: string): Promise<ChatThreadDetail> {
-  const response = await fetch(`${BACKEND_URL}/api/chat/threads/${threadId}`, {
+  const response = await apiFetch(`/api/chat/threads/${threadId}`, {
     method: "GET",
     headers: { Accept: "application/json" },
   });
@@ -82,7 +70,7 @@ export async function fetchChatThread(threadId: string): Promise<ChatThreadDetai
 }
 
 export async function updateChatThreadTitle(threadId: string, title: string): Promise<void> {
-  const response = await fetch(`${BACKEND_URL}/api/chat/threads/${threadId}`, {
+  const response = await apiFetch(`/api/chat/threads/${threadId}`, {
     method: "PATCH",
     headers: {
       Accept: "application/json",
@@ -98,7 +86,7 @@ export async function updateChatThreadTitle(threadId: string, title: string): Pr
 }
 
 export async function deleteChatThread(threadId: string): Promise<void> {
-  const response = await fetch(`${BACKEND_URL}/api/chat/threads/${threadId}`, {
+  const response = await apiFetch(`/api/chat/threads/${threadId}`, {
     method: "DELETE",
     headers: { Accept: "application/json" },
   });
@@ -114,7 +102,7 @@ export async function submitMessageFeedback(
   rating: 1 | -1,
   userMessage?: string,
 ): Promise<void> {
-  const response = await fetch(`${BACKEND_URL}/api/chat/messages/${messageId}/feedback`, {
+  const response = await apiFetch(`/api/chat/messages/${messageId}/feedback`, {
     method: "POST",
     headers: { Accept: "application/json", "Content-Type": "application/json" },
     body: JSON.stringify({ rating, user_message: userMessage ?? null }),
@@ -149,7 +137,7 @@ export async function sendChatTurnStream(
   },
   signal?: AbortSignal,
 ): Promise<ChatTurnResponse> {
-  const response = await fetch(`${BACKEND_URL}/api/chat/messages/stream`, {
+  const response = await apiFetch(`/api/chat/messages/stream`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "text/event-stream" },
     body: JSON.stringify(payload),
@@ -229,7 +217,7 @@ export async function sendChatTurn(
   const timeoutId = setTimeout(() => controller.abort(), CHAT_TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${BACKEND_URL}/api/chat/messages`, {
+    const response = await apiFetch(`/api/chat/messages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
