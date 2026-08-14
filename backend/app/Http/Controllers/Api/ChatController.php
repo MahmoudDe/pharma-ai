@@ -25,6 +25,7 @@ class ChatController extends Controller
             'thread_id' => ['required', 'string', 'uuid'],
             'message' => ['required', 'string'],
             'structured_brief' => ['sometimes', 'array'],
+            'assistant_message_id' => ['sometimes', 'string', 'uuid'],
         ]);
 
         $baseUrl = rtrim((string) config('services.ai.url'), '/');
@@ -88,6 +89,7 @@ class ChatController extends Controller
                 }
 
                 ChatMessage::query()->create([
+                    'id' => $validated['assistant_message_id'] ?? Str::uuid()->toString(),
                     'thread_id' => $thread->id,
                     'role' => 'assistant',
                     'content' => (string) ($body['assistant_message'] ?? ''),
@@ -129,6 +131,7 @@ class ChatController extends Controller
             'thread_id' => ['required', 'string', 'uuid'],
             'message' => ['required', 'string'],
             'structured_brief' => ['sometimes', 'array'],
+            'assistant_message_id' => ['sometimes', 'string', 'uuid'],
         ]);
 
         $baseUrl = rtrim((string) config('services.ai.url'), '/');
@@ -228,6 +231,7 @@ class ChatController extends Controller
 
                     if (is_array($donePayload)) {
                         ChatMessage::query()->create([
+                            'id' => $validated['assistant_message_id'] ?? Str::uuid()->toString(),
                             'thread_id' => $thread->id,
                             'role' => 'assistant',
                             'content' => (string) ($donePayload['assistant_message'] ?? ''),
@@ -259,6 +263,42 @@ class ChatController extends Controller
                 502,
             );
         }
+    }
+
+    public function feedback(Request $request, string $messageId): JsonResponse
+    {
+        $validated = $request->validate([
+            'rating' => ['required', 'integer', 'in:1,-1'],
+            'user_message' => ['sometimes', 'string', 'nullable'],
+        ]);
+
+        $message = ChatMessage::query()->find($messageId);
+        if ($message === null || $message->role !== 'assistant') {
+            return response()->json(['message' => 'Assistant message not found.'], 404);
+        }
+
+        $message->feedback_rating = (int) $validated['rating'];
+        $message->save();
+
+        $baseUrl = rtrim((string) config('services.ai.url'), '/');
+        if ($baseUrl !== '') {
+            try {
+                Http::timeout(10)
+                    ->acceptJson()
+                    ->asJson()
+                    ->post("{$baseUrl}/eval/feedback", [
+                        'message_id' => $messageId,
+                        'thread_id' => $message->thread_id,
+                        'rating' => (int) $validated['rating'],
+                        'user_message' => $validated['user_message'] ?? null,
+                        'assistant_message' => $message->content,
+                    ]);
+            } catch (Throwable $exception) {
+                Log::warning('Feedback eval log failed', ['error' => $exception->getMessage()]);
+            }
+        }
+
+        return response()->json(['ok' => true, 'feedback_rating' => $message->feedback_rating]);
     }
 
     private function aiConnectionMessage(Throwable $exception): string

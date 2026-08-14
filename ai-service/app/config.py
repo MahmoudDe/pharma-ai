@@ -73,6 +73,7 @@ class Settings(BaseSettings):
     warehouse_llm_batch_size: int = 25
     warehouse_review_threshold: float = 0.7
     warehouse_makeable_coverage: float = 95.0
+    warehouse_embed_threshold: float = 0.72
 
     # Formulation store: sqlite (default) or postgres
     formulation_store: str = "sqlite"

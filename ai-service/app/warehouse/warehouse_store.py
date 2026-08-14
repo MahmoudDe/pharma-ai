@@ -78,6 +78,11 @@ def init_db() -> None:
                 payload_json TEXT NOT NULL,
                 created_at TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS alias_overrides (
+                raw_key TEXT PRIMARY KEY,
+                canonical_name TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
             CREATE INDEX IF NOT EXISTS idx_wh_materials_upload ON warehouse_materials(upload_id);
             """
         )
@@ -161,7 +166,53 @@ def get_material(material_id: int) -> MaterialRow | None:
     )
 
 
+def alias_override_key(raw_name: str) -> str:
+    from app.formulation.normalize import normalize_ingredient_name
+    from app.warehouse.arabic_aliases import has_arabic
+    from app.warehouse.matching import canonical_key
+
+    stripped = raw_name.strip()
+    if has_arabic(stripped):
+        return stripped.lower()
+    norm = normalize_ingredient_name(stripped)
+    return canonical_key(norm or stripped)
+
+
+def save_alias_override(raw_name: str, canonical: str) -> None:
+    from app.warehouse.matching import canonical_key
+
+    key = alias_override_key(raw_name)
+    canonical = canonical_key(canonical)
+    now = datetime.now(timezone.utc).isoformat()
+    init_db()
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO alias_overrides (raw_key, canonical_name, updated_at)
+            VALUES (?, ?, ?)
+            """,
+            (key, canonical, now),
+        )
+        conn.commit()
+
+
+def get_alias_override(raw_name: str) -> str | None:
+    key = alias_override_key(raw_name)
+    init_db()
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT canonical_name FROM alias_overrides WHERE raw_key = ?",
+            (key,),
+        ).fetchone()
+    return str(row["canonical_name"]) if row else None
+
+
 def clear_aliases_for_upload(upload_id: str) -> None:
+    """Remove auto-resolved aliases; keep manual corrections."""
+    clear_auto_aliases_for_upload(upload_id)
+
+
+def clear_auto_aliases_for_upload(upload_id: str) -> None:
     init_db()
     with _connect() as conn:
         ids = [
@@ -171,8 +222,29 @@ def clear_aliases_for_upload(upload_id: str) -> None:
             ).fetchall()
         ]
         for mid in ids:
-            conn.execute("DELETE FROM material_aliases WHERE warehouse_material_id = ?", (mid,))
-            conn.execute("DELETE FROM material_matches WHERE warehouse_material_id = ?", (mid,))
+            conn.execute(
+                """
+                DELETE FROM material_aliases
+                WHERE warehouse_material_id = ? AND source NOT IN ('manual')
+                """,
+                (mid,),
+            )
+            conn.execute(
+                "DELETE FROM material_matches WHERE warehouse_material_id = ?",
+                (mid,),
+            )
+            row = conn.execute(
+                "SELECT canonical_name FROM material_aliases WHERE warehouse_material_id = ? LIMIT 1",
+                (mid,),
+            ).fetchone()
+            if row:
+                conn.execute(
+                    """
+                    INSERT INTO material_matches (warehouse_material_id, matched_ingredient_norm, formulation_corpus_hit)
+                    VALUES (?, ?, 1)
+                    """,
+                    (mid, str(row["canonical_name"])),
+                )
         conn.commit()
 
 

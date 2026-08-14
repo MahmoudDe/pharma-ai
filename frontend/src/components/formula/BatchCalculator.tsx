@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { StructuredFormulationView } from "@/types/chat";
 
 interface BatchCalculatorProps {
   formulation: StructuredFormulationView;
+  defaultBatchKg?: number;
 }
 
 function parseBaseTotal(ingredients: StructuredFormulationView["ingredients"]): number | null {
@@ -20,9 +21,17 @@ function parseBaseTotal(ingredients: StructuredFormulationView["ingredients"]): 
   return sum;
 }
 
-export function BatchCalculator({ formulation }: BatchCalculatorProps) {
+export function BatchCalculator({ formulation, defaultBatchKg }: BatchCalculatorProps) {
   const { t } = useLocale();
-  const [batchKg, setBatchKg] = useState("1");
+  const [batchKg, setBatchKg] = useState(
+    defaultBatchKg != null && defaultBatchKg > 0 ? String(defaultBatchKg) : "1",
+  );
+
+  useEffect(() => {
+    if (defaultBatchKg != null && defaultBatchKg > 0) {
+      setBatchKg(String(defaultBatchKg));
+    }
+  }, [defaultBatchKg, formulation.formulation_id]);
 
   const baseTotal = useMemo(() => parseBaseTotal(formulation.ingredients), [formulation]);
 

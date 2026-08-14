@@ -26,6 +26,37 @@ export interface ComplianceReport {
   findings: ComplianceFinding[];
 }
 
+export interface FormulationCompareReport {
+  left_id: string;
+  right_id: string;
+  left_name: string;
+  right_name: string;
+  left_cost_per_kg: number | null;
+  right_cost_per_kg: number | null;
+  cost_delta_per_kg: number | null;
+  left_compliance: string;
+  right_compliance: string;
+  markets: string[];
+  only_in_left: string[];
+  only_in_right: string[];
+  ingredient_deltas: Array<{
+    key: string;
+    raw_name: string;
+    left_amount: number | null;
+    left_unit: string | null;
+    right_amount: number | null;
+    right_unit: string | null;
+  }>;
+  role_summaries: Array<{
+    role: string;
+    left_count: number;
+    right_count: number;
+    left_examples: string[];
+    right_examples: string[];
+  }>;
+  summary_lines: string[];
+}
+
 export interface FormulationCost {
   formulation_id: string;
   cost_per_kg: number | null;
@@ -262,4 +293,29 @@ export async function fetchFormulationCost(formulationId: string): Promise<Formu
     );
   }
   return body as FormulationCost;
+}
+
+export async function fetchCompareFormulations(
+  leftId: string,
+  rightId: string,
+  markets?: string[],
+): Promise<FormulationCompareReport> {
+  const response = await fetch(`${BACKEND_URL}/api/formulations/compare`, {
+    method: "POST",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify({
+      left_id: leftId,
+      right_id: rightId,
+      markets: markets?.length ? markets : undefined,
+    }),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+  return body as FormulationCompareReport;
 }

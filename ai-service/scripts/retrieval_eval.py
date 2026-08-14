@@ -49,6 +49,14 @@ class RetrievalEvalResult:
     chunks: list[RetrievedChunk] = field(default_factory=list)
 
 
+def load_golden_questions(path: Path | None = None) -> list[str]:
+    golden_path = path or DEFAULT_GOLDEN_PATH
+    if not golden_path.is_file():
+        return list(GOLDEN_QUESTIONS)
+    raw: dict[str, Any] = json.loads(golden_path.read_text(encoding="utf-8"))
+    return list(raw.keys())
+
+
 def load_golden_expectations(path: Path | None = None) -> dict[str, GoldenExpectation]:
     golden_path = path or DEFAULT_GOLDEN_PATH
     if not golden_path.is_file():
@@ -222,7 +230,7 @@ def run_retrieval_eval(
     verbose: bool = True,
 ) -> list[RetrievalEvalResult]:
     golden_map = load_golden_expectations(golden_path)
-    qs = questions or GOLDEN_QUESTIONS
+    qs = questions or load_golden_questions(golden_path)
     results: list[RetrievalEvalResult] = []
 
     for question in qs:

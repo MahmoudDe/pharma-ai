@@ -123,3 +123,29 @@ def apply_brief_filters(
     if brief.cost_target is not None:
         out = [r for r in out if not exceeds_cost_target(r, brief)]
     return out
+
+
+def format_structured_brief(brief: StructuredBrief | None) -> str:
+    if brief is None:
+        return ""
+    parts: list[str] = []
+    if brief.product_type:
+        parts.append(f"product_type={brief.product_type}")
+    if brief.target_attributes:
+        parts.append(f"target_attributes={', '.join(brief.target_attributes)}")
+    if brief.banned_ingredients:
+        parts.append(f"banned_ingredients={', '.join(brief.banned_ingredients)}")
+    if brief.preferred_ingredients:
+        parts.append(f"preferred_ingredients={', '.join(brief.preferred_ingredients)}")
+    if brief.markets:
+        parts.append(f"markets={', '.join(brief.markets)}")
+    if brief.cost_target is not None:
+        parts.append(f"max_cost_usd_per_kg={brief.cost_target}")
+    if brief.batch_size is not None:
+        parts.append(f"target_batch_kg={brief.batch_size}")
+    if not parts:
+        return ""
+    return (
+        "USER CONSTRAINTS (honor when recommending formulas and batch amounts):\n"
+        + "\n".join(f"- {p}" for p in parts)
+    )

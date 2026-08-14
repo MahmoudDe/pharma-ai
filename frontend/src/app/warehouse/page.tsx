@@ -72,6 +72,9 @@ export default function WarehousePage() {
   const [resolve, setResolve] = useState<ResolveResponse | null>(null);
   const [products, setProducts] = useState<DiscoverProductResult[]>([]);
   const [minCoverage, setMinCoverage] = useState(70);
+  const [bannedInput, setBannedInput] = useState("");
+  const [marketsInput, setMarketsInput] = useState("");
+  const [maxCost, setMaxCost] = useState("");
   const [tierFilter, setTierFilter] = useState<"all" | "makeable" | "partial">("all");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -108,12 +111,23 @@ export default function WarehousePage() {
     }
   };
 
+  const splitList = (raw: string) =>
+    raw
+      .split(/[,;]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
   const onDiscover = async () => {
     if (!upload) return;
     setBusy(true);
     setError(null);
     try {
-      const res = await discoverProducts(upload.upload_id, minCoverage);
+      const res = await discoverProducts(upload.upload_id, {
+        minCoverage,
+        bannedIngredients: splitList(bannedInput),
+        markets: splitList(marketsInput),
+        maxCost: maxCost.trim() ? parseFloat(maxCost) : undefined,
+      });
       setProducts(res.products);
       setStep(3);
     } catch (e) {
@@ -283,6 +297,38 @@ export default function WarehousePage() {
                   />
                   %
                 </label>
+                <label className="flex flex-col gap-1 text-xs text-text-secondary">
+                  {t("warehouse.banned")}
+                  <input
+                    type="text"
+                    value={bannedInput}
+                    onChange={(e) => setBannedInput(e.target.value)}
+                    placeholder={t("warehouse.bannedPlaceholder")}
+                    className="field min-w-[10rem] px-2 py-1.5"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-xs text-text-secondary">
+                  {t("warehouse.markets")}
+                  <input
+                    type="text"
+                    value={marketsInput}
+                    onChange={(e) => setMarketsInput(e.target.value)}
+                    placeholder={t("warehouse.marketsPlaceholder")}
+                    className="field min-w-[8rem] px-2 py-1.5"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 text-xs text-text-secondary">
+                  {t("warehouse.maxCost")}
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.1}
+                    value={maxCost}
+                    onChange={(e) => setMaxCost(e.target.value)}
+                    placeholder={t("warehouse.maxCostPlaceholder")}
+                    className="field w-24 px-2 py-1.5"
+                  />
+                </label>
               </div>
             </section>
 
@@ -425,6 +471,9 @@ export default function WarehousePage() {
                       <p className="mt-1 text-xs text-text-secondary">
                         {t("warehouse.matchedIngredients", { matched, total })}
                         {p.product_types.length > 0 ? ` · ${p.product_types.join(", ")}` : ""}
+                        {p.estimated_cost_per_kg != null
+                          ? ` · $${p.estimated_cost_per_kg.toFixed(2)}/kg`
+                          : ""}
                       </p>
                       {p.missing_ingredients.length > 0 ? (
                         <p className="mt-2 text-xs text-warning">

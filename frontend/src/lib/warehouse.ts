@@ -69,16 +69,27 @@ export async function setMaterialAlias(
 
 export async function discoverProducts(
   uploadId: string,
-  minCoverage = 50,
-  productType?: string,
+  options?: {
+    minCoverage?: number;
+    productType?: string;
+    bannedIngredients?: string[];
+    markets?: string[];
+    maxCost?: number;
+  },
 ): Promise<DiscoverResponse> {
+  const minCoverage = options?.minCoverage ?? 50;
   const response = await fetch(`${BACKEND_URL}/api/warehouse/discover`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
       upload_id: uploadId,
       min_coverage: minCoverage,
-      product_type: productType || undefined,
+      product_type: options?.productType || undefined,
+      banned_ingredients: options?.bannedIngredients?.length
+        ? options.bannedIngredients
+        : undefined,
+      markets: options?.markets?.length ? options.markets : undefined,
+      max_cost: options?.maxCost ?? undefined,
     }),
   });
   const body = await parseJson(response);

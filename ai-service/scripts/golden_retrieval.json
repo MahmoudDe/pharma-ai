@@ -54,5 +54,32 @@
     "product_types_any": ["lotion"],
     "combined_text_must_match": "lotion",
     "combined_text_must_not_contain": ["shampoo", "hand cream", "sunscreen"]
+  },
+  "Find a mild baby shampoo without SLS for EU market.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_all": ["baby", "shampoo"],
+    "combined_text_must_match": "baby\\s+shampoo",
+    "combined_text_must_not_contain": ["hand cream", "sunscreen"]
+  },
+  "Show moisturizing face cream formulas with glycerin.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cream"],
+    "combined_text_must_match": "cream|lotion",
+    "combined_text_must_not_contain": ["shampoo", "baby bath"]
+  },
+  "What conditioner formulas use cationic surfactants?": {
+    "top_k": 5,
+    "min_top_score": 0.30,
+    "product_types_any": ["conditioner"],
+    "combined_text_must_match": "condition"
+  },
+  "Give me a sunscreen lotion with UV filters.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["lotion", "sunscreen"],
+    "combined_text_must_match": "sun|spf|uv",
+    "combined_text_must_not_contain": ["baby shampoo", "hand cream"]
   }
 }

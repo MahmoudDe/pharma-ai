@@ -17,6 +17,7 @@ import {
   fetchChatThread,
   fetchChatThreads,
   sendChatTurn,
+  submitMessageFeedback,
   updateChatThreadTitle,
 } from "@/lib/chat";
 import { useLocale } from "@/components/i18n/LocaleProvider";
@@ -71,6 +72,7 @@ function mapStoredMessage(message: ChatThreadMessage): ChatMessage {
     suggestedActions: message.suggested_next_actions,
     structuredFormulation: structuredList[0] ?? null,
     structuredFormulations: structuredList,
+    feedback_rating: message.feedback_rating,
   });
 }
 
@@ -311,11 +313,14 @@ function ChatPageContent() {
       structuredBrief.product_type ||
       (structuredBrief.banned_ingredients?.length ?? 0) > 0 ||
       (structuredBrief.preferred_ingredients?.length ?? 0) > 0 ||
-      (structuredBrief.markets?.length ?? 0) > 0;
+      (structuredBrief.markets?.length ?? 0) > 0 ||
+      structuredBrief.cost_target != null ||
+      structuredBrief.batch_size != null;
 
     const payload: ChatTurnRequest = {
       thread_id: threadId,
       message: rawMessage,
+      assistant_message_id: streamAssistant.id,
       ...(hasBrief ? { structured_brief: structuredBrief } : {}),
     };
 
@@ -450,6 +455,18 @@ function ChatPageContent() {
               isLoading={isLoading || isInitializing}
               streamingMessageId={streamingId}
               onSuggestionClick={handleSuggestionClick}
+              onFeedback={async (messageId, rating, userMessage) => {
+                try {
+                  await submitMessageFeedback(messageId, rating, userMessage);
+                  setMessages((prev) =>
+                    prev.map((m) =>
+                      m.id === messageId ? { ...m, feedback_rating: rating } : m,
+                    ),
+                  );
+                } catch {
+                  /* ignore */
+                }
+              }}
             />
           </div>
           <ChatComposer

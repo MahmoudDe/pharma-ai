@@ -1,4 +1,12 @@
-export type AliasSource = "rules" | "corpus" | "llm" | "manual" | "arabic" | "unresolved";
+export type AliasSource =
+  | "rules"
+  | "corpus"
+  | "llm"
+  | "manual"
+  | "arabic"
+  | "embedding"
+  | "override"
+  | "unresolved";
 
 export interface WarehouseMaterialRow {
   id: number;
@@ -37,6 +45,7 @@ export interface DiscoverProductResult {
   matched_ingredients: Array<{ raw_name: string; canonical?: string | null; matched: boolean }>;
   missing_ingredients: string[];
   citation_quote: string;
+  estimated_cost_per_kg?: number | null;
 }
 
 export interface DiscoverResponse {

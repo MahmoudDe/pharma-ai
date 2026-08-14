@@ -105,6 +105,7 @@ def set_material_alias(material_id: int, body: SetAliasRequest) -> WarehouseMate
     if not canonical:
         raise HTTPException(status_code=400, detail="canonical_name is required.")
     warehouse_store.save_alias(material_id, canonical, "manual", 1.0)
+    warehouse_store.save_alias_override(mat.raw_name, canonical)
     warehouse_store.clear_discover_cache(mat.upload_id)
     updated = warehouse_store.get_material(material_id)
     assert updated is not None

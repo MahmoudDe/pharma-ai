@@ -61,6 +61,7 @@ class ChatThreadController extends Controller
                 'suggested_next_actions' => $message->suggested_next_actions,
                 'structured_formulation' => $message->structured_formulation,
                 'structured_formulations' => $message->structured_formulations,
+                'feedback_rating' => $message->feedback_rating,
             ]);
 
         return response()->json([

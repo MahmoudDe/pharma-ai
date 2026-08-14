@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
-AliasSource = Literal["rules", "corpus", "llm", "manual", "arabic", "unresolved"]
+AliasSource = Literal["rules", "corpus", "llm", "manual", "arabic", "embedding", "override", "unresolved"]
 
 
 class WarehouseMaterialRow(BaseModel):
@@ -46,6 +46,9 @@ class DiscoverRequest(BaseModel):
     min_coverage: float = Field(default=50.0, ge=0, le=100)
     product_type: str | None = None
     exclude_water: bool = True
+    banned_ingredients: list[str] | None = None
+    markets: list[str] | None = None
+    max_cost: float | None = Field(None, ge=0)
 
 
 class IngredientMatchDetail(BaseModel):
@@ -66,6 +69,7 @@ class DiscoverProductResult(BaseModel):
     matched_ingredients: list[IngredientMatchDetail]
     missing_ingredients: list[str]
     citation_quote: str
+    estimated_cost_per_kg: float | None = None
 
 
 class DiscoverResponse(BaseModel):

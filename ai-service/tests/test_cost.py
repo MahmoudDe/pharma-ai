@@ -1,7 +1,7 @@
 """Tests for formulation cost estimation."""
 from __future__ import annotations
 
-from app.formulation.cost import estimate_formulation_cost, load_price_table
+from app.formulation.cost import estimate_formulation_cost, load_price_table, merge_price_rows
 from app.formulation.schemas import FormulationRecord, IngredientLine
 
 
@@ -55,3 +55,18 @@ def test_estimate_formulation_cost_reports_missing_prices():
     assert est.cost_per_kg is not None
     assert est.covered_percent == 0.5
     assert any("Mystery" in m for m in est.missing_ingredients)
+
+
+def test_merge_price_rows_persists(tmp_path, monkeypatch):
+    from app.formulation.cost import _DATA_PATH, reload_price_table
+
+    original_path = _DATA_PATH
+    csv_path = tmp_path / "prices.csv"
+    monkeypatch.setattr("app.formulation.cost._DATA_PATH", csv_path)
+    reload_price_table()
+    count = merge_price_rows([("custom wax", 9.5)])
+    assert count >= 1
+    prices = load_price_table()
+    assert prices.get("custom wax") == 9.5
+    monkeypatch.setattr("app.formulation.cost._DATA_PATH", original_path)
+    reload_price_table()

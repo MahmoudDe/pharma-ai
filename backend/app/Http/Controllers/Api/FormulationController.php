@@ -91,6 +91,39 @@ class FormulationController extends Controller
         );
     }
 
+    public function compare(Request $request): JsonResponse
+    {
+        return $this->proxyPost("{$this->aiBaseUrl()}/formulations/compare", $request->all());
+    }
+
+    public function prices(): JsonResponse
+    {
+        return $this->proxyGet("{$this->aiBaseUrl()}/formulations/prices", []);
+    }
+
+    public function uploadPrices(Request $request): JsonResponse
+    {
+        $baseUrl = $this->aiBaseUrl();
+        if ($baseUrl === '') {
+            return response()->json(['message' => 'AI_SERVICE_URL is not configured.'], 503);
+        }
+
+        $file = $request->file('file');
+        if ($file === null) {
+            return response()->json(['message' => 'Missing file.'], 400);
+        }
+
+        try {
+            $response = Http::timeout(30)
+                ->attach('file', $file->get(), $file->getClientOriginalName())
+                ->post("{$baseUrl}/formulations/prices/upload");
+
+            return response()->json($response->json() ?? [], $response->status());
+        } catch (Throwable $e) {
+            return response()->json(['message' => $e->getMessage()], 502);
+        }
+    }
+
     public function kbsReport(string $formulationId): JsonResponse
     {
         return $this->proxyGet("{$this->aiBaseUrl()}/kbs/report/{$formulationId}", []);
