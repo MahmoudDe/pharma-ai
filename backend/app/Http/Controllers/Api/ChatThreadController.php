@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\ChatMessage;
 use App\Models\ChatThread;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ChatThreadController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $threads = ChatThread::query()
+            ->where('user_id', $request->user()->id)
             ->with('latestMessage')
             ->orderByDesc('updated_at')
             ->get()
@@ -30,9 +32,11 @@ class ChatThreadController extends Controller
         return response()->json(['threads' => $threads]);
     }
 
-    public function store(): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        $thread = ChatThread::query()->create();
+        $thread = ChatThread::query()->create([
+            'user_id' => $request->user()->id,
+        ]);
 
         return response()->json([
             'id' => $thread->id,
@@ -41,13 +45,9 @@ class ChatThreadController extends Controller
         ], 201);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
-        $thread = ChatThread::query()->find($id);
-
-        if ($thread === null) {
-            return response()->json(['message' => 'Thread not found.'], 404);
-        }
+        $thread = ChatThread::ownedBy($request->user(), $id);
 
         $messages = $thread->messages()
             ->orderBy('created_at')
@@ -72,12 +72,9 @@ class ChatThreadController extends Controller
         ]);
     }
 
-    public function update(\Illuminate\Http\Request $request, string $id): JsonResponse
+    public function update(Request $request, string $id): JsonResponse
     {
-        $thread = ChatThread::query()->find($id);
-        if ($thread === null) {
-            return response()->json(['message' => 'Thread not found.'], 404);
-        }
+        $thread = ChatThread::ownedBy($request->user(), $id);
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:120'],
@@ -93,13 +90,9 @@ class ChatThreadController extends Controller
         ]);
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(Request $request, string $id): JsonResponse
     {
-        $thread = ChatThread::query()->find($id);
-        if ($thread === null) {
-            return response()->json(['message' => 'Thread not found.'], 404);
-        }
-
+        $thread = ChatThread::ownedBy($request->user(), $id);
         $thread->delete();
 
         return response()->json(null, 204);

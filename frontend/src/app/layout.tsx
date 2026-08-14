@@ -23,7 +23,8 @@ const appMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Pharma AI",
-  description: "Pharma AI formulation assistant",
+  description:
+    "Pharmaceutical manufacturing assistant — cited answers, structured formulas, and warehouse matching.",
 };
 
 // Synchronous theme bootstrap. Runs in <head> before the first paint so the
