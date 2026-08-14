@@ -24,7 +24,8 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
     Boolean(brief.product_type) ||
     (brief.banned_ingredients?.length ?? 0) > 0 ||
     (brief.preferred_ingredients?.length ?? 0) > 0 ||
-    (brief.markets?.length ?? 0) > 0;
+    (brief.markets?.length ?? 0) > 0 ||
+    brief.cost_target != null;
 
   return (
     <section className="panel-muted-band relative z-10 shrink-0 px-4 py-2 lg:px-6">
@@ -97,6 +98,24 @@ export function ConstraintsPanel({ brief, onChange }: ConstraintsPanelProps) {
                   onChange({ ...brief, markets: splitList(e.target.value) })
                 }
                 placeholder={t("constraints.marketsPlaceholder")}
+                className="field"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-text-secondary">
+              {t("constraints.costTarget")}
+              <input
+                type="number"
+                min={0}
+                step={0.1}
+                value={brief.cost_target ?? ""}
+                onChange={(e) => {
+                  const raw = e.target.value.trim();
+                  onChange({
+                    ...brief,
+                    cost_target: raw ? parseFloat(raw) : undefined,
+                  });
+                }}
+                placeholder={t("constraints.costTargetPlaceholder")}
                 className="field"
               />
             </label>

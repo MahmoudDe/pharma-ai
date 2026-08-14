@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { BatchCalculator } from "@/components/formula/BatchCalculator";
 import { ComplianceBadge } from "@/components/formula/ComplianceBadge";
+import { CostBadge } from "@/components/formula/CostBadge";
 import { SubstitutionPanel } from "@/components/formula/SubstitutionPanel";
 import { useLocale } from "@/components/i18n/LocaleProvider";
 import {
@@ -252,6 +253,7 @@ function SpecSheet({
       </div>
 
       <BatchCalculator formulation={formulation} />
+      <CostBadge formulationId={formulation.formulation_id} />
       <SubstitutionPanel formulation={formulation} brief={brief} />
     </div>
   );

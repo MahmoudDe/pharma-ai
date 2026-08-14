@@ -26,6 +26,14 @@ export interface ComplianceReport {
   findings: ComplianceFinding[];
 }
 
+export interface FormulationCost {
+  formulation_id: string;
+  cost_per_kg: number | null;
+  currency: string;
+  covered_percent: number;
+  missing_ingredients: string[];
+}
+
 export interface IngestJob {
   id: string;
   status: "queued" | "running" | "done" | "failed";
@@ -57,6 +65,8 @@ export interface FormulationSummary {
   confidence: number;
   precision_score?: number | null;
   kbs_status?: "verified" | "review" | "low_precision" | null;
+  estimated_cost_per_kg?: number | null;
+  cost_coverage_percent?: number | null;
 }
 
 export interface KbsFinding {
@@ -195,13 +205,14 @@ export async function fetchSubstitutions(
   formulationId: string,
   ingredient: string,
   constraints?: StructuredBrief,
+  includeLlmNote = false,
 ): Promise<SubstitutionSuggestion[]> {
   const response = await fetch(
     `${BACKEND_URL}/api/formulations/${formulationId}/substitutions`,
     {
       method: "POST",
       headers: { Accept: "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({ ingredient, constraints }),
+      body: JSON.stringify({ ingredient, constraints, include_llm_note: includeLlmNote }),
     },
   );
   const body = await response.json().catch(() => ({}));
@@ -236,4 +247,19 @@ export async function fetchComplianceReport(
     );
   }
   return body as ComplianceReport;
+}
+
+export async function fetchFormulationCost(formulationId: string): Promise<FormulationCost> {
+  const response = await fetch(`${BACKEND_URL}/api/formulations/${formulationId}/cost`, {
+    headers: { Accept: "application/json" },
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      typeof body === "object" && body && "message" in body
+        ? String((body as { message: unknown }).message)
+        : `Request failed (${response.status})`,
+    );
+  }
+  return body as FormulationCost;
 }

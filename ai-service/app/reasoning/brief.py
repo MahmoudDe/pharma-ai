@@ -6,6 +6,7 @@ import re
 from app.formulation.normalize import normalize_ingredient_name
 from app.formulation.regulatory import check_formulation
 from app.formulation.schemas import FormulationRecord
+from app.formulation.cost import estimate_formulation_cost
 from app.retrieval.intent import QueryIntent
 from app.schemas import StructuredBrief
 
@@ -80,6 +81,32 @@ def formulation_compliance_status(record: FormulationRecord, markets: list[str])
     return check_formulation(record, markets).status
 
 
+def formulation_cost_per_kg(record: FormulationRecord) -> float | None:
+    return estimate_formulation_cost(record).cost_per_kg
+
+
+def cost_target_score(record: FormulationRecord, brief: StructuredBrief | None) -> float:
+    if brief is None or brief.cost_target is None:
+        return 0.0
+    cost = formulation_cost_per_kg(record)
+    target = float(brief.cost_target)
+    if cost is None:
+        return -6.0
+    if cost <= target:
+        return min(12.0, 6.0 + (target - cost) / max(target, 0.01) * 4.0)
+    excess = (cost - target) / max(target, 0.01)
+    return -min(30.0, 8.0 + excess * 20.0)
+
+
+def exceeds_cost_target(record: FormulationRecord, brief: StructuredBrief | None) -> bool:
+    if brief is None or brief.cost_target is None:
+        return False
+    cost = formulation_cost_per_kg(record)
+    if cost is None:
+        return False
+    return cost > float(brief.cost_target) * 1.1
+
+
 def apply_brief_filters(
     records: list[FormulationRecord],
     brief: StructuredBrief | None,
@@ -93,4 +120,6 @@ def apply_brief_filters(
     markets = brief_markets(brief)
     if markets:
         out = [r for r in out if formulation_compliance_status(r, markets) != "fail"]
+    if brief.cost_target is not None:
+        out = [r for r in out if not exceeds_cost_target(r, brief)]
     return out

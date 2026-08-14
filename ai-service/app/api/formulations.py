@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 
+from app.formulation.cost import estimate_formulation_cost
 from app.formulation.regulatory import check_formulation
 from app.formulation.review import list_review_queue, patch_formulation
 from app.formulation.schemas import (
@@ -21,6 +22,7 @@ router = APIRouter(prefix="/formulations", tags=["formulations"])
 class SubstitutionRequest(BaseModel):
     ingredient: str
     constraints: StructuredBrief | None = None
+    include_llm_note: bool = False
 
 
 class ComplianceRequest(BaseModel):
@@ -39,6 +41,7 @@ def _to_summary(
     verdicts: dict[str, tuple[float, str]] | None = None,
 ) -> StructuredFormulationSummary:
     verdict = (verdicts or {}).get(record.id)
+    cost = estimate_formulation_cost(record)
     return StructuredFormulationSummary(
         formulation_id=record.id,
         name=record.name,
@@ -50,6 +53,8 @@ def _to_summary(
         confidence=record.confidence,
         precision_score=verdict[0] if verdict else None,
         kbs_status=verdict[1] if verdict else None,
+        estimated_cost_per_kg=cost.cost_per_kg,
+        cost_coverage_percent=round(cost.covered_percent * 100, 1) if cost.covered_percent else None,
     )
 
 
@@ -118,6 +123,21 @@ def search(body: FormulationSearchRequest) -> dict:
     }
 
 
+@router.get("/{formulation_id}/cost")
+def formulation_cost(formulation_id: str) -> dict:
+    record = get_formulation(formulation_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Formulation not found")
+    est = estimate_formulation_cost(record)
+    return {
+        "formulation_id": formulation_id,
+        "cost_per_kg": est.cost_per_kg,
+        "currency": est.currency,
+        "covered_percent": est.covered_percent,
+        "missing_ingredients": est.missing_ingredients,
+    }
+
+
 @router.post("/{formulation_id}/substitutions")
 def substitutions(formulation_id: str, body: SubstitutionRequest) -> dict:
     record = get_formulation(formulation_id)
@@ -127,6 +147,7 @@ def substitutions(formulation_id: str, body: SubstitutionRequest) -> dict:
         record,
         body.ingredient,
         brief=body.constraints,
+        include_llm_note=body.include_llm_note,
     )
     return {
         "suggestions": [
