@@ -252,7 +252,7 @@ function SpecSheet({
         </ul>
       </div>
 
-      <BatchCalculator formulation={formulation} />
+      <BatchCalculator formulation={formulation} defaultBatchKg={brief?.batch_size} />
       <CostBadge formulationId={formulation.formulation_id} />
       <SubstitutionPanel formulation={formulation} brief={brief} />
     </div>
@@ -390,7 +390,7 @@ export function FormulaWorksheet({
                 </svg>
               }
             >
-              <FormulaComparePanel formulations={list} />
+              <FormulaComparePanel formulations={list} markets={brief?.markets} />
             </Section>
           ) : null}
 

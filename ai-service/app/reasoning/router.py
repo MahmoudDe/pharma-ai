@@ -28,7 +28,7 @@ from app.reasoning.templates import (
     format_lookup_response,
     format_transparent_failure,
 )
-from app.reasoning.brief import apply_brief_filters, merge_intent_with_brief
+from app.reasoning.brief import apply_brief_filters, format_structured_brief, merge_intent_with_brief
 from app.reasoning.validate import validate_response
 from app.retrieval.intent import (
     QueryClassification,
@@ -229,6 +229,9 @@ def _run_llm_path(
     if history_block:
         context_block = f"{history_block}\n\n{context_block}"
     structured_block = format_structured_formulations(structured, _kbs_annotations(structured))
+    brief_block = format_structured_brief(payload.structured_brief)
+    if brief_block:
+        context_block = f"{brief_block}\n\n{context_block}"
     if structured_block:
         context_block = f"{context_block}\n\n{structured_block}"
 

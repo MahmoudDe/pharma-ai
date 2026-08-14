@@ -46,6 +46,62 @@ def load_price_table() -> dict[str, float]:
     return prices
 
 
+def reload_price_table() -> None:
+    load_price_table.cache_clear()
+
+
+def price_table_stats() -> dict:
+    prices = load_price_table()
+    return {"ingredient_count": len(prices), "currency": "USD", "path": str(_DATA_PATH)}
+
+
+def merge_price_rows(rows: list[tuple[str, float]]) -> int:
+    """Upsert ingredient prices and persist to CSV. Returns rows written."""
+    existing: dict[str, float] = {}
+    if _DATA_PATH.is_file():
+        with _DATA_PATH.open(encoding="utf-8") as fh:
+            reader = csv.DictReader(fh)
+            for row in reader:
+                name = (row.get("ingredient") or "").strip().lower()
+                raw_price = row.get("price_per_kg_usd") or row.get("price_per_kg")
+                if name and raw_price:
+                    try:
+                        existing[name] = float(raw_price)
+                    except ValueError:
+                        continue
+    for name, price in rows:
+        key = name.strip().lower()
+        if not key or price < 0:
+            continue
+        existing[key] = float(price)
+
+    _DATA_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with _DATA_PATH.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.writer(fh)
+        writer.writerow(["ingredient", "price_per_kg_usd"])
+        for name in sorted(existing):
+            writer.writerow([name, existing[name]])
+
+    reload_price_table()
+    return len(existing)
+
+
+def parse_price_csv(text: str) -> list[tuple[str, float]]:
+    rows: list[tuple[str, float]] = []
+    reader = csv.DictReader(text.splitlines())
+    if reader.fieldnames:
+        for row in reader:
+            name = (row.get("ingredient") or row.get("name") or "").strip()
+            raw = row.get("price_per_kg_usd") or row.get("price_per_kg") or row.get("price")
+            if not name or not raw:
+                continue
+            try:
+                rows.append((name, float(raw)))
+            except ValueError:
+                continue
+    return rows
+
+
 def _price_for_ingredient(raw: str, norm: str | None, prices: dict[str, float]) -> float | None:
     candidates = [
         (norm or "").lower(),

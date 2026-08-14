@@ -1,26 +1,49 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "@/components/i18n/LocaleProvider";
+import { fetchCompareFormulations, type FormulationCompareReport } from "@/lib/formulations";
 import type { StructuredFormulationView } from "@/types/chat";
 
 interface FormulaComparePanelProps {
   formulations: StructuredFormulationView[];
+  markets?: string[];
 }
 
 function ingredientKey(ing: StructuredFormulationView["ingredients"][0]): string {
   return (ing.normalized_name ?? ing.raw_name).toLowerCase();
 }
 
-export function FormulaComparePanel({ formulations }: FormulaComparePanelProps) {
+export function FormulaComparePanel({ formulations, markets }: FormulaComparePanelProps) {
   const { t } = useLocale();
   const options = formulations.filter((f) => f.ingredients.length > 0);
 
   const [leftId, setLeftId] = useState(options[0]?.formulation_id ?? "");
   const [rightId, setRightId] = useState(options[1]?.formulation_id ?? "");
+  const [report, setReport] = useState<FormulationCompareReport | null>(null);
+  const [compareError, setCompareError] = useState<string | null>(null);
 
   const left = options.find((f) => f.formulation_id === leftId);
   const right = options.find((f) => f.formulation_id === rightId);
+
+  useEffect(() => {
+    if (!leftId || !rightId || leftId === rightId) {
+      setReport(null);
+      return;
+    }
+    let cancelled = false;
+    setCompareError(null);
+    fetchCompareFormulations(leftId, rightId, markets)
+      .then((data) => {
+        if (!cancelled) setReport(data);
+      })
+      .catch((e) => {
+        if (!cancelled) setCompareError(e instanceof Error ? e.message : "Failed");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [leftId, rightId, markets]);
 
   const rows = useMemo(() => {
     if (!left || !right) return [];
@@ -76,6 +99,28 @@ export function FormulaComparePanel({ formulations }: FormulaComparePanelProps) 
           ))}
         </select>
       </div>
+
+      {report ? (
+        <div className="mt-3 rounded-xl border border-border/60 bg-[var(--panel-muted)] p-3 text-xs text-text-secondary">
+          <p className="font-semibold text-text-primary">{t("tools.compareInsights")}</p>
+          <ul className="mt-2 space-y-1">
+            {report.summary_lines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+          {report.role_summaries.length > 0 ? (
+            <p className="mt-2 text-[10px] text-text-tertiary">
+              {report.role_summaries
+                .filter((r) => r.left_count || r.right_count)
+                .map((r) => `${r.role}: ${r.left_count} vs ${r.right_count}`)
+                .join(" · ")}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+      {compareError ? (
+        <p className="mt-2 text-[11px] text-text-tertiary">{t("tools.compareUnavailable")}</p>
+      ) : null}
 
       <div className="mt-3 max-h-64 overflow-auto rounded-xl border border-border/60">
         <table className="w-full text-start text-xs">

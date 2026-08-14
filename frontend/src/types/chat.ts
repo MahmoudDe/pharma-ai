@@ -39,13 +39,14 @@ export interface ChatMessage {
   route?: QueryRoute;
   llmUsed?: boolean;
   searchConfidence?: number | null;
+  feedback_rating?: number | null;
 }
 
 export interface ChatTurnRequest {
   thread_id: string;
   message: string;
   structured_brief?: StructuredBrief;
-  history?: Array<{ role: ChatRole; content: string }>;
+  assistant_message_id?: string;
 }
 
 export interface StructuredIngredient {
@@ -106,6 +107,7 @@ export interface ChatThreadMessage {
   suggested_next_actions?: SuggestedNextAction[];
   structured_formulation?: StructuredFormulationView | null;
   structured_formulations?: StructuredFormulationView[];
+  feedback_rating?: number | null;
 }
 
 export interface ChatThreadDetail {

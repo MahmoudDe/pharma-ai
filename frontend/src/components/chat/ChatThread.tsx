@@ -15,6 +15,7 @@ interface ChatThreadProps {
   /** Id of the assistant message currently being streamed, if any. */
   streamingMessageId?: string | null;
   onSuggestionClick?: (suggestion: string) => void;
+  onFeedback?: (messageId: string, rating: 1 | -1, userMessage?: string) => void;
 }
 
 const EMPTY_STATE_KEYS: TranslationKey[] = [
@@ -96,6 +97,7 @@ export function ChatThread({
   isLoading,
   streamingMessageId = null,
   onSuggestionClick,
+  onFeedback,
 }: ChatThreadProps) {
   const { t } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -203,8 +205,12 @@ export function ChatThread({
         aria-live="polite"
       >
         <div className="mx-auto max-w-3xl space-y-5">
-          {sortedMessages.map((message) => {
+          {sortedMessages.map((message, index) => {
             const isUser = message.role === "user";
+            const priorUser =
+              !isUser
+                ? [...sortedMessages.slice(0, index)].reverse().find((m) => m.role === "user")
+                : null;
 
             if (isUser) {
               return (
@@ -255,6 +261,34 @@ export function ChatThread({
                     <p className="mt-2 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                       {toLocalTime(message.createdAt)}
                     </p>
+                  ) : null}
+                  {!isStreaming && onFeedback ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <button
+                        type="button"
+                        aria-label={t("chat.feedbackUp")}
+                        onClick={() => onFeedback(message.id, 1, priorUser?.content)}
+                        className={`rounded-md border px-2 py-1 text-[10px] font-semibold ${
+                          message.feedback_rating === 1
+                            ? "border-success/40 bg-success/10 text-success"
+                            : "border-border text-text-secondary hover:bg-secondary/10"
+                        }`}
+                      >
+                        {t("chat.feedbackUp")}
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={t("chat.feedbackDown")}
+                        onClick={() => onFeedback(message.id, -1, priorUser?.content)}
+                        className={`rounded-md border px-2 py-1 text-[10px] font-semibold ${
+                          message.feedback_rating === -1
+                            ? "border-error/40 bg-error/10 text-error"
+                            : "border-border text-text-secondary hover:bg-secondary/10"
+                        }`}
+                      >
+                        {t("chat.feedbackDown")}
+                      </button>
+                    </div>
                   ) : null}
                 </div>
               </div>

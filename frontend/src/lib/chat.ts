@@ -109,6 +109,22 @@ export async function deleteChatThread(threadId: string): Promise<void> {
   }
 }
 
+export async function submitMessageFeedback(
+  messageId: string,
+  rating: 1 | -1,
+  userMessage?: string,
+): Promise<void> {
+  const response = await fetch(`${BACKEND_URL}/api/chat/messages/${messageId}/feedback`, {
+    method: "POST",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify({ rating, user_message: userMessage ?? null }),
+  });
+  const body = await parseJsonResponse(response);
+  if (!response.ok) {
+    throw buildApiError(response.status, body);
+  }
+}
+
 function parseSseBlock(block: string): { event: string; data: string } | null {
   let event = "message";
   let data = "";

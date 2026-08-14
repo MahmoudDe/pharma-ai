@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import chat, corpus, debug, formulations, health, kbs, sources, warehouse
+from app.api import chat, corpus, debug, eval, formulations, health, kbs, sources, warehouse
 from app.config import get_settings
 
 
@@ -34,6 +34,7 @@ def create_app() -> FastAPI:
     app.include_router(formulations.router)
     app.include_router(kbs.router)
     app.include_router(corpus.router)
+    app.include_router(eval.router)
     app.include_router(sources.router)
     app.include_router(warehouse.router)
 

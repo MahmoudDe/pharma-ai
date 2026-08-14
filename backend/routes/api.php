@@ -37,6 +37,7 @@ Route::patch('/chat/threads/{id}', [ChatThreadController::class, 'update']);
 Route::delete('/chat/threads/{id}', [ChatThreadController::class, 'destroy']);
 Route::post('/chat/messages', [ChatController::class, 'messages']);
 Route::post('/chat/messages/stream', [ChatController::class, 'messagesStream']);
+Route::post('/chat/messages/{messageId}/feedback', [ChatController::class, 'feedback']);
 
 Route::get('/corpus/stats', [CorpusController::class, 'stats']);
 Route::get('/corpus/ingest-quality', [CorpusController::class, 'ingestQuality']);
@@ -47,6 +48,9 @@ Route::get('/corpus/ingest/{jobId}', [CorpusController::class, 'getIngestJob']);
 Route::get('/formulations', [FormulationController::class, 'index']);
 Route::get('/formulations/review', [FormulationController::class, 'review']);
 Route::post('/formulations/search', [FormulationController::class, 'search']);
+Route::post('/formulations/compare', [FormulationController::class, 'compare']);
+Route::get('/formulations/prices', [FormulationController::class, 'prices']);
+Route::post('/formulations/prices/upload', [FormulationController::class, 'uploadPrices']);
 Route::get('/formulations/{formulationId}', [FormulationController::class, 'show']);
 Route::patch('/formulations/{formulationId}', [FormulationController::class, 'patch']);
 Route::post('/formulations/{formulationId}/substitutions', [FormulationController::class, 'substitutions']);

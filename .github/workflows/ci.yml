@@ -44,6 +44,10 @@ jobs:
             tests/test_warehouse_arabic.py \
             tests/test_warehouse_phase_d.py \
             tests/test_ai_smoke.py \
+            tests/test_compare.py \
+            tests/test_brief_format.py \
+            tests/test_golden_retrieval.py \
+            tests/test_feedback_log.py \
             tests/test_sources.py \
             -q
 

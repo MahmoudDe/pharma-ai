@@ -24,6 +24,7 @@ class ChatMessage extends Model
         'suggested_next_actions',
         'structured_formulation',
         'structured_formulations',
+        'feedback_rating',
         'created_at',
     ];
 

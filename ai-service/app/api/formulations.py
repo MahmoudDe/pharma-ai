@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, File, HTTPException, Query, UploadFile
 
-from app.formulation.cost import estimate_formulation_cost
+from app.formulation.cost import estimate_formulation_cost, merge_price_rows, parse_price_csv, price_table_stats
+from app.formulation.compare import compare_formulations
 from app.formulation.regulatory import check_formulation
 from app.formulation.review import list_review_queue, patch_formulation
 from app.formulation.schemas import (
@@ -27,6 +28,12 @@ class SubstitutionRequest(BaseModel):
 
 class ComplianceRequest(BaseModel):
     markets: list[str] = Field(default_factory=lambda: ["EU"])
+
+
+class CompareRequest(BaseModel):
+    left_id: str
+    right_id: str
+    markets: list[str] | None = None
 
 
 class FormulationPatchRequest(BaseModel):
@@ -121,6 +128,72 @@ def search(body: FormulationSearchRequest) -> dict:
         "formulations": records,
         "count": len(records),
     }
+
+
+@router.post("/compare")
+def compare_two(body: CompareRequest) -> dict:
+    left = get_formulation(body.left_id)
+    right = get_formulation(body.right_id)
+    if left is None or right is None:
+        raise HTTPException(status_code=404, detail="Formulation not found")
+    report = compare_formulations(left, right, markets=body.markets)
+    return {
+        "left_id": report.left_id,
+        "right_id": report.right_id,
+        "left_name": report.left_name,
+        "right_name": report.right_name,
+        "left_cost_per_kg": report.left_cost_per_kg,
+        "right_cost_per_kg": report.right_cost_per_kg,
+        "cost_delta_per_kg": report.cost_delta_per_kg,
+        "left_compliance": report.left_compliance,
+        "right_compliance": report.right_compliance,
+        "markets": report.markets,
+        "only_in_left": report.only_in_left,
+        "only_in_right": report.only_in_right,
+        "ingredient_deltas": [
+            {
+                "key": d.key,
+                "raw_name": d.raw_name,
+                "left_amount": d.left_amount,
+                "left_unit": d.left_unit,
+                "right_amount": d.right_amount,
+                "right_unit": d.right_unit,
+            }
+            for d in report.ingredient_deltas
+        ],
+        "role_summaries": [
+            {
+                "role": r.role,
+                "left_count": r.left_count,
+                "right_count": r.right_count,
+                "left_examples": r.left_examples,
+                "right_examples": r.right_examples,
+            }
+            for r in report.role_summaries
+        ],
+        "summary_lines": report.summary_lines,
+    }
+
+
+@router.get("/prices")
+def ingredient_prices() -> dict:
+    return price_table_stats()
+
+
+@router.post("/prices/upload")
+async def upload_prices(file: UploadFile = File(...)) -> dict:
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="Missing filename.")
+    raw = await file.read()
+    try:
+        text = raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        raise HTTPException(status_code=400, detail="File must be UTF-8 CSV.") from None
+    rows = parse_price_csv(text)
+    if not rows:
+        raise HTTPException(status_code=400, detail="No valid price rows found.")
+    count = merge_price_rows(rows)
+    return {"merged_count": count, **price_table_stats()}
 
 
 @router.get("/{formulation_id}/cost")
