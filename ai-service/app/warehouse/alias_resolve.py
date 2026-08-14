@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import json
 import logging
-import re
 
 from app.config import get_settings
 from app.formulation.normalize import normalize_ingredient_name
+from app.warehouse.embedding_match import embedding_canonical
 from app.warehouse.matching import canonical_key
 from app.reasoning.llm import _client
 from app.warehouse import warehouse_store
@@ -16,8 +16,6 @@ from app.warehouse.schemas import ResolveResponse, WarehouseMaterialRow
 
 
 logger = logging.getLogger(__name__)
-
-_WATER_NAMES = frozenset({"water", "aqua", "purified water", "deionized water"})
 
 
 def _rules_canonical(raw: str) -> tuple[str, float] | None:
@@ -97,36 +95,60 @@ def _llm_batch_resolve(names: list[str]) -> dict[str, tuple[str, float]]:
         return {}
 
 
+def _resolve_one_material(
+    raw_name: str,
+    fuzzy_threshold: int,
+    embed_threshold: float,
+) -> tuple[str, str, float] | None:
+    """Return (canonical, source, confidence) or None if unresolved."""
+    override = warehouse_store.get_alias_override(raw_name)
+    if override:
+        return canonical_key(override), "override", 1.0
+
+    hit = None
+    source = "rules"
+    if has_arabic(raw_name):
+        hit = resolve_arabic_alias(raw_name)
+        source = "arabic"
+    if not hit:
+        hit = _rules_canonical(raw_name)
+        source = "rules"
+    if not hit:
+        hit = _fuzzy_canonical(raw_name, fuzzy_threshold)
+        source = "corpus"
+    if not hit:
+        hit = embedding_canonical(raw_name, threshold=embed_threshold)
+        if hit:
+            source = "embedding"
+    if hit:
+        return canonical_key(hit[0]), source, hit[1]
+    return None
+
+
 def resolve_upload(upload_id: str | None = None) -> ResolveResponse:
     settings = get_settings()
     uid = upload_id or warehouse_store.get_active_upload_id()
     if not uid:
         raise ValueError("No warehouse upload found.")
 
-    warehouse_store.clear_aliases_for_upload(uid)
+    warehouse_store.clear_auto_aliases_for_upload(uid)
     warehouse_store.clear_discover_cache(uid)
     materials = warehouse_store.list_materials(uid)
     unresolved: list[tuple[int, str]] = []
 
     for mat in materials:
-        hit = None
-        source = "rules"
-        if has_arabic(mat.raw_name):
-            hit = resolve_arabic_alias(mat.raw_name)
-            source = "arabic"
-        if not hit:
-            hit = _rules_canonical(mat.raw_name)
-            source = "rules"
-        if not hit:
-            hit = _fuzzy_canonical(mat.raw_name, settings.warehouse_fuzzy_threshold)
-            source = "corpus"
-        if hit:
-            warehouse_store.save_alias(
-                mat.id,
-                canonical_key(hit[0]),
-                source,
-                hit[1],
-            )
+        existing = warehouse_store.get_aliases(mat.id)
+        if existing and existing[0].source == "manual":
+            continue
+
+        resolved = _resolve_one_material(
+            mat.raw_name,
+            settings.warehouse_fuzzy_threshold,
+            settings.warehouse_embed_threshold,
+        )
+        if resolved:
+            can, source, conf = resolved
+            warehouse_store.save_alias(mat.id, can, source, conf)
         else:
             unresolved.append((mat.id, mat.raw_name))
 
@@ -146,7 +168,7 @@ def resolve_upload(upload_id: str | None = None) -> ResolveResponse:
         aliases = warehouse_store.get_aliases(mat.id)
         if aliases:
             a = aliases[0]
-            needs = a.confidence < settings.warehouse_review_threshold
+            needs = a.confidence < settings.warehouse_review_threshold and a.source != "manual"
             if needs:
                 needs_review += 1
             else:

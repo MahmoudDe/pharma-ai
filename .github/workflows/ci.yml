@@ -27,6 +27,8 @@ jobs:
           pip install -r requirements.txt pytest
 
       - name: Run unit tests (no Qdrant / LLM)
+        env:
+          PYTHONPATH: .
         run: |
           pytest tests/test_query_rewrite.py \
             tests/test_brief_markets.py \
@@ -38,6 +40,11 @@ jobs:
             tests/test_formulation_review.py \
             tests/test_parsers.py \
             tests/test_kbs_name_quality.py \
+            tests/test_warehouse.py \
+            tests/test_warehouse_arabic.py \
+            tests/test_warehouse_phase_d.py \
+            tests/test_ai_smoke.py \
+            tests/test_sources.py \
             -q
 
   frontend-typecheck:

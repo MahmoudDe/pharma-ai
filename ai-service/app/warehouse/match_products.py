@@ -7,6 +7,8 @@ from app.config import get_settings
 from app.formulation.normalize import normalize_ingredient_name
 from app.formulation.schemas import FormulationRecord
 from app.formulation.store import list_formulations
+from app.reasoning.brief import apply_brief_filters, formulation_cost_per_kg
+from app.schemas import StructuredBrief
 from app.warehouse import warehouse_store
 from app.warehouse.matching import expand_inventory, ingredient_in_inventory
 from app.warehouse.schemas import (
@@ -95,13 +97,33 @@ def _tier(coverage: float, makeable: float, partial: float) -> str:
     return "low"
 
 
+def _discover_cache_key(req: DiscoverRequest) -> str:
+    banned = ",".join(sorted(req.banned_ingredients or []))
+    markets = ",".join(sorted(m.strip().upper() for m in req.markets or [] if m.strip()))
+    max_cost = "" if req.max_cost is None else str(req.max_cost)
+    return (
+        f"{req.min_coverage}:{req.product_type or ''}:{req.exclude_water}:"
+        f"{banned}:{markets}:{max_cost}"
+    )
+
+
+def _brief_from_request(req: DiscoverRequest) -> StructuredBrief | None:
+    if not req.banned_ingredients and not req.markets and req.max_cost is None:
+        return None
+    return StructuredBrief(
+        banned_ingredients=req.banned_ingredients,
+        markets=req.markets,
+        cost_target=req.max_cost,
+    )
+
+
 def discover_products(req: DiscoverRequest) -> DiscoverResponse:
     settings = get_settings()
     uid = req.upload_id or warehouse_store.get_active_upload_id()
     if not uid:
         raise ValueError("No warehouse upload found.")
 
-    cache_key = f"{req.min_coverage}:{req.product_type or ''}:{req.exclude_water}"
+    cache_key = _discover_cache_key(req)
     cached = warehouse_store.get_discover_cache(uid)
     if cached and cached.get("cache_key") == cache_key:
         return DiscoverResponse(
@@ -121,6 +143,10 @@ def discover_products(req: DiscoverRequest) -> DiscoverResponse:
     )
     if not records:
         records = list_formulations(limit=800)
+
+    brief = _brief_from_request(req)
+    if brief:
+        records = apply_brief_filters(records, brief)
 
     makeable_threshold = settings.warehouse_makeable_coverage
     fuzzy_threshold = max(80, settings.warehouse_fuzzy_threshold - 2)
@@ -145,6 +171,7 @@ def discover_products(req: DiscoverRequest) -> DiscoverResponse:
 
         tier = _tier(pct, makeable_threshold, req.min_coverage)
         quote = (rec.source_text or rec.name)[:280].strip()
+        est_cost = formulation_cost_per_kg(rec)
         products.append(
             DiscoverProductResult(
                 formulation_id=rec.id,
@@ -158,6 +185,7 @@ def discover_products(req: DiscoverRequest) -> DiscoverResponse:
                 matched_ingredients=matched_details,
                 missing_ingredients=missing,
                 citation_quote=quote,
+                estimated_cost_per_kg=est_cost,
             )
         )
 
@@ -165,6 +193,7 @@ def discover_products(req: DiscoverRequest) -> DiscoverResponse:
         key=lambda p: (
             0 if p.tier == "makeable" else 1 if p.tier == "partial" else 2,
             -p.coverage_pct,
+            p.estimated_cost_per_kg if p.estimated_cost_per_kg is not None else 1e9,
             p.name.lower(),
         ),
     )

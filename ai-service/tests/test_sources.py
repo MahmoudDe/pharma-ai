@@ -53,6 +53,7 @@ def test_manual_alias_override(tmp_path, monkeypatch):
     )
     assert response.status_code == 200
     body = response.json()
-    assert body["canonical_name"] == "Mineral Oil"
+    assert body["canonical_name"] == "mineral oil"
     assert body["alias_source"] == "manual"
     assert body["needs_review"] is False
+    assert warehouse_store.get_alias_override("Mystery Oil") == "mineral oil"
