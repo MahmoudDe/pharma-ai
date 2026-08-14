@@ -83,6 +83,14 @@ class FormulationController extends Controller
         );
     }
 
+    public function cost(string $formulationId): JsonResponse
+    {
+        return $this->proxyGet(
+            "{$this->aiBaseUrl()}/formulations/{$formulationId}/cost",
+            [],
+        );
+    }
+
     public function kbsReport(string $formulationId): JsonResponse
     {
         return $this->proxyGet("{$this->aiBaseUrl()}/kbs/report/{$formulationId}", []);

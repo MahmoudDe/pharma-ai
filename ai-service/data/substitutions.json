@@ -16,5 +16,77 @@
     "product_types": ["shampoo", "body_wash"],
     "reason": "Non-ionic surfactant alternative for mild cleansing systems.",
     "confidence": 0.75
+  },
+  {
+    "from": "sodium laureth sulfate",
+    "aliases_from": ["sles", "sodium laureth sulphate"],
+    "to": "cocamidopropyl betaine",
+    "aliases_to": ["capb"],
+    "product_types": ["shampoo", "body_wash"],
+    "reason": "Amphoteric surfactant can reduce irritation when replacing primary anionic surfactant.",
+    "confidence": 0.72
+  },
+  {
+    "from": "paraffin",
+    "aliases_from": ["mineral oil", "paraffinum liquidum"],
+    "to": "squalane",
+    "aliases_to": ["squalane"],
+    "product_types": ["cream", "lotion"],
+    "reason": "Plant-derived emollient alternative with similar skin feel.",
+    "confidence": 0.7
+  },
+  {
+    "from": "cetyl alcohol",
+    "aliases_from": ["cetyl alcohol", "cetanol"],
+    "to": "cetearyl alcohol",
+    "aliases_to": ["cetearyl alcohol"],
+    "product_types": ["cream", "lotion"],
+    "reason": "Cetearyl alcohol is a common co-emulsifier / thickener substitute.",
+    "confidence": 0.78
+  },
+  {
+    "from": "triethanolamine",
+    "aliases_from": ["tea", "triethanolamine"],
+    "to": "sodium hydroxide",
+    "aliases_to": ["naoh", "sodium hydroxide"],
+    "product_types": ["cream", "lotion"],
+    "reason": "Inorganic base for pH adjustment; check compatibility with emulsifier system.",
+    "confidence": 0.65
+  },
+  {
+    "from": "imidazolidinyl urea",
+    "aliases_from": ["imidazolidinyl urea", "germaid"],
+    "to": "phenoxyethanol",
+    "aliases_to": ["phenoxyethanol"],
+    "product_types": [],
+    "reason": "Alternative preservative blend; verify broad-spectrum coverage in your system.",
+    "confidence": 0.68
+  },
+  {
+    "from": "carbomer",
+    "aliases_from": ["carbomer", "carbopol"],
+    "to": "xanthan gum",
+    "aliases_to": ["xanthan gum"],
+    "product_types": ["lotion", "gel"],
+    "reason": "Natural thickener; rheology differs — adjust shear and salt sensitivity.",
+    "confidence": 0.7
+  },
+  {
+    "from": "dimethicone",
+    "aliases_from": ["dimethicone", "cyclomethicone"],
+    "to": "cyclopentasiloxane",
+    "aliases_to": ["d5", "cyclopentasiloxane"],
+    "product_types": ["cream", "lotion", "conditioner"],
+    "reason": "Volatile silicone can improve spread with lighter dry-down.",
+    "confidence": 0.66
+  },
+  {
+    "from": "methylparaben",
+    "aliases_from": ["methylparaben", "methyl paraben"],
+    "to": "phenoxyethanol",
+    "aliases_to": ["phenoxyethanol"],
+    "product_types": [],
+    "reason": "Widely used broad preservative; pair with caprylyl glycol if needed.",
+    "confidence": 0.74
   }
 ]

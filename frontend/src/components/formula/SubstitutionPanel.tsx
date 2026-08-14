@@ -16,6 +16,7 @@ export function SubstitutionPanel({ formulation, brief }: SubstitutionPanelProps
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<SubstitutionSuggestion[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [llmNote, setLlmNote] = useState(false);
 
   const loadSuggestions = async (ingredient: string) => {
     setSelected(ingredient);
@@ -26,6 +27,7 @@ export function SubstitutionPanel({ formulation, brief }: SubstitutionPanelProps
         formulation.formulation_id,
         ingredient,
         brief,
+        llmNote,
       );
       setSuggestions(result);
     } catch (e) {
@@ -40,6 +42,15 @@ export function SubstitutionPanel({ formulation, brief }: SubstitutionPanelProps
     <div className="mt-4 rounded-xl border border-border bg-surface-sunken p-3">
       <p className="text-xs font-bold text-text-primary">{t("substitution.title")}</p>
       <p className="mt-1 text-[11px] text-text-secondary">{t("substitution.hint")}</p>
+      <label className="mt-2 flex items-center gap-2 text-[11px] text-text-secondary">
+        <input
+          type="checkbox"
+          checked={llmNote}
+          onChange={(e) => setLlmNote(e.target.checked)}
+          className="rounded border-border"
+        />
+        {t("substitution.llmNote")}
+      </label>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {formulation.ingredients.map((ing) => (
           <button

@@ -427,7 +427,7 @@ def route_chat(
         )
 
     chunks = search(search_query, top_k=TOP_K, intent=intent)
-    hydrated = _hydrate_chunks(chunks)
+    hydrated = apply_brief_filters(_hydrate_chunks(chunks), payload.structured_brief)
     if not structured_records:
         structured_records = hydrated
 

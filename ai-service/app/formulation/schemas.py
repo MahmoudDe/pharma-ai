@@ -67,3 +67,5 @@ class StructuredFormulationSummary(BaseModel):
     confidence: float
     precision_score: float | None = None
     kbs_status: str | None = None
+    estimated_cost_per_kg: float | None = None
+    cost_coverage_percent: float | None = None

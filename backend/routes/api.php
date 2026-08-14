@@ -51,6 +51,7 @@ Route::get('/formulations/{formulationId}', [FormulationController::class, 'show
 Route::patch('/formulations/{formulationId}', [FormulationController::class, 'patch']);
 Route::post('/formulations/{formulationId}/substitutions', [FormulationController::class, 'substitutions']);
 Route::post('/formulations/{formulationId}/compliance', [FormulationController::class, 'compliance']);
+Route::get('/formulations/{formulationId}/cost', [FormulationController::class, 'cost']);
 Route::get('/kbs/report/{formulationId}', [FormulationController::class, 'kbsReport']);
 Route::post('/kbs/validate/{formulationId}', [FormulationController::class, 'kbsValidate']);
 Route::get('/kbs/rules', [FormulationController::class, 'kbsRules']);

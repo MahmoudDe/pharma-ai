@@ -9,6 +9,7 @@ from app.formulation.schemas import FormulationRecord
 from app.formulation.store import list_formulations
 from app.reasoning.brief import (
     brief_markets,
+    cost_target_score,
     formulation_compliance_status,
     merge_intent_with_brief,
     normalize_brief_terms,
@@ -182,6 +183,7 @@ def score_formulation(
                 breakdown["compliance"] = -12.0
             else:
                 breakdown["compliance"] = 4.0
+        breakdown["cost_target"] = cost_target_score(record, brief)
 
     breakdown["ingredient_match"] = _ingredient_match_score(record, signals)
     breakdown["named_formula"] = _named_formula_score(record, signals)
@@ -300,6 +302,11 @@ def structured_search(
         ranked = [
             r for r in ranked if formulation_compliance_status(r.record, markets) != "fail"
         ]
+
+    if brief and brief.cost_target is not None:
+        from app.reasoning.brief import exceeds_cost_target
+
+        ranked = [r for r in ranked if not exceeds_cost_target(r.record, brief)]
 
     if _query_hand_cream(query):
         def _hand_cream_rank(r: RankedFormulation) -> tuple[int, float]:

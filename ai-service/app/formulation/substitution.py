@@ -132,6 +132,7 @@ def suggest_substitutions(
     *,
     brief: StructuredBrief | None = None,
     limit: int = 5,
+    include_llm_note: bool = False,
 ) -> list[SubstitutionSuggestion]:
     if not ingredient.strip():
         return []
@@ -144,5 +145,56 @@ def suggest_substitutions(
         if key not in merged or sug.confidence > merged[key].confidence:
             merged[key] = sug
 
-    ranked = sorted(merged.values(), key=lambda s: s.confidence, reverse=True)
-    return ranked[:limit]
+    ranked = sorted(merged.values(), key=lambda s: s.confidence, reverse=True)[:limit]
+
+    if include_llm_note and ranked:
+        ranked = _maybe_enrich_with_llm(record, ingredient, ranked)
+
+    return ranked
+
+
+def _maybe_enrich_with_llm(
+    record: FormulationRecord,
+    ingredient: str,
+    suggestions: list[SubstitutionSuggestion],
+) -> list[SubstitutionSuggestion]:
+    from app.config import get_settings
+
+    settings = get_settings()
+    if not settings.llm_api_key:
+        return suggestions
+
+    try:
+        from app.reasoning.llm import _client
+
+        top = suggestions[0]
+        client = _client()
+        prompt = (
+            f"In a {record.name} formula, why might '{top.substitute}' work as a substitute "
+            f"for '{ingredient}'? One short sentence, grounded in cosmetic formulation practice."
+        )
+        completion = client.chat.completions.create(
+            model=settings.llm_model,
+            temperature=0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You explain cosmetic ingredient substitutions briefly.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+        )
+        note = (completion.choices[0].message.content or "").strip()
+        if note and len(note) > 10:
+            enriched = SubstitutionSuggestion(
+                substitute=top.substitute,
+                confidence=top.confidence,
+                reason=f"{top.reason} — {note}",
+                source=top.source,
+                citations=top.citations,
+            )
+            return [enriched] + suggestions[1:]
+    except Exception:
+        logger.exception("LLM substitution note failed")
+
+    return suggestions

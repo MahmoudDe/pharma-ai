@@ -30,6 +30,8 @@ jobs:
         run: |
           pytest tests/test_query_rewrite.py \
             tests/test_brief_markets.py \
+            tests/test_brief_cost.py \
+            tests/test_cost.py \
             tests/test_conversation_history.py \
             tests/test_regulatory.py \
             tests/test_corpus_health.py \
