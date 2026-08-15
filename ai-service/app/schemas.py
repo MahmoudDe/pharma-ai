@@ -20,6 +20,7 @@ class StructuredBrief(BaseModel):
 
 class CitedEvidence(BaseModel):
     document_id: str
+    document_title: Optional[str] = None
     page: Optional[int] = None
     pdf_page: Optional[int] = None
     printed_page: Optional[int] = None

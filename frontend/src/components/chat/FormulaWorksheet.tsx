@@ -429,7 +429,9 @@ export function FormulaWorksheet({
                         <div className="flex items-center justify-between gap-2">
                           <span className="flex items-center gap-1.5 truncate font-semibold uppercase tracking-wide text-text-tertiary">
                             <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} />
-                            <span className="truncate">{item.document_id}</span>
+                            <span className="truncate">
+                              {item.document_title || item.document_id}
+                            </span>
                           </span>
                           {pdfPage ? (
                             <a

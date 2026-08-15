@@ -19,9 +19,16 @@ class SourceController extends Controller
         }
 
         try {
+            $encodedId = rawurlencode($docId);
+            $page = $request->query('page');
+            $url = "{$baseUrl}/sources/{$encodedId}";
+            if ($page !== null && $page !== '') {
+                $url .= '?page='.urlencode((string) $page);
+            }
+
             $response = Http::timeout(60)
                 ->withOptions(['stream' => true])
-                ->get("{$baseUrl}/sources/{$docId}");
+                ->get($url);
 
             if (! $response->successful()) {
                 return response()->json($response->json() ?? ['message' => 'Source not found.'], $response->status());

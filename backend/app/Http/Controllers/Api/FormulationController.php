@@ -69,9 +69,40 @@ class FormulationController extends Controller
 
     public function substitutions(Request $request, string $formulationId): JsonResponse
     {
+        $payload = $request->all();
+
+        // PHP json_decode turns JSON {} into [] — FastAPI then 422s on StructuredBrief.
+        if (! array_key_exists('constraints', $payload) || $payload['constraints'] === [] || $payload['constraints'] === null) {
+            unset($payload['constraints']);
+        } elseif (is_array($payload['constraints'])) {
+            $constraints = $payload['constraints'];
+            foreach (['banned_ingredients', 'preferred_ingredients', 'markets', 'target_attributes'] as $listKey) {
+                if (! isset($constraints[$listKey]) || ! is_array($constraints[$listKey])) {
+                    continue;
+                }
+                $constraints[$listKey] = array_values(array_filter(
+                    $constraints[$listKey],
+                    static fn ($value): bool => is_string($value) && $value !== '',
+                ));
+                if ($constraints[$listKey] === []) {
+                    unset($constraints[$listKey]);
+                }
+            }
+            if ($constraints === []) {
+                unset($payload['constraints']);
+            } else {
+                $payload['constraints'] = $constraints;
+            }
+        }
+
+        if (! isset($payload['ingredient']) || ! is_string($payload['ingredient']) || trim($payload['ingredient']) === '') {
+            return response()->json(['message' => 'ingredient is required.', 'suggestions' => []], 422);
+        }
+        $payload['ingredient'] = trim($payload['ingredient']);
+
         return $this->proxyPost(
             "{$this->aiBaseUrl()}/formulations/{$formulationId}/substitutions",
-            $request->all(),
+            $payload,
         );
     }
 

@@ -238,20 +238,65 @@ export async function fetchSubstitutions(
   constraints?: StructuredBrief,
   includeLlmNote = false,
 ): Promise<SubstitutionSuggestion[]> {
+  const name = ingredient.trim();
+  if (!name) {
+    return [];
+  }
+
+  const hasConstraints = Boolean(
+    constraints &&
+      (constraints.product_type ||
+        (constraints.banned_ingredients?.length ?? 0) > 0 ||
+        (constraints.preferred_ingredients?.length ?? 0) > 0 ||
+        (constraints.markets?.length ?? 0) > 0 ||
+        constraints.cost_target != null ||
+        constraints.batch_size != null),
+  );
+
+  const payload: Record<string, unknown> = {
+    ingredient: name,
+    include_llm_note: includeLlmNote,
+  };
+  if (hasConstraints && constraints) {
+    payload.constraints = {
+      ...(constraints.product_type ? { product_type: constraints.product_type } : {}),
+      ...(constraints.banned_ingredients?.length
+        ? { banned_ingredients: constraints.banned_ingredients.filter(Boolean) }
+        : {}),
+      ...(constraints.preferred_ingredients?.length
+        ? { preferred_ingredients: constraints.preferred_ingredients.filter(Boolean) }
+        : {}),
+      ...(constraints.markets?.length
+        ? { markets: constraints.markets.filter(Boolean) }
+        : {}),
+      ...(constraints.cost_target != null ? { cost_target: constraints.cost_target } : {}),
+      ...(constraints.batch_size != null ? { batch_size: constraints.batch_size } : {}),
+      ...(constraints.target_attributes?.length
+        ? { target_attributes: constraints.target_attributes.filter(Boolean) }
+        : {}),
+    };
+  }
+
   const response = await fetch(
     `${BACKEND_URL}/api/formulations/${formulationId}/substitutions`,
     {
       method: "POST",
       headers: { Accept: "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({ ingredient, constraints, include_llm_note: includeLlmNote }),
+      body: JSON.stringify(payload),
     },
   );
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
+    const detail =
+      typeof body === "object" && body && "detail" in body
+        ? JSON.stringify((body as { detail: unknown }).detail)
+        : null;
     throw new Error(
       typeof body === "object" && body && "message" in body
         ? String((body as { message: unknown }).message)
-        : `Request failed (${response.status})`,
+        : detail
+          ? `Request failed (${response.status}): ${detail}`
+          : `Request failed (${response.status})`,
     );
   }
   return (body as { suggestions: SubstitutionSuggestion[] }).suggestions ?? [];

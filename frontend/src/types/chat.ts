@@ -12,6 +12,8 @@ export interface StructuredBrief {
 
 export interface CitedEvidence {
   document_id: string;
+  /** Human-readable book/file title when available. */
+  document_title?: string;
   page?: number;
   pdf_page?: number;
   printed_page?: number;

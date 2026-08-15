@@ -14,7 +14,7 @@ from app.formulation.store import get_formulation, list_formulations
 from app.kbs.report_store import get_verdicts
 from app.formulation.substitution import suggest_substitutions
 from app.schemas import StructuredBrief
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 router = APIRouter(prefix="/formulations", tags=["formulations"])
@@ -24,6 +24,21 @@ class SubstitutionRequest(BaseModel):
     ingredient: str
     constraints: StructuredBrief | None = None
     include_llm_note: bool = False
+
+    @field_validator("ingredient", mode="before")
+    @classmethod
+    def _require_ingredient(cls, value: object) -> str:
+        if value is None:
+            return ""
+        return str(value).strip()
+
+    @field_validator("constraints", mode="before")
+    @classmethod
+    def _coerce_empty_constraints(cls, value: object) -> object:
+        # Laravel/PHP may forward JSON {} as [] after json_decode.
+        if value is None or value == [] or value == {}:
+            return None
+        return value
 
 
 class ComplianceRequest(BaseModel):

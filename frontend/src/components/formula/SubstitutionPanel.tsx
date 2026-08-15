@@ -52,18 +52,21 @@ export function SubstitutionPanel({ formulation, brief }: SubstitutionPanelProps
         {t("substitution.llmNote")}
       </label>
       <div className="mt-2 flex flex-wrap gap-1.5">
-        {formulation.ingredients.map((ing) => (
+        {formulation.ingredients
+          .map((ing) => (ing.raw_name || ing.normalized_name || "").trim())
+          .filter(Boolean)
+          .map((name) => (
           <button
-            key={ing.raw_name}
+            key={name}
             type="button"
-            onClick={() => void loadSuggestions(ing.raw_name)}
+            onClick={() => void loadSuggestions(name)}
             className={`rounded-lg border px-2 py-1 text-[11px] font-medium transition ${
-              selected === ing.raw_name
+              selected === name
                 ? "border-secondary bg-secondary/15 text-secondary"
                 : "border-border text-text-secondary hover:border-secondary/40"
             }`}
           >
-            {ing.raw_name}
+            {name}
           </button>
         ))}
       </div>

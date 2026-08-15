@@ -148,7 +148,9 @@ def _evidence_from_chunks(
             fid = structured[0].id if i == 0 else None
         evidence.append(
             CitedEvidence(
-                document_id=chunk.doc_title or chunk.doc_id,
+                # PDF deep-links require the slug doc_id, not the human title.
+                document_id=chunk.doc_id or chunk.doc_title,
+                document_title=chunk.doc_title or None,
                 page=chunk.page,
                 pdf_page=chunk.pdf_page,
                 printed_page=chunk.printed_page,

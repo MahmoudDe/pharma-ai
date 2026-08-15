@@ -30,6 +30,15 @@ def test_resolve_pdf_path_known_doc():
     assert resolve_pdf_path(doc_id) == path
 
 
+def test_resolve_pdf_path_accepts_legacy_title():
+    index = pdf_index()
+    if not index:
+        return
+    path = next(iter(index.values()))
+    # Old citations used the human filename stem as document_id.
+    assert resolve_pdf_path(path.stem) == path
+
+
 def test_sources_endpoint_returns_pdf():
     index = pdf_index()
     if not index:
