@@ -17,6 +17,7 @@ from app.formulation.store import get_formulation
 from app.reasoning.llm import reason, reason_stream
 from app.reasoning.prompt import (
     SYSTEM_PROMPT,
+    SYSTEM_PROMPT_STREAM,
     format_context,
     format_conversation_history,
     format_structured_formulations,
@@ -237,7 +238,7 @@ def _run_llm_path(
 
     if on_token is not None:
         llm_result = reason_stream(
-            system_prompt=SYSTEM_PROMPT,
+            system_prompt=SYSTEM_PROMPT_STREAM,
             context_block=context_block,
             user_message=query,
             on_token=on_token,
@@ -284,7 +285,7 @@ def _direct_template_ok(
     if not records:
         return False
     signals = extract_query_signals(query)
-    if signals.asks_ingredient_role:
+    if signals.asks_ingredient_role or signals.asks_advice:
         return False
     if signals.asks_identify_with_ingredients and signals.required_ingredients:
         return record_matches_signals(records[0], signals)
@@ -463,6 +464,7 @@ def route_chat(
     if struct_result.route_hint == "hybrid" and structured_records:
         needs_llm = (
             signals.asks_ingredient_role
+            or signals.asks_advice
             or signals.asks_identify_with_ingredients
             or (route == "compare" and len(structured_records) >= 2)
             or not _direct_template_ok(route, structured_records, search_query)

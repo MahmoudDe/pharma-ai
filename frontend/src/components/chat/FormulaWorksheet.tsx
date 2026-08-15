@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { BatchCalculator } from "@/components/formula/BatchCalculator";
 import { ComplianceBadge } from "@/components/formula/ComplianceBadge";
 import { CostBadge } from "@/components/formula/CostBadge";
@@ -74,11 +74,25 @@ function Section({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  const toggle = () => {
+    setOpen((wasOpen) => {
+      const next = !wasOpen;
+      if (next) {
+        requestAnimationFrame(() => {
+          rootRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        });
+      }
+      return next;
+    });
+  };
+
   return (
-    <div className="surface-inset overflow-hidden">
+    <div ref={rootRef} className="surface-inset shrink-0 overflow-hidden">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
         className="flex w-full items-center gap-2 px-3.5 py-3 text-start"
       >
         <span
@@ -335,145 +349,149 @@ export function FormulaWorksheet({
           </div>
         </div>
       ) : (
-        <div className="stagger-children flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3 lg:p-4">
-          {/* formulation tabs */}
-          {list.length > 1 ? (
-            <div className="flex flex-wrap gap-1.5">
-              {list.map((f, i) => (
-                <button
-                  key={f.formulation_id}
-                  type="button"
-                  onClick={() => setActiveIdx(i)}
-                  className={`max-w-[10rem] truncate rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
-                    i === activeIdx
-                      ? "text-white"
-                      : "border border-border bg-surface-sunken text-text-secondary hover:text-text-primary"
-                  }`}
-                  style={i === activeIdx ? { background: "var(--brand-gradient-vivid)" } : undefined}
-                  title={f.name}
-                >
-                  {f.name}
-                </button>
-              ))}
-            </div>
-          ) : null}
-
-          {active ? (
-            <div className="surface-card p-3.5">
-              <SpecSheet formulation={active} brief={brief} />
-            </div>
-          ) : null}
-
-          {active && active.procedure && active.procedure.length > 0 ? (
-            <Section
-              title={t("formula.procedure")}
-              icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
-                </svg>
-              }
-            >
-              <ol className="list-decimal space-y-1.5 ps-4 text-xs leading-relaxed text-text-secondary">
-                {active.procedure.map((step, i) => (
-                  <li key={i}>{step}</li>
-                ))}
-              </ol>
-            </Section>
-          ) : null}
-
-          {list.length >= 2 ? (
-            <Section
-              title={t("tools.compareTitle")}
-              icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7" />
-                </svg>
-              }
-            >
-              <FormulaComparePanel formulations={list} markets={brief?.markets} />
-            </Section>
-          ) : null}
-
-          {evidence.length > 0 ? (
-            <Section
-              defaultOpen
-              title={t("evidence.title")}
-              badge={
-                <span className="rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] font-bold text-text-secondary">
-                  {evidence.length}
-                </span>
-              }
-              icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
-                </svg>
-              }
-            >
-              <ul className="space-y-2">
-                {evidence.map((item, index) => {
-                  const pdfPage = item.pdf_page ?? item.page;
-                  const href = pdfPage ? sourcePdfUrl(item.document_id, pdfPage) : sourcePdfUrl(item.document_id);
-                  const dot = CONFIDENCE_DOT[item.confidence ?? "unknown"] ?? CONFIDENCE_DOT.unknown;
-                  return (
-                    <li
-                      key={`${item.document_id}-${pdfPage ?? "na"}-${index}`}
-                      className={`rounded-lg border bg-surface p-2.5 text-xs ${
-                        item.quote_verified === false ? "border-warning/40" : "border-border"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-1.5 truncate font-semibold uppercase tracking-wide text-text-tertiary">
-                          <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} />
-                          <span className="truncate">{item.document_id}</span>
-                        </span>
-                        {pdfPage ? (
-                          <a
-                            href={href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="shrink-0 rounded-md border border-secondary/40 bg-secondary/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-secondary transition hover:underline"
-                          >
-                            {t("evidence.openPdf")}{pdfPage}
-                          </a>
-                        ) : null}
-                      </div>
-                      <p className="mt-1.5 line-clamp-4 leading-relaxed text-text-primary">“{item.quote}”</p>
-                    </li>
-                  );
-                })}
-              </ul>
-            </Section>
-          ) : null}
-
-          {actions.length > 0 ? (
-            <div className="surface-inset p-3.5">
-              <p className="flex items-center gap-2 text-sm font-bold text-text-primary">
-                <span
-                  aria-hidden
-                  className="flex h-6 w-6 items-center justify-center rounded-lg text-secondary"
-                  style={{ background: "color-mix(in srgb, var(--secondary) 12%, transparent)" }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" />
-                  </svg>
-                </span>
-                {t("actions.title")}
-              </p>
-              <div className="mt-2.5 flex flex-wrap gap-2">
-                {actions.map((action, index) => (
+        // Keep overflow on a non-flex scroller so accordion growth always
+        // contributes to scrollHeight (flex+transform stagger was clipping it).
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-3 lg:p-4">
+          <div className="flex flex-col gap-3 pb-1">
+            {/* formulation tabs */}
+            {list.length > 1 ? (
+              <div className="flex flex-wrap gap-1.5">
+                {list.map((f, i) => (
                   <button
-                    key={`${action.type}-${index}`}
+                    key={f.formulation_id}
                     type="button"
-                    onClick={() => onActionClick(action)}
-                    className="rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text-primary transition-all duration-200 hover:border-secondary/40 hover:bg-secondary/5 hover:text-secondary"
+                    onClick={() => setActiveIdx(i)}
+                    className={`max-w-[10rem] truncate rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                      i === activeIdx
+                        ? "text-white"
+                        : "border border-border bg-surface-sunken text-text-secondary hover:text-text-primary"
+                    }`}
+                    style={i === activeIdx ? { background: "var(--brand-gradient-vivid)" } : undefined}
+                    title={f.name}
                   >
-                    {action.label}
+                    {f.name}
                   </button>
                 ))}
               </div>
-            </div>
-          ) : null}
+            ) : null}
+
+            {active ? (
+              <div className="surface-card shrink-0 p-3.5">
+                <SpecSheet formulation={active} brief={brief} />
+              </div>
+            ) : null}
+
+            {active && active.procedure && active.procedure.length > 0 ? (
+              <Section
+                title={t("formula.procedure")}
+                icon={
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                  </svg>
+                }
+              >
+                <ol className="list-decimal space-y-1.5 ps-4 text-xs leading-relaxed text-text-secondary">
+                  {active.procedure.map((step, i) => (
+                    <li key={i}>{step}</li>
+                  ))}
+                </ol>
+              </Section>
+            ) : null}
+
+            {list.length >= 2 ? (
+              <Section
+                title={t("tools.compareTitle")}
+                icon={
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 3h5v5M21 3l-7 7M8 21H3v-5M3 21l7-7" />
+                  </svg>
+                }
+              >
+                <FormulaComparePanel formulations={list} markets={brief?.markets} />
+              </Section>
+            ) : null}
+
+            {evidence.length > 0 ? (
+              <Section
+                defaultOpen
+                title={t("evidence.title")}
+                badge={
+                  <span className="rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] font-bold text-text-secondary">
+                    {evidence.length}
+                  </span>
+                }
+                icon={
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z" />
+                  </svg>
+                }
+              >
+                <ul className="space-y-2">
+                  {evidence.map((item, index) => {
+                    const pdfPage = item.pdf_page ?? item.page;
+                    const href = pdfPage ? sourcePdfUrl(item.document_id, pdfPage) : sourcePdfUrl(item.document_id);
+                    const dot = CONFIDENCE_DOT[item.confidence ?? "unknown"] ?? CONFIDENCE_DOT.unknown;
+                    return (
+                      <li
+                        key={`${item.document_id}-${pdfPage ?? "na"}-${index}`}
+                        className={`rounded-lg border bg-surface p-2.5 text-xs ${
+                          item.quote_verified === false ? "border-warning/40" : "border-border"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="flex items-center gap-1.5 truncate font-semibold uppercase tracking-wide text-text-tertiary">
+                            <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dot}`} />
+                            <span className="truncate">{item.document_id}</span>
+                          </span>
+                          {pdfPage ? (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="shrink-0 rounded-md border border-secondary/40 bg-secondary/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-secondary transition hover:underline"
+                            >
+                              {t("evidence.openPdf")}{pdfPage}
+                            </a>
+                          ) : null}
+                        </div>
+                        <p className="mt-1.5 line-clamp-4 leading-relaxed text-text-primary">“{item.quote}”</p>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </Section>
+            ) : null}
+
+            {actions.length > 0 ? (
+              <div className="surface-inset shrink-0 p-3.5">
+                <p className="flex items-center gap-2 text-sm font-bold text-text-primary">
+                  <span
+                    aria-hidden
+                    className="flex h-6 w-6 items-center justify-center rounded-lg text-secondary"
+                    style={{ background: "color-mix(in srgb, var(--secondary) 12%, transparent)" }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z" />
+                    </svg>
+                  </span>
+                  {t("actions.title")}
+                </p>
+                <div className="mt-2.5 flex flex-wrap gap-2">
+                  {actions.map((action, index) => (
+                    <button
+                      key={`${action.type}-${index}`}
+                      type="button"
+                      onClick={() => onActionClick(action)}
+                      className="rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-text-primary transition-all duration-200 hover:border-secondary/40 hover:bg-secondary/5 hover:text-secondary"
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
       )}
     </div>

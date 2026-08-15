@@ -45,6 +45,8 @@
   "chat.copy": "نسخ",
   "chat.copied": "تم النسخ",
   "chat.jumpToLatest": "الانتقال إلى الأحدث",
+  "chat.showWorksheet": "عرض ورقة العمل",
+  "chat.worksheetShowing": "في ورقة العمل",
   "composer.placeholder": "اطلب تركيبة أو مقارنة مكونات…",
   "composer.send": "إرسال",
   "composer.retry": "إعادة",

@@ -67,8 +67,8 @@ export function AppHeader({ active, statusSlot, compact = false }: AppHeaderProp
         </span>
       </Link>
       <div
-        className={`flex min-w-0 items-center justify-end ${
-          compact ? "flex-nowrap gap-1.5 overflow-hidden" : "flex-wrap gap-1.5 sm:gap-2"
+        className={`flex min-w-0 flex-1 items-center justify-end ${
+          compact ? "flex-nowrap gap-1.5" : "flex-wrap gap-1.5 sm:gap-2"
         }`}
       >
         <nav className="flex h-9 min-w-0 items-center gap-0.5 overflow-x-auto rounded-xl border border-border bg-[var(--panel-muted)] p-1">
@@ -81,31 +81,34 @@ export function AppHeader({ active, statusSlot, compact = false }: AppHeaderProp
           <NavPill href="/warehouse" label={t("nav.warehouse")} active={active === "warehouse"} />
           <NavPill href="/corpus" label={t("nav.corpus")} active={active === "corpus"} />
         </nav>
-        {statusSlot ? (
-          <span className={compact ? "hidden xl:inline-flex" : undefined}>{statusSlot}</span>
-        ) : null}
-        <LanguageToggle />
-        <ThemeToggle />
-        {loading ? (
-          <span className="h-9 w-9 shrink-0 animate-pulse rounded-xl bg-border/80" aria-hidden />
-        ) : user ? (
-          <UserMenu compact={compact} />
-        ) : (
-          <div className="flex h-9 items-center gap-1.5">
-            <Link
-              href="/login"
-              className="btn-ghost inline-flex h-9 items-center rounded-xl px-3 text-xs font-semibold"
-            >
-              {t("auth.login")}
-            </Link>
-            <Link
-              href="/register"
-              className="btn-primary hidden h-9 items-center rounded-xl px-3 text-xs font-semibold sm:inline-flex"
-            >
-              {t("auth.register")}
-            </Link>
-          </div>
-        )}
+        {/* Keep toggles/avatar outside overflow so they stay clickable */}
+        <div className="flex shrink-0 items-center gap-1.5">
+          {statusSlot ? (
+            <span className={compact ? "hidden xl:inline-flex" : undefined}>{statusSlot}</span>
+          ) : null}
+          <LanguageToggle />
+          <ThemeToggle />
+          {loading ? (
+            <span className="h-9 w-9 shrink-0 animate-pulse rounded-xl bg-border/80" aria-hidden />
+          ) : user ? (
+            <UserMenu compact={compact} />
+          ) : (
+            <div className="flex h-9 items-center gap-1.5">
+              <Link
+                href="/login"
+                className="btn-ghost inline-flex h-9 items-center rounded-xl px-3 text-xs font-semibold"
+              >
+                {t("auth.login")}
+              </Link>
+              <Link
+                href="/register"
+                className="btn-primary hidden h-9 items-center rounded-xl px-3 text-xs font-semibold sm:inline-flex"
+              >
+                {t("auth.register")}
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

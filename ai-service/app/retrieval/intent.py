@@ -23,6 +23,22 @@ _REASONING = re.compile(
     r"should i use|what happens if|mechanism|difference between .+ and .+ because)\b",
     re.I,
 )
+# Usage / suitability about a product already in context — not a recipe dump.
+_ADVICE = re.compile(
+    r"(?:"
+    r"\bis\s+(?:this|it|the)\b.{0,48}\b(?:suitable|safe|okay|ok|appropriate|intended|meant)\b|"
+    r"\b(?:suitable|safe|appropriate)\s+for\s+(?:use\s+)?(?:on\s+)?(?:all\s+)?"
+    r"(?:body(?:\s+parts)?|skin|face|hands?|eyes?|everywhere)\b|"
+    r"\bcan\s+(?:i|we)\s+(?:use|apply)\b|"
+    r"\bis\s+it\s+(?:safe|ok|okay)\s+to\s+(?:use|apply)\b|"
+    r"\bshould\s+(?:i|we)\s+use\b|"
+    r"\bwhere\s+(?:can|should)\s+(?:i|we)\s+(?:use|apply)\b|"
+    r"\bfor\s+all\s+(?:body\s+parts|parts\s+of\s+the\s+body)\b|"
+    r"\ball\s+over\s+(?:the\s+)?body\b|"
+    r"هل\s+يصلح|يصلح\s+(?:هذا|له|ل)|للاستخدام|لكل\s+أعضاء|مناسب\s+(?:ل|لل)"
+    r")",
+    re.I,
+)
 _COMPARE = re.compile(
     r"\b(compare|comparison|difference between|vs\.?|versus)\b",
     re.I,
@@ -92,6 +108,10 @@ def classify_query(query: str) -> QueryClassification:
     intent = parse_query_intent(q)
 
     if _ROLE_REASONING.search(q):
+        return QueryClassification(route="reasoning", intent=intent, query=q)
+
+    # Advice about suitability/usage must beat product-type lookup ("cream" ≠ recipe).
+    if _ADVICE.search(q) and not _LOOKUP.search(q):
         return QueryClassification(route="reasoning", intent=intent, query=q)
 
     if _REASONING.search(q) and not _COMPARE.search(q):

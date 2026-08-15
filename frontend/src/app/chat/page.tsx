@@ -54,6 +54,63 @@ function createMessage(
     createdAt: extras?.createdAt ?? new Date().toISOString(),
     citedEvidence: extras?.citedEvidence,
     suggestedActions: extras?.suggestedActions,
+    structuredFormulation: extras?.structuredFormulation,
+    structuredFormulations: extras?.structuredFormulations,
+    route: extras?.route,
+    llmUsed: extras?.llmUsed,
+    searchConfidence: extras?.searchConfidence,
+    feedback_rating: extras?.feedback_rating,
+  };
+}
+
+function panelsFromMessage(message: ChatMessage): {
+  evidence: CitedEvidence[];
+  actions: SuggestedNextAction[];
+  structured: StructuredFormulationView | null;
+  structuredList: StructuredFormulationView[];
+} {
+  const structuredList =
+    message.structuredFormulations && message.structuredFormulations.length > 0
+      ? message.structuredFormulations
+      : message.structuredFormulation
+        ? [message.structuredFormulation]
+        : [];
+  return {
+    evidence: message.citedEvidence ?? [],
+    actions: message.suggestedActions ?? [],
+    structured: structuredList[0] ?? null,
+    structuredList,
+  };
+}
+
+function messageHasWorksheet(message: ChatMessage): boolean {
+  const panels = panelsFromMessage(message);
+  return (
+    panels.structuredList.length > 0 ||
+    panels.evidence.length > 0 ||
+    panels.actions.length > 0
+  );
+}
+
+/** Newest assistant message that carries worksheet panels (formula / evidence / actions). */
+function latestAssistantPanels(messages: ChatMessage[]): {
+  evidence: CitedEvidence[];
+  actions: SuggestedNextAction[];
+  structured: StructuredFormulationView | null;
+  structuredList: StructuredFormulationView[];
+  messageId: string | null;
+} {
+  for (let i = messages.length - 1; i >= 0; i -= 1) {
+    const message = messages[i];
+    if (message.role !== "assistant" || !messageHasWorksheet(message)) continue;
+    return { ...panelsFromMessage(message), messageId: message.id };
+  }
+  return {
+    evidence: [],
+    actions: [],
+    structured: null,
+    structuredList: [],
+    messageId: null,
   };
 }
 
@@ -75,32 +132,6 @@ function mapStoredMessage(message: ChatThreadMessage): ChatMessage {
   });
 }
 
-function latestAssistantPanels(messages: ChatMessage[]): {
-  evidence: CitedEvidence[];
-  actions: SuggestedNextAction[];
-  structured: StructuredFormulationView | null;
-  structuredList: StructuredFormulationView[];
-} {
-  for (let i = messages.length - 1; i >= 0; i -= 1) {
-    const message = messages[i];
-    if (message.role === "assistant") {
-      const structuredList =
-        message.structuredFormulations && message.structuredFormulations.length > 0
-          ? message.structuredFormulations
-          : message.structuredFormulation
-            ? [message.structuredFormulation]
-            : [];
-      return {
-        evidence: message.citedEvidence ?? [],
-        actions: message.suggestedActions ?? [],
-        structured: structuredList[0] ?? null,
-        structuredList,
-      };
-    }
-  }
-  return { evidence: [], actions: [], structured: null, structuredList: [] };
-}
-
 function ChatPageContent() {
   const { t } = useLocale();
   const { user } = useAuth();
@@ -120,6 +151,7 @@ function ChatPageContent() {
   const [latestStructured, setLatestStructured] = useState<StructuredFormulationView | null>(null);
   const [latestStructuredList, setLatestStructuredList] = useState<StructuredFormulationView[]>([]);
   const [latestActions, setLatestActions] = useState<SuggestedNextAction[]>([]);
+  const [activeWorksheetMessageId, setActiveWorksheetMessageId] = useState<string | null>(null);
   const [backendStatus, setBackendStatus] = useState<BackendStatus>("checking");
   const [corpusStatus, setCorpusStatus] = useState<CorpusStatus>("unknown");
   const [structuredBrief, setStructuredBrief] = useState<StructuredBrief>({});
@@ -155,6 +187,7 @@ function ChatPageContent() {
       setLatestStructured(panels.structured);
       setLatestStructuredList(panels.structuredList);
       setLatestActions(panels.actions);
+      setActiveWorksheetMessageId(panels.messageId);
     },
     [syncThreadUrl, user?.id],
   );
@@ -167,6 +200,7 @@ function ChatPageContent() {
     setLatestStructured(null);
     setLatestStructuredList([]);
     setLatestActions([]);
+    setActiveWorksheetMessageId(null);
     setMessageInput("");
     try {
       const id = await createChatThread();
@@ -313,7 +347,20 @@ function ChatPageContent() {
     setLatestStructuredList(structuredList);
     setLatestStructured(structuredList[0] ?? null);
     setLatestActions(response.suggested_next_actions ?? []);
+    if (assistantId) {
+      setActiveWorksheetMessageId(assistantId);
+    }
   };
+
+  const showWorksheetForMessage = useCallback((message: ChatMessage) => {
+    if (message.role !== "assistant" || !messageHasWorksheet(message)) return;
+    const panels = panelsFromMessage(message);
+    setLatestEvidence(panels.evidence);
+    setLatestStructured(panels.structured);
+    setLatestStructuredList(panels.structuredList);
+    setLatestActions(panels.actions);
+    setActiveWorksheetMessageId(message.id);
+  }, []);
 
   const executeTurn = async (rawMessage: string) => {
     let activeThreadId = threadId;
@@ -485,6 +532,8 @@ function ChatPageContent() {
               messages={messages}
               isLoading={isLoading || isInitializing}
               streamingMessageId={streamingId}
+              activeWorksheetMessageId={activeWorksheetMessageId}
+              onShowWorksheet={showWorksheetForMessage}
               onSuggestionClick={handleSuggestionClick}
               onFeedback={async (messageId, rating, userMessage) => {
                 try {

@@ -58,6 +58,20 @@ _IDENTIFY_WITH = re.compile(
     r"\bidentify\b.*\bcontains?\b|\bfind\b.*\bcontains?\b|\bthat\s+uses?\s+both\b",
     re.I,
 )
+_ADVICE_QUESTION = re.compile(
+    r"(?:"
+    r"\bis\s+(?:this|it|the)\b.{0,48}\b(?:suitable|safe|okay|ok|appropriate|intended|meant)\b|"
+    r"\b(?:suitable|safe|appropriate)\s+for\s+(?:use\s+)?(?:on\s+)?(?:all\s+)?"
+    r"(?:body(?:\s+parts)?|skin|face|hands?|eyes?|everywhere)\b|"
+    r"\bcan\s+(?:i|we)\s+(?:use|apply)\b|"
+    r"\bis\s+it\s+(?:safe|ok|okay)\s+to\s+(?:use|apply)\b|"
+    r"\bshould\s+(?:i|we)\s+use\b|"
+    r"\bwhere\s+(?:can|should)\s+(?:i|we)\s+(?:use|apply)\b|"
+    r"\bfor\s+all\s+(?:body\s+parts|parts\s+of\s+the\s+body)\b|"
+    r"هل\s+يصلح|يصلح\s+(?:هذا|له|ل)|للاستخدام|لكل\s+أعضاء|مناسب\s+(?:ل|لل)"
+    r")",
+    re.I,
+)
 
 _SKIP_NAME_FRAGMENTS = frozenset(
     {
@@ -80,6 +94,7 @@ class QuerySignals:
     required_ingredients: list[str] = field(default_factory=list)
     asks_ingredient_role: bool = False
     asks_identify_with_ingredients: bool = False
+    asks_advice: bool = False
 
 
 def _clean_name(raw: str) -> str:
@@ -146,6 +161,7 @@ def extract_query_signals(query: str) -> QuerySignals:
         required_ingredients=_dedupe_ci(required),
         asks_ingredient_role=bool(_ROLE_QUESTION.search(q)),
         asks_identify_with_ingredients=bool(_IDENTIFY_WITH.search(q)),
+        asks_advice=bool(_ADVICE_QUESTION.search(q)),
     )
 
 
