@@ -695,6 +695,19 @@ html[lang="ar"] body {
 .animate-scale-in { animation: scale-in 0.45s var(--ease-out-expo) both; }
 .animate-float { animation: float 5s ease-in-out infinite; }
 
+/*
+ * Overflow shells (chat panel, worksheets, menus) must not keep a transform after
+ * enter animations — fill-mode:both + transform creates a containing block and
+ * clips scroll / portals. Prefer .animate-fade-in on those shells.
+ */
+.panel-solid.animate-fade-in,
+.panel-solid.animate-scale-in,
+.panel-solid.animate-slide-in-right,
+.panel-solid.animate-slide-in-left {
+  animation-fill-mode: forwards;
+  animation-name: fade-in;
+}
+
 .animate-shimmer {
   background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--secondary) 10%, transparent) 50%, transparent 100%);
   background-size: 200% 100%;
