@@ -71,7 +71,7 @@ export function AppHeader({ active, statusSlot, compact = false }: AppHeaderProp
           compact ? "flex-nowrap gap-1.5" : "flex-wrap gap-1.5 sm:gap-2"
         }`}
       >
-        <nav className="flex h-9 min-w-0 items-center gap-0.5 overflow-x-auto rounded-xl border border-border bg-[var(--panel-muted)] p-1">
+        <nav className="flex h-9 min-w-0 flex-1 items-center gap-0.5 overflow-x-auto rounded-xl border border-border bg-[var(--panel-muted)] p-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <NavPill href="/chat" label={t("nav.chat")} active={active === "chat"} />
           <NavPill
             href="/formulations"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { BatchCalculator } from "@/components/formula/BatchCalculator";
 import { ComplianceBadge } from "@/components/formula/ComplianceBadge";
 import { CostBadge } from "@/components/formula/CostBadge";
@@ -74,25 +74,12 @@ function Section({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  const toggle = () => {
-    setOpen((wasOpen) => {
-      const next = !wasOpen;
-      if (next) {
-        requestAnimationFrame(() => {
-          rootRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-        });
-      }
-      return next;
-    });
-  };
 
   return (
-    <div ref={rootRef} className="surface-inset shrink-0 overflow-hidden">
+    <div className="surface-inset shrink-0 overflow-hidden rounded-[var(--r-md)]">
       <button
         type="button"
-        onClick={toggle}
+        onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center gap-2 px-3.5 py-3 text-start"
       >
         <span
