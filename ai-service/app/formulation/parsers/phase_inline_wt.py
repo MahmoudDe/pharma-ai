@@ -1,4 +1,3 @@
-"""Parse Part A/B/C blocks with alternating ingredient name and wt% amount lines."""
 from __future__ import annotations
 
 import re

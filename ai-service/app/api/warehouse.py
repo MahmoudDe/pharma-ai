@@ -1,4 +1,3 @@
-"""Warehouse inventory upload, alias resolution, product discovery."""
 from __future__ import annotations
 
 import logging

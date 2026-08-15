@@ -1,16 +1,3 @@
-"""Name-quality rule: flag OCR-garbled formulation names.
-
-Name quality is intentionally NOT part of the precision score — a record
-with a mangled title but verbatim-verified amounts is still a good formula.
-Findings are emitted at 'info' severity (zero score penalty), so they
-surface in the report/UI without moving the badge.
-
-Suspicion is scored from several weak signals; a name is flagged once the
-total crosses THRESHOLD. Weights and threshold were tuned against the real
-corpus so structural garbles ('Wt$', 'Mackstat ... | 32 0', 'Drv/Damaqed')
-are caught while legitimate trade names ('PEG-80 Sorbitan Laurate',
-'Sunscreen Cream W/O. fatty') are not.
-"""
 from __future__ import annotations
 
 import re

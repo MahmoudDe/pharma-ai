@@ -1,4 +1,3 @@
-"""Parse inline wt% rows: name and amount on adjacent lines (Volume 8 concentrate tables)."""
 from __future__ import annotations
 
 import re

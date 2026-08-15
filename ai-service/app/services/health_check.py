@@ -1,4 +1,3 @@
-"""Deep dependency checks for /health and /health/ready."""
 from __future__ import annotations
 
 import sqlite3

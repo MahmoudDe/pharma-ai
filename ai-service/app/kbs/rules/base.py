@@ -1,4 +1,3 @@
-"""Rule protocol shared by all KBS rules."""
 from __future__ import annotations
 
 from typing import Protocol, runtime_checkable

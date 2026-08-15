@@ -1,4 +1,3 @@
-"""Shared chunk metadata: product tags, section titles, text hashing."""
 from __future__ import annotations
 
 import hashlib

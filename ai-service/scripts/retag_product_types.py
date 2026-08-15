@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Retag product_types on SQLite formulas + Qdrant payloads (no re-embed)."""
 from __future__ import annotations
 
 import json

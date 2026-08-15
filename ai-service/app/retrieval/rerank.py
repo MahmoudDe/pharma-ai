@@ -1,4 +1,3 @@
-"""Cross-encoder reranking for retrieved chunks (Phase 3)."""
 from __future__ import annotations
 
 import logging

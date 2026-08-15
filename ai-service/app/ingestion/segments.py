@@ -1,4 +1,3 @@
-"""Unified page segmentation: formula artifacts + prose blocks from one pass."""
 from __future__ import annotations
 
 import re

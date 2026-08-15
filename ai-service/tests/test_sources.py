@@ -1,4 +1,3 @@
-"""Source PDF mapping and manual alias API."""
 from __future__ import annotations
 
 from pathlib import Path

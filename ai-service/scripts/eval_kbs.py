@@ -1,12 +1,3 @@
-"""Evaluate the KBS 'verified' badge as a classifier against the golden set.
-
-The golden set (scripts/golden_kbs.json) holds labeled record snapshots:
-'good' = extraction independently verified, 'bad' = clearly defective.
-Prints precision / recall / F1 of the verified badge, plus misclassifications.
-
-Usage:
-    python -m scripts.eval_kbs
-"""
 from __future__ import annotations
 
 import json

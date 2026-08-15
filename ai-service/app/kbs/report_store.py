@@ -1,4 +1,3 @@
-"""SQLite persistence for KBS validation reports (own DB, works with any formulation store)."""
 from __future__ import annotations
 
 import sqlite3

@@ -1,4 +1,3 @@
-"""Registry of active KBS rules."""
 from __future__ import annotations
 
 from app.kbs.rules import completeness, consistency, fidelity, name_quality, ranges

@@ -1,4 +1,3 @@
-"""Fact context: everything rules need to judge one formulation."""
 from __future__ import annotations
 
 import re

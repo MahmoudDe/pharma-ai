@@ -1,4 +1,3 @@
-"""Tests for formulation store backends."""
 from __future__ import annotations
 
 import os

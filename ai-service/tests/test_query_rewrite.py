@@ -1,4 +1,3 @@
-"""Tests for conversation-aware query rewriting."""
 from __future__ import annotations
 
 from app.reasoning.query_rewrite import (

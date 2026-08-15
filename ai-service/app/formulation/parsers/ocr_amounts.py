@@ -1,4 +1,3 @@
-"""Normalize OCR-spaced numeric amount lines before parsing."""
 from __future__ import annotations
 
 import re

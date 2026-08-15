@@ -1,4 +1,3 @@
-"""Discover book formulas makeable from warehouse inventory."""
 from __future__ import annotations
 
 import re

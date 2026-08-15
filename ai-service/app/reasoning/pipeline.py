@@ -1,4 +1,3 @@
-"""Chat entrypoint: delegates to router with fallback orchestration."""
 from __future__ import annotations
 
 import logging

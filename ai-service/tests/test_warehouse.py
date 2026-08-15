@@ -1,4 +1,3 @@
-"""Warehouse parsing, alias normalization, and coverage scoring tests."""
 from __future__ import annotations
 
 import io

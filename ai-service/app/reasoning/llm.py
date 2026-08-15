@@ -1,4 +1,3 @@
-"""OpenAI chat-completions wrapper with JSON-object response forcing."""
 from __future__ import annotations
 
 import json

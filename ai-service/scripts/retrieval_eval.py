@@ -1,4 +1,3 @@
-"""Shared retrieval-only evaluation helpers (no LLM / no API credits)."""
 from __future__ import annotations
 
 import json

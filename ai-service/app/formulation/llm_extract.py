@@ -1,4 +1,3 @@
-"""Optional LLM fallback for low-confidence formula blocks (costs API credits)."""
 from __future__ import annotations
 
 import json

@@ -1,13 +1,3 @@
-"""Re-parse stored formulations from their source_text after parser fixes.
-
-Surgical alternative to `run_ingest --force`: updates ingredients, vector_text
-and extraction metadata in the formulation store from the already-stored
-source blocks, without touching Qdrant or the BM25 index. Run KBS
-re-validation afterwards (or pass --validate).
-
-Usage:
-    python -m scripts.reparse_formulations [--dry-run] [--validate]
-"""
 from __future__ import annotations
 
 import argparse
@@ -42,7 +32,9 @@ def _sum_deviation(ingredients) -> float | None:
 
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s :: %(message)s")
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Re-parse stored formulations from their source_text after parser fixes."
+    )
     parser.add_argument("--dry-run", action="store_true", help="Report changes without writing.")
     parser.add_argument("--validate", action="store_true", help="Run KBS batch validation after.")
     args = parser.parse_args(argv)

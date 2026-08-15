@@ -1,4 +1,3 @@
-"""Phase D: warehouse overrides, embedding alias fallback, constraint-aware discover."""
 from __future__ import annotations
 
 import numpy as np

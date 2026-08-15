@@ -1,4 +1,3 @@
-"""Deprecated: use `python -m app.ingestion.run_ingest` for unified PDF -> SQLite + Qdrant."""
 from __future__ import annotations
 
 import argparse

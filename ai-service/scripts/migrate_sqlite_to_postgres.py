@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Migrate formulations from SQLite to PostgreSQL."""
 from __future__ import annotations
 
 import argparse

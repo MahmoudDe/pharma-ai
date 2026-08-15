@@ -1,4 +1,3 @@
-"""Pydantic models for KBS validation reports."""
 from __future__ import annotations
 
 from typing import Literal

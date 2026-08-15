@@ -1,4 +1,3 @@
-"""Eval utilities: feedback capture for golden loop."""
 from __future__ import annotations
 
 from fastapi import APIRouter

@@ -1,4 +1,3 @@
-"""Parse Part A:/B:/C: labeled layouts with wt% (roll-on, deodorant)."""
 from __future__ import annotations
 
 import re

@@ -1,4 +1,3 @@
-"""Tests for the KBS engine, scoring, report store and service orchestration."""
 from __future__ import annotations
 
 import pytest

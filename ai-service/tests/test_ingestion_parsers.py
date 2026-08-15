@@ -1,4 +1,3 @@
-"""Tests for Phase 4 ingestion parsers."""
 from app.formulation.parsers import parse_formula_block
 from app.formulation.parsers.japan_prescription import parse_japan_prescription
 from app.formulation.parsers.phase_inline_wt import parse_phase_inline_wt

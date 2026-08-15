@@ -1,4 +1,3 @@
-"""Sparse BM25 index persisted alongside Qdrant for hybrid retrieval."""
 from __future__ import annotations
 
 import json

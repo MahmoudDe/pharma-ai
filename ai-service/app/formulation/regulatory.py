@@ -1,4 +1,3 @@
-"""Regulatory / market compliance checks for formulations."""
 from __future__ import annotations
 
 import csv

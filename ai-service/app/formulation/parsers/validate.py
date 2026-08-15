@@ -1,4 +1,3 @@
-"""Filter and validate parsed ingredient lines before storage / embedding."""
 from __future__ import annotations
 
 import re

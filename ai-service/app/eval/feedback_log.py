@@ -1,4 +1,3 @@
-"""Persist chat feedback for eval loops."""
 from __future__ import annotations
 
 import json

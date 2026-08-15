@@ -1,4 +1,3 @@
-"""Corpus-level ingestion quality metrics for structured formulations."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

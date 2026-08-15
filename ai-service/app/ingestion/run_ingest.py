@@ -1,4 +1,3 @@
-"""Unified ingestion: PDF -> structured formulations (SQLite) + vector chunks (Qdrant)."""
 from __future__ import annotations
 
 import argparse

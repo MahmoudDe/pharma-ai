@@ -1,4 +1,3 @@
-"""Reject non-formula reference tables during ingestion."""
 from __future__ import annotations
 
 import re

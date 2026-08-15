@@ -1,9 +1,3 @@
-"""Fetch a formulation's indexed chunks from Qdrant for fidelity checks.
-
-Best-effort by design: if Qdrant is unreachable the first time, fetching is
-disabled for the rest of the process so batch validation never hangs on a
-down vector store.
-"""
 from __future__ import annotations
 
 import logging

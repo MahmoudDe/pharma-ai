@@ -1,4 +1,3 @@
-"""Pydantic models for structured formulations."""
 from __future__ import annotations
 
 from typing import Literal

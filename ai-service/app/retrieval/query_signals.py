@@ -1,4 +1,3 @@
-"""Extract structured signals from user queries for retrieval and routing."""
 from __future__ import annotations
 
 import re

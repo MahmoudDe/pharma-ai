@@ -1,4 +1,3 @@
-"""Map doc_id slugs to PDF files under docs/."""
 from __future__ import annotations
 
 import re

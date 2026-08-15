@@ -1,19 +1,3 @@
-"""Parse "Phase A:" column blocks — names listed first, amounts follow.
-
-    Wt%
-    Inuredients:
-    Phase A:
-    Water, DI
-    Carbopol 1382
-    Triethanolamine 99%     <- concentration grade stays in the name
-
-    73.40
-    1.00
-    1.50
-
-    Phase B:
-    ...
-"""
 from __future__ import annotations
 
 import re

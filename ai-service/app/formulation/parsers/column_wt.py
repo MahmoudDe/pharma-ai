@@ -1,4 +1,3 @@
-"""Parse Volume-8 column layouts: ingredient names then wt% amounts (or reverse)."""
 from __future__ import annotations
 
 import re

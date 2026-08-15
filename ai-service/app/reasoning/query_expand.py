@@ -1,4 +1,3 @@
-"""Cheap LLM query expansion for fallback search."""
 from __future__ import annotations
 
 import json

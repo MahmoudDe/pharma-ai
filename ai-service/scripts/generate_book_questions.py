@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Generate evaluation questions from ingested book content via OpenRouter."""
 from __future__ import annotations
 
 import argparse

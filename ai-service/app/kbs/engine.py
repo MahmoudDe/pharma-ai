@@ -1,4 +1,3 @@
-"""KBS engine: run rules over facts, collect findings, compute scores."""
 from __future__ import annotations
 
 import logging

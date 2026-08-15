@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Evaluate query routing and structured-match quality (minimal LLM)."""
 from __future__ import annotations
 
 import argparse

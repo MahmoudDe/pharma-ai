@@ -1,4 +1,3 @@
-"""Parser unit tests for Volume-8 column layouts."""
 from app.formulation.parsers import parse_formula_block
 from app.formulation.parsers.ocr_amounts import normalize_ocr_amount_line
 from app.formulation.parsers.validate import filter_ingredient_lines

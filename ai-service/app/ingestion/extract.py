@@ -1,4 +1,3 @@
-"""PDF -> per-page text using PyMuPDF with table extraction and printed page detection."""
 from __future__ import annotations
 
 import logging

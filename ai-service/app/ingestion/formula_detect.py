@@ -1,4 +1,3 @@
-"""Shared formula-block detection for ingest and retrieval."""
 from __future__ import annotations
 
 import re

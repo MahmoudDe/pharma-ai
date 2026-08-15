@@ -1,4 +1,3 @@
-"""Formulation cost estimation from ingredient price list."""
 from __future__ import annotations
 
 import csv

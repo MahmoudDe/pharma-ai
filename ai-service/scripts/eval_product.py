@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Product-aligned eval: measures what Pharma AI promises (free checks only)."""
 from __future__ import annotations
 
 import argparse

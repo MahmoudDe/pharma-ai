@@ -1,4 +1,3 @@
-"""Server-side verification: quotes must exist in chunks; amounts must be verbatim in sources."""
 from __future__ import annotations
 
 import re

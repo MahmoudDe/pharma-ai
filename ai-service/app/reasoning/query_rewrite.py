@@ -1,4 +1,3 @@
-"""Conversation-aware query rewriting before retrieval."""
 from __future__ import annotations
 
 import json

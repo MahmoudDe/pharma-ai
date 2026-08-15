@@ -1,4 +1,3 @@
-"""Tests for brief cost_target filtering."""
 from __future__ import annotations
 
 from app.formulation.schemas import FormulationRecord, IngredientLine

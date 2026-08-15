@@ -1,4 +1,3 @@
-"""Tests for regulatory compliance checks."""
 from __future__ import annotations
 
 from app.formulation.regulatory import check_formulation

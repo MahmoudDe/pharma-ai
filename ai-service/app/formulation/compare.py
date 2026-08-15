@@ -1,4 +1,3 @@
-"""Structured formula comparison: cost, compliance, and ingredient roles."""
 from __future__ import annotations
 
 import re

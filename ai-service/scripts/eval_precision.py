@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Golden-question eval: retrieval-only by default; LLM checks are opt-in (costs credits)."""
 from __future__ import annotations
 
 import argparse

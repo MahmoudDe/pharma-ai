@@ -1,9 +1,3 @@
-"""Source-fidelity rules: every extracted value must be traceable to the source text.
-
-This is the core precision check against the vector database: the record's
-source_text/vector_text is exactly what was chunked and embedded, so a value
-that cannot be found there was invented or corrupted during extraction.
-"""
 from __future__ import annotations
 
 import re

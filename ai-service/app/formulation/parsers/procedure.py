@@ -1,4 +1,3 @@
-"""Extract manufacturing procedure steps from formula block text."""
 from __future__ import annotations
 
 import re

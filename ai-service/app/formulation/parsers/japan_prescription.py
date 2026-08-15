@@ -1,4 +1,3 @@
-"""Parse Japan cosmetics book Prescription tables (Part / Ingredient / % layout)."""
 from __future__ import annotations
 
 import re

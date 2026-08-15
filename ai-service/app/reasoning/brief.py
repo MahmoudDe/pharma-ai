@@ -1,4 +1,3 @@
-"""Apply optional structured_brief constraints to intent and formulation results."""
 from __future__ import annotations
 
 import re

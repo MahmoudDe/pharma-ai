@@ -1,4 +1,3 @@
-"""Server-Sent Events for streaming chat turns."""
 from __future__ import annotations
 
 import json

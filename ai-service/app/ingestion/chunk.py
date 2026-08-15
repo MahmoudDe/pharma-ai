@@ -1,4 +1,3 @@
-"""Character-based chunker with formula-block preservation and rich metadata."""
 from __future__ import annotations
 
 import re

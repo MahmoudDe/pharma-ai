@@ -1,4 +1,3 @@
-"""Detect formula section blocks — delegates to unified segmentation."""
 from __future__ import annotations
 
 from dataclasses import dataclass

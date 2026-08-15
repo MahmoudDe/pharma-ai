@@ -1,4 +1,3 @@
-"""Parse line-based ingredient lists without percentages."""
 from __future__ import annotations
 
 import re

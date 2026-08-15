@@ -1,4 +1,3 @@
-"""Advice / suitability questions must use reasoning, not formula lookup."""
 from app.retrieval.intent import classify_query
 from app.retrieval.query_signals import extract_query_signals
 

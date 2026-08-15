@@ -1,4 +1,3 @@
-"""Build searchable corpus of ingredient names from formulations.db."""
 from __future__ import annotations
 
 import sqlite3

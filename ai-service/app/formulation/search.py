@@ -1,4 +1,3 @@
-"""Confidence-scored structured formulation search."""
 from __future__ import annotations
 
 import re

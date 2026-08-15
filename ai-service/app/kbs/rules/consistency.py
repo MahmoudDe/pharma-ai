@@ -1,4 +1,3 @@
-"""Consistency rules: do the numbers agree with each other?"""
 from __future__ import annotations
 
 from collections import Counter

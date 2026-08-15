@@ -1,4 +1,3 @@
-"""Parse Volume 8 wtg / Part A-B style formulas."""
 from __future__ import annotations
 
 import re

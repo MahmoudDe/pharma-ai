@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Run local AI evals and write a numbered HTML report (no LLM spend)."""
 from __future__ import annotations
 
 import json

@@ -1,4 +1,3 @@
-"""Tests for the OCR-garbled name-quality rule."""
 from __future__ import annotations
 
 import pytest

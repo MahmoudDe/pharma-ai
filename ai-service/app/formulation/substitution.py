@@ -1,4 +1,3 @@
-"""Ingredient substitution suggestions."""
 from __future__ import annotations
 
 import json

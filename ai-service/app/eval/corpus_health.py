@@ -1,4 +1,3 @@
-"""Aggregate corpus OCR and ingestion quality metrics for the dashboard."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

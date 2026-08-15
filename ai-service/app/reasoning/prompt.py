@@ -1,4 +1,3 @@
-"""System prompt and context formatting for grounded RAG."""
 from __future__ import annotations
 
 from app.ingestion.formula_detect import is_formula_chunk

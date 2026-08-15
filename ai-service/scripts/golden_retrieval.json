@@ -241,5 +241,95 @@
     "min_top_score": 0.28,
     "product_types_any": ["sunscreen", "lotion"],
     "combined_text_must_match": "sun|solar|spf|uv|methoxy|salicylate|titanium"
+  },
+  "Give me an after-sun lotion formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["lotion", "cream"],
+    "combined_text_must_match": "after\\s*sun|after-sun",
+    "combined_text_must_not_contain": ["baby shampoo", "lipstick"]
+  },
+  "Show me a lip balm or balm formula with oils.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "balm|lipstick|lip",
+    "combined_text_must_not_contain": ["antidandruff shampoo"]
+  },
+  "I need a cleansing oil or facial cleansing formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cleanser", "cream", "lotion"],
+    "combined_text_must_match": "cleans|oil|facial",
+    "combined_text_must_not_contain": ["deodorant stick"]
+  },
+  "Give me a bath or shower product formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "bath|shower",
+    "combined_text_must_not_contain": ["lipstick", "nail polish"]
+  },
+  "Show me a hair gel or hair wax formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "hair\\s+gel|hair\\s+wax|gel|wax",
+    "combined_text_must_not_contain": ["sunscreen lotion"]
+  },
+  "What ingredients appear in after-sun care products?": {
+    "top_k": 5,
+    "min_top_score": 0.28,
+    "combined_text_must_match": "after\\s*sun|sun|lotion"
+  },
+  "Give me a foam or foaming cleanser formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "foam|foaming|cleanser|wash",
+    "combined_text_must_not_contain": ["lipstick"]
+  },
+  "Show me an emulsion or W/O lotion formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["lotion", "cream"],
+    "combined_text_must_match": "emulsion|lotion|w/o|cream",
+    "combined_text_must_not_contain": ["antidandruff"]
+  },
+  "Find a perfume or fragrance-containing cream formula.": {
+    "top_k": 5,
+    "min_top_score": 0.25,
+    "product_types_any": ["cream", "lotion"],
+    "combined_text_must_match": "fragrance|perfume|cream|lotion"
+  },
+  "Give me a baby cream formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["baby", "cream"],
+    "combined_text_must_match": "baby\\s+cream|baby",
+    "combined_text_must_not_contain": ["antidandruff", "lipstick"]
+  },
+  "Show me a sunscreen cream SPF formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["sunscreen", "cream", "lotion"],
+    "combined_text_must_match": "sun|spf|uv",
+    "combined_text_must_not_contain": ["baby shampoo"]
+  },
+  "Compare shampoo and conditioner formulas.": {
+    "min_formula_in_top_k": 2,
+    "top_k": 5,
+    "product_types_any": ["shampoo", "conditioner"],
+    "combined_text_must_match": "sham|shampoo|condition",
+    "combined_text_must_not_contain": ["lipstick"]
+  },
+  "What humectants are used in body lotion formulas?": {
+    "top_k": 5,
+    "min_top_score": 0.28,
+    "product_types_any": ["lotion"],
+    "combined_text_must_match": "lotion|glycerin|humect|moistur"
+  },
+  "Give me a sport body lotion or low-viscosity lotion formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["lotion"],
+    "combined_text_must_match": "lotion|sport|body",
+    "combined_text_must_not_contain": ["lipstick"]
   }
 }

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Evaluate chat pipeline answers using an OpenRouter LLM judge (not local cross-encoder)."""
 from __future__ import annotations
 
 import argparse

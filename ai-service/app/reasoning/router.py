@@ -1,4 +1,3 @@
-"""Query routing with structured-first search and tiered fallbacks."""
 from __future__ import annotations
 
 import logging

@@ -1,4 +1,3 @@
-"""Translate Arabic chat queries to English for retrieval against English books."""
 from __future__ import annotations
 
 import json

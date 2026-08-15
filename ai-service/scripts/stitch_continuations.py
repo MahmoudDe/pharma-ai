@@ -1,14 +1,3 @@
-"""Merge "(continued)" formulation records into their parents.
-
-Multi-page tables (e.g. "Prescription 5.10 Damage care shampoo" on page 144,
-"Prescription 5.10 (continued)" on page 145) are ingested as two records,
-leaving the parent with an incomplete ingredient list that fails the KBS
-percentage-sum check. This stitches each continuation into its parent and
-removes the continuation record and its KBS report.
-
-Usage:
-    python -m scripts.stitch_continuations [--dry-run] [--validate]
-"""
 from __future__ import annotations
 
 import argparse
@@ -29,7 +18,9 @@ _CONTINUED = re.compile(r"^(?P<prefix>.+?)\s*\(continued\)\s*$", re.I)
 
 def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s :: %(message)s")
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description='Merge "(continued)" formulation records into their parents.'
+    )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--validate", action="store_true", help="Run KBS batch validation after.")
     args = parser.parse_args(argv)

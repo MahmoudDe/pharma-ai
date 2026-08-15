@@ -1,27 +1,3 @@
-"""Parse blocks where the amount column precedes the ingredient list.
-
-    Wt%
-    25.00
-    73.65
-    0.25
-    typical: 0.80
-    typical: 0.05
-
-    Inqredients;
-    Sulfochem B-2090P
-    Water, soft
-    Fragrance
-    NaCl
-    Citric acid
-    Preservatives
-    Hydrolyzed milk protein
-
-    0.25
-    q.s.
-
-Pre-header amounts pair with the first names in order; amounts after the
-name list continue the pairing for the remaining names.
-"""
 from __future__ import annotations
 
 import re

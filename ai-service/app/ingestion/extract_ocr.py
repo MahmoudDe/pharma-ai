@@ -1,4 +1,3 @@
-"""OCR fallback for scanned PDF pages."""
 from __future__ import annotations
 
 import logging

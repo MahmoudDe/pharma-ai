@@ -1,4 +1,3 @@
-"""BGE-small embedding singleton. Uses sentence-transformers under the hood."""
 from __future__ import annotations
 
 import logging

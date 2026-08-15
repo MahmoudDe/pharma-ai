@@ -1,4 +1,3 @@
-"""Qdrant upsert helpers. Formula chunks use deterministic IDs per formulation_id."""
 from __future__ import annotations
 
 import logging

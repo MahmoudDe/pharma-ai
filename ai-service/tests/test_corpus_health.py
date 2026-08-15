@@ -1,4 +1,3 @@
-"""Tests for corpus health aggregation."""
 from __future__ import annotations
 
 from app.eval.corpus_health import summarize_ocr_from_manifest

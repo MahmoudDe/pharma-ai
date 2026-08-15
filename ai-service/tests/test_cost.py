@@ -1,4 +1,3 @@
-"""Tests for formulation cost estimation."""
 from __future__ import annotations
 
 from app.formulation.cost import estimate_formulation_cost, load_price_table, merge_price_rows

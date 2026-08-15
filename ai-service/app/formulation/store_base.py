@@ -1,4 +1,3 @@
-"""Formulation store protocol and shared search filters."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

@@ -1,4 +1,3 @@
-"""Arabic warehouse inventory parsing and alias resolution."""
 from __future__ import annotations
 
 from pathlib import Path

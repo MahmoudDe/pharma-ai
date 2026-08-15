@@ -1,4 +1,3 @@
-"""Parse CSV/XLSX warehouse inventory files (English or Arabic)."""
 from __future__ import annotations
 
 import io

@@ -1,4 +1,3 @@
-"""Template responses for lookup/compare without full LLM."""
 from __future__ import annotations
 
 from app.formulation.schemas import FormulationRecord

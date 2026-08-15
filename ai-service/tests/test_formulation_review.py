@@ -1,4 +1,3 @@
-"""Tests for formulation review queue."""
 from __future__ import annotations
 
 from unittest.mock import patch

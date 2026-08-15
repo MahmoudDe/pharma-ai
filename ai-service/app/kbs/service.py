@@ -1,4 +1,3 @@
-"""KBS orchestration: validate records, score precision, persist reports."""
 from __future__ import annotations
 
 import logging

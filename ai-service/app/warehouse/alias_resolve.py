@@ -1,4 +1,3 @@
-"""Resolve warehouse material names to canonical book ingredients."""
 from __future__ import annotations
 
 import json

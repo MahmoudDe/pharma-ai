@@ -1,20 +1,3 @@
-"""Parse numbered Stage/Material tables (A&E Connock style).
-
-Layout — row index, material name and amount each on their own line:
-
-    Staqe: Material:
-    wt%
-    Oil Phase:
-    1
-    Light Mineral Oil
-    7.000
-    2
-    Triethanolamine 99%      <- "99%" is a concentration grade, not the amount
-    2.500
-
-The row indices must increment strictly from 1, which makes this parser
-near-impossible to trigger by accident.
-"""
 from __future__ import annotations
 
 import re

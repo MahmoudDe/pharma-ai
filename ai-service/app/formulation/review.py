@@ -1,4 +1,3 @@
-"""Review queue and manual correction for extracted formulations."""
 from __future__ import annotations
 
 from app.formulation.schemas import FormulationRecord, IngredientLine, StructuredFormulationSummary

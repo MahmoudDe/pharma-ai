@@ -1,4 +1,3 @@
-"""KBS configuration loaded from data/kbs/kbs_config.yaml with safe defaults."""
 from __future__ import annotations
 
 import logging

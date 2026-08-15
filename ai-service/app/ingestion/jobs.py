@@ -1,4 +1,3 @@
-"""File-based ingest job queue."""
 from __future__ import annotations
 
 import json

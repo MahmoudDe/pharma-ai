@@ -1,20 +1,3 @@
-"""Parse "Component: / wt%" interleaved blocks (Cognis/Henkel style).
-
-Names and amounts alternate; names may wrap across lines and carry trade
-codes that must not be read as amounts:
-
-    Component:
-    wt%
-    Dehyquart L 80/Dicocoylethyl Hydroxyethylmonium Metho-
-    sulfate (and) Propylene Glycol
-    2.0
-    Lamesoft PO 65/Coco-Glucoside (and) Glyceryl Oleate
-    2.0
-    Water
-    ad 100
-    Preservatives
-    q . s .
-"""
 from __future__ import annotations
 
 import re

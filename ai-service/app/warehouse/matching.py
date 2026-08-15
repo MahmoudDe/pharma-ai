@@ -1,4 +1,3 @@
-"""Ingredient matching between warehouse inventory and book formulations."""
 from __future__ import annotations
 
 from app.formulation.normalize import normalize_ingredient_name

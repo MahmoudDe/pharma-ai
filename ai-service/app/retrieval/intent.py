@@ -1,4 +1,3 @@
-"""Parse user query into retrieval filters and route classification."""
 from __future__ import annotations
 
 import re

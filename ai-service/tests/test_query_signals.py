@@ -1,4 +1,3 @@
-"""Tests for query signal extraction."""
 from app.retrieval.query_signals import extract_query_signals, fuzzy_name_match
 
 

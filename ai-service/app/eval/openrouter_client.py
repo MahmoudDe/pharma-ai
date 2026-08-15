@@ -1,4 +1,3 @@
-"""OpenRouter chat helpers for offline eval (question generation + judging)."""
 from __future__ import annotations
 
 import json

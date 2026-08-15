@@ -1,4 +1,3 @@
-"""Completeness rules: is anything missing from the record?"""
 from __future__ import annotations
 
 import re

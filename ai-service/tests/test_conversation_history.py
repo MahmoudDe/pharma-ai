@@ -1,4 +1,3 @@
-"""Tests for conversation history in LLM context formatting."""
 from __future__ import annotations
 
 from app.reasoning.prompt import format_conversation_history

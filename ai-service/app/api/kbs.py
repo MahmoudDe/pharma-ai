@@ -1,4 +1,3 @@
-"""KBS endpoints: validate formulations and read precision reports."""
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException

@@ -1,12 +1,3 @@
-"""Narrated end-to-end walkthrough of the KBS — one command for a live demo.
-
-Picks real records straight from the store, validates them live, and prints
-what the knowledge rules found: a clean record that verifies, a broken one
-that gets flagged with the exact defect, and a good formula whose only
-problem is an OCR-garbled title. Ends with the calibrated accuracy numbers.
-
-    python -m scripts.kbs_demo
-"""
 from __future__ import annotations
 
 import sys

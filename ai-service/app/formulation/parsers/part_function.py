@@ -1,4 +1,3 @@
-"""Parse Part A/B/C + Ingredient/Function column layouts (Volume 8 hand creams)."""
 from __future__ import annotations
 
 import re

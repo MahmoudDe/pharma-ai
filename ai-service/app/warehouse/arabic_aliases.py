@@ -1,4 +1,3 @@
-"""Arabic trade / transliterated ingredient names → INCI keys."""
 from __future__ import annotations
 
 import re

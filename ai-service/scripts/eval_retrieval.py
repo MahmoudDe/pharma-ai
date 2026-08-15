@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Retrieval-only golden checks (BGE + Qdrant). No LLM — no OpenRouter credits."""
 from __future__ import annotations
 
 import argparse

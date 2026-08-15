@@ -1,4 +1,3 @@
-"""Parse Japan-style Ingredient % tables."""
 from __future__ import annotations
 
 import re

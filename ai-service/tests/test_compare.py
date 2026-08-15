@@ -1,4 +1,3 @@
-"""Tests for formula compare report."""
 from __future__ import annotations
 
 from app.formulation.compare import compare_formulations

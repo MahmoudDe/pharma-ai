@@ -1,4 +1,3 @@
-"""Tests for the individual KBS rule families."""
 from __future__ import annotations
 
 import pytest

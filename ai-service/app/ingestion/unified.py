@@ -1,4 +1,3 @@
-"""Build chunks + formulation records from unified page segmentation."""
 from __future__ import annotations
 
 from typing import Iterator

@@ -1,4 +1,3 @@
-"""Tests for brief markets compliance filtering."""
 from __future__ import annotations
 
 from app.formulation.schemas import FormulationRecord, IngredientLine

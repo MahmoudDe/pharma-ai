@@ -1,4 +1,3 @@
-"""DOCX -> pseudo-page text records for unified ingest."""
 from __future__ import annotations
 
 import logging

@@ -1,4 +1,3 @@
-"""Domain-range rules driven by data/kbs/ingredient_ranges.yaml."""
 from __future__ import annotations
 
 import logging

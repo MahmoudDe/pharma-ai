@@ -1,4 +1,3 @@
-"""Sample passages from ingested books for LLM question generation."""
 from __future__ import annotations
 
 import random

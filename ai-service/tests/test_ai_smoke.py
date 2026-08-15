@@ -1,4 +1,3 @@
-"""Cross-module AI smoke tests (no Qdrant / LLM required)."""
 from __future__ import annotations
 
 from app.formulation.schemas import FormulationRecord, IngredientLine

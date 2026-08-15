@@ -1,4 +1,3 @@
-"""Embedding-based ingredient name matching for warehouse alias resolution."""
 from __future__ import annotations
 
 import logging

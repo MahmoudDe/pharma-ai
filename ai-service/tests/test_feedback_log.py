@@ -1,4 +1,3 @@
-"""Tests for eval feedback log."""
 from __future__ import annotations
 
 from app.eval.feedback_log import append_feedback, feedback_stats

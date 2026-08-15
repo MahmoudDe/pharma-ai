@@ -1,4 +1,3 @@
-"""Embed a user query with BGE and run metadata-filtered Qdrant search with reranking."""
 from __future__ import annotations
 
 import logging

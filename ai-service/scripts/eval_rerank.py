@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Compare heuristic-only vs cross-encoder reranking on golden retrieval queries."""
 from __future__ import annotations
 
 import argparse

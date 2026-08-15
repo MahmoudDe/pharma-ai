@@ -1,4 +1,3 @@
-"""Serve source PDFs for citation deep-links."""
 from __future__ import annotations
 
 from pathlib import Path

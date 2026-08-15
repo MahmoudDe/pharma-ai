@@ -1,4 +1,3 @@
-"""Tests for structured brief formatting."""
 from __future__ import annotations
 
 from app.reasoning.brief import format_structured_brief
