@@ -13,7 +13,7 @@ _GOLDEN_PATH = Path(__file__).resolve().parent.parent / "scripts" / "golden_retr
 
 def test_golden_retrieval_has_minimum_questions():
     questions = load_golden_questions(_GOLDEN_PATH)
-    assert len(questions) >= 12
+    assert len(questions) >= 30
 
 
 def test_golden_expectations_parse_for_all_questions():

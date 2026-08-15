@@ -24,17 +24,49 @@ _FORMULA_KEYWORDS = re.compile(
 _NUMERIC_PERCENT = re.compile(r"\d[\d.,]*\s*%")
 _WTG_PATTERN = re.compile(r"\bwtg\b", re.IGNORECASE)
 
-_ANCHOR_MUST_TYPES = frozenset({"anti_dandruff"})
-_RELAX_FORMULA_FILTER_TYPES = frozenset({"anti_dandruff"})
+_ANCHOR_MUST_TYPES = frozenset({"anti_dandruff", "makeup", "deodorant", "toner", "soap"})
+_RELAX_FORMULA_FILTER_TYPES = frozenset({"anti_dandruff", "toner", "deodorant", "makeup"})
 
 _TEXT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("anti_dandruff", re.compile(r"\banti[-\s]?dandruff\b|\bantidandruff\b", re.I)),
     ("baby", re.compile(r"\bbaby\b", re.I)),
-    ("shampoo", re.compile(r"\bshampoo\b", re.I)),
+    ("shampoo", re.compile(r"\bshampoo\b|\bsham[d]?oo\b", re.I)),
     ("hand_cream", re.compile(r"\bhand\s+(and\s+)?(nail\s+)?cream\b", re.I)),
-    ("cream", re.compile(r"\bcream\b", re.I)),
+    ("cream", re.compile(r"\bcream\b|\bgel\s+cream\b", re.I)),
     ("lotion", re.compile(r"\blotion\b", re.I)),
-    ("sunscreen", re.compile(r"\bsunscreen\b|\bspf\b|\bsolar\s+protection\b", re.I)),
+    ("sunscreen", re.compile(r"\bsunscreen\b|\bspf\b|\bsolar\s+protection\b|\bsuntan\b", re.I)),
+    ("conditioner", re.compile(r"\bcondition(er|ing)\b|\bleave[-\s]?in\b", re.I)),
+    ("soap", re.compile(r"\bsoap\b|\bhand\s+cleaner\b", re.I)),
+    ("makeup", re.compile(r"\blipstick\b|\bmake[-\s]?up\b|\blip\s+balm\b", re.I)),
+    ("deodorant", re.compile(r"\bdeodorant\b|\bantiperspirant\b", re.I)),
+    ("cleanser", re.compile(r"\bcleanser\b|\bfacial\s+wash\b|\bcleansing\b", re.I)),
+    ("toner", re.compile(r"\btoner\b", re.I)),
+    ("gel", re.compile(r"\bgel\b|\bshower\s+(?:gel|bath)\b", re.I)),
+]
+
+# Query phrases → chunk text patterns. Rare types need strong exact-phrase boosts
+# because many chunks were ingested without those product_types tags.
+_PHRASE_BOOSTS: list[tuple[str, str, float]] = [
+    ("anti-dandruff", r"anti[-\s]?dandruff|antidandruff", 0.28),
+    ("antidandruff", r"anti[-\s]?dandruff|antidandruff", 0.28),
+    ("baby shampoo", r"baby\s+shampoo", 0.22),
+    ("hand cream", r"hand\s+(and\s+)?(nail\s+)?cream", 0.22),
+    ("hand and nail", r"hand\s+and\s+nail", 0.24),
+    ("lipstick", r"lipstick", 0.35),
+    ("makeup", r"make[-\s]?up|lipstick", 0.28),
+    ("deodorant", r"deodorant|antiperspirant", 0.32),
+    ("antiperspirant", r"deodorant|antiperspirant", 0.32),
+    ("toner", r"\btoner\b", 0.35),
+    ("facial cleanser", r"facial\s+cleanser|cleanser|facial\s+wash", 0.28),
+    ("cleanser", r"cleanser|facial\s+wash|cleansing", 0.24),
+    ("shower gel", r"shower\s+(?:gel|bath)|\bgel\b", 0.26),
+    ("shower bath", r"shower\s+(?:gel|bath)", 0.28),
+    ("leave-in", r"leave[-\s]?in|conditioner", 0.24),
+    ("conditioner", r"condition(er|ing)|leave[-\s]?in", 0.20),
+    ("gel cream", r"gel\s+cream|\bgel\b", 0.24),
+    ("shaving cream", r"shav(?:e|ing)\s+cream|\bshav", 0.28),
+    ("body soap", r"\bsoap\b|hand\s+cleaner", 0.26),
+    ("sunscreen", r"sunscreen|solar\s+protection|\bspf\b|suntan", 0.24),
 ]
 
 
@@ -87,7 +119,8 @@ def _product_type_boost(chunk_products: list[str], intent: QueryIntent) -> float
     overlap = required & chunk_set
     boost = 0.18 * len(overlap)
     missing = required - chunk_set
-    boost -= 0.22 * len(missing)
+    # Softer miss penalty — text match can recover rare types with stale tags.
+    boost -= 0.10 * len(missing)
     if required == {"baby", "shampoo"} and "baby" in chunk_set and "shampoo" not in chunk_set:
         boost -= 0.15
     if "anti_dandruff" in required and "anti_dandruff" not in chunk_set:
@@ -105,9 +138,13 @@ def _text_intent_boost(chunk: RetrievedChunk, intent: QueryIntent, query: str) -
         if tag not in intent.product_types and tag.replace("_", " ") not in query_lower:
             continue
         if pattern.search(combined):
-            boost += 0.20 if is_formula_chunk(chunk.text) else 0.08
+            boost += 0.22 if is_formula_chunk(chunk.text) else 0.10
         elif tag in intent.product_types:
-            boost -= 0.12
+            # Do not heavily punish missing tags when the type is rare / often untagged.
+            if tag in {"makeup", "deodorant", "toner", "cleanser", "gel", "soap"}:
+                boost -= 0.04
+            else:
+                boost -= 0.12
 
     if "anti_dandruff" in intent.product_types:
         if re.search(r"\banti[-\s]?dandruff\b|\bantidandruff\b", combined, re.I):
@@ -127,6 +164,24 @@ def _text_intent_boost(chunk: RetrievedChunk, intent: QueryIntent, query: str) -
         elif "lotion" in combined and "cream" not in combined:
             boost -= 0.08
 
+    # Keep lotion/cream queries from being flooded by shampoo chunks.
+    skin_types = {"lotion", "cream", "moisturizer"} & set(intent.product_types)
+    hair_types = {"shampoo", "conditioner", "anti_dandruff"} & set(intent.product_types)
+    if skin_types and not hair_types:
+        if re.search(r"\bshampoo\b|\bsham[d]?oo\b|\bcondition", combined, re.I):
+            boost -= 0.28
+        if re.search(r"\blotion\b|\bcream\b|\bemollient|\bmoistur", combined, re.I):
+            boost += 0.12 if is_formula_chunk(chunk.text) else 0.05
+
+    if "makeup" in intent.product_types and re.search(r"\blipstick\b|\bmake[-\s]?up\b", combined, re.I):
+        boost += 0.30 if is_formula_chunk(chunk.text) else 0.18
+    if "toner" in intent.product_types and re.search(r"\btoner\b", combined, re.I):
+        boost += 0.32 if is_formula_chunk(chunk.text) else 0.18
+    if "deodorant" in intent.product_types and re.search(
+        r"\bdeodorant\b|\bantiperspirant\b", combined, re.I
+    ):
+        boost += 0.30 if is_formula_chunk(chunk.text) else 0.16
+
     return boost
 
 
@@ -136,20 +191,14 @@ def _query_phrase_boost(text: str, query: str) -> float:
     query_lower = query.lower()
     is_formula = is_formula_chunk(text)
 
-    phrases: list[tuple[str, str, float]] = [
-        ("anti-dandruff", r"anti[-\s]?dandruff|antidandruff", 0.28),
-        ("antidandruff", r"anti[-\s]?dandruff|antidandruff", 0.28),
-        ("baby shampoo", r"baby\s+shampoo", 0.22),
-        ("hand cream", r"hand\s+(and\s+)?(nail\s+)?cream", 0.22),
-    ]
-    for needle, pattern, amount in phrases:
+    for needle, pattern, amount in _PHRASE_BOOSTS:
         if needle in query_lower and re.search(pattern, text_lower):
             if is_formula:
                 boost += amount
             elif re.search(r"\bstarting\s+(formula|formulation)\b", text_lower):
                 boost -= 0.12
             else:
-                boost += amount * 0.35
+                boost += amount * 0.40
             break
 
     if re.search(r"\b(percentage|percentages)\b", query_lower) and is_formula:
@@ -167,6 +216,50 @@ def _query_phrase_boost(text: str, query: str) -> float:
             boost += 0.18 if is_formula else 0.08
 
     return boost
+
+
+def _prefer_on_type_formulas(
+    hits: list[RetrievedChunk],
+    query: str,
+    intent: QueryIntent,
+) -> list[RetrievedChunk]:
+    """When asking for formulas, surface on-type formula chunks ahead of off-type prose."""
+    if not hits or not (intent.wants_formula or intent.product_types):
+        return hits
+
+    query_lower = query.lower()
+    required = set(intent.product_types)
+
+    def on_type(h: RetrievedChunk) -> bool:
+        tags = set(h.product_types or [])
+        combined = h.combined_text().lower()
+        if required and tags & required:
+            return True
+        for tag, pattern in _TEXT_PATTERNS:
+            if tag in required or tag.replace("_", " ") in query_lower:
+                if pattern.search(combined):
+                    return True
+        for needle, pattern, _ in _PHRASE_BOOSTS:
+            if needle in query_lower and re.search(pattern, combined):
+                return True
+        return False
+
+    formulas_on = [h for h in hits if is_formula_chunk(h.text) and on_type(h)]
+    formulas_other = [h for h in hits if is_formula_chunk(h.text) and not on_type(h)]
+    rest = [h for h in hits if not is_formula_chunk(h.text)]
+
+    # Compare / multi-formula: keep at least two formula chunks near the top when available.
+    if re.search(r"\b(compare|comparison|difference|vs\.?)\b", query_lower, re.I):
+        preferred = formulas_on[:4] + formulas_other[:2]
+        preferred_ids = {id(h) for h in preferred}
+        return preferred + [h for h in hits if id(h) not in preferred_ids]
+
+    if formulas_on:
+        preferred = formulas_on[:3]
+        preferred_ids = {id(h) for h in preferred}
+        return preferred + [h for h in hits if id(h) not in preferred_ids]
+
+    return hits
 
 
 def _build_filter(intent: QueryIntent, *, formula_only: bool = False) -> qm.Filter | None:
@@ -350,6 +443,43 @@ def _chunk_from_payload(payload: dict, score: float) -> RetrievedChunk:
     )
 
 
+def _chunk_from_formulation_record(record, *, score: float) -> RetrievedChunk:
+    """Build a formula-shaped chunk from SQLite when Qdrant has no formulation_id point."""
+    lines = [
+        f"Formula: {record.name}",
+        f"Product types: {', '.join(record.product_types)}",
+        f"Ingredients ({len(record.ingredients)}):",
+    ]
+    for ing in (record.ingredients or [])[:16]:
+        amt = ""
+        if ing.amount is not None:
+            unit = f" {ing.unit}" if ing.unit else ""
+            amt = f" {ing.amount}{unit}"
+        lines.append(f"- {ing.raw_name}{amt}")
+    if record.procedure:
+        lines.append("Procedure:")
+        lines.extend(f"- {step}" for step in record.procedure[:6])
+    text = "\n".join(lines)
+    if record.source_text and len(text) < 400:
+        text = f"{text}\n{record.source_text[:600]}"
+    return RetrievedChunk(
+        doc_id=record.doc_id,
+        doc_title=record.doc_title or record.doc_id,
+        pdf_page=int(record.pdf_page or 0),
+        printed_page=record.printed_page,
+        chunk_index=0,
+        text=text,
+        score=score,
+        chunk_type="formula",
+        section_title=record.name,
+        product_types=list(record.product_types or []),
+        text_hash="",
+        formulation_id=record.id,
+        ingredient_count=len(record.ingredients or []),
+        extraction_confidence=float(record.confidence or 0.0),
+    )
+
+
 def _inject_structured_formula_chunks(
     results: list[RetrievedChunk],
     query: str,
@@ -366,24 +496,35 @@ def _inject_structured_formula_chunks(
         return results
 
     seen_fids = {r.formulation_id for r in results if r.formulation_id}
-    ids_to_fetch: list[str] = []
-    for i, ranked in enumerate(struct.matches[:3]):
+    candidates = []
+    for ranked in struct.matches[:3]:
         if ranked.score < 50:
             continue
         fid = ranked.record.id
         if fid and fid not in seen_fids:
-            ids_to_fetch.append(fid)
+            candidates.append(ranked)
             seen_fids.add(fid)
 
-    if not ids_to_fetch:
+    if not candidates:
         return results
 
+    ids_to_fetch = [c.record.id for c in candidates]
     payloads = fetch_chunks_by_formulation_ids(ids_to_fetch)
+    payload_by_fid = {
+        str(p.get("formulation_id")): p
+        for p in payloads
+        if p and p.get("formulation_id")
+    }
+
     injected: list[RetrievedChunk] = []
-    for i, payload in enumerate(payloads):
-        if not payload or not payload.get("formulation_id"):
-            continue
-        injected.append(_chunk_from_payload(payload, score=0.92 - i * 0.02))
+    for i, ranked in enumerate(candidates):
+        score = 0.94 - i * 0.02
+        payload = payload_by_fid.get(ranked.record.id)
+        if payload:
+            injected.append(_chunk_from_payload(payload, score=score))
+        else:
+            # Rare types often exist in SQLite without a linked Qdrant formula point.
+            injected.append(_chunk_from_formulation_record(ranked.record, score=score))
 
     return injected + results
 
@@ -472,6 +613,29 @@ def search(
                 results.append(_hit_to_chunk(hit, float(hit.score or 0.0)))
                 seen_ids.add(key)
 
+    # Pull rare-type tagged chunks into the pool (many were previously untagged).
+    for rare in ("makeup", "deodorant", "toner", "soap", "cleanser", "gel"):
+        if rare not in intent.product_types:
+            continue
+        rare_filter = qm.Filter(
+            must=[
+                qm.FieldCondition(key="product_types", match=qm.MatchValue(value=rare))
+            ]
+        )
+        rare_hits = client.query_points(
+            collection_name=settings.qdrant_collection,
+            query=vector.tolist(),
+            query_filter=rare_filter,
+            limit=min(effective_fetch, 30),
+            with_payload=True,
+        ).points
+        seen_ids = {f"{r.doc_id}:{r.pdf_page}:{r.chunk_index}" for r in results}
+        for hit in rare_hits:
+            key = f"{hit.payload.get('doc_id')}:{hit.payload.get('pdf_page')}:{hit.payload.get('chunk_index')}"
+            if key not in seen_ids:
+                results.append(_hit_to_chunk(hit, float(hit.score or 0.0)))
+                seen_ids.add(key)
+
     results = _inject_structured_formula_chunks(results, query, intent)
     results = _dedup_hits(results)
 
@@ -482,6 +646,7 @@ def search(
             results = _dedup_hits(results)
 
     results = _rerank(results, query, intent)
+    results = _prefer_on_type_formulas(results, query, intent)
     results = results[:top_k]
 
     logger.info(

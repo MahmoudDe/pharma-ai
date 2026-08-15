@@ -1,0 +1,707 @@
+{
+  "judge_model": "openai/gpt-4o-mini",
+  "passed": 2,
+  "total": 50,
+  "results": [
+    {
+      "id": "q01",
+      "question": "What is the formulation for a sunscreen that includes SPF 24 and utilizes Carbopol Ultrez as a thickener?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "missing SPF 24",
+        "ignores Carbopol Ultrez",
+        "forbidden phrase 'baby cream' in answer"
+      ],
+      "reasoning": "The assistant provided a formulation for a cream that is not a sunscreen and does not include SPF 24 or specifically mention Carbopol Ultrez as a thickener. The answer lacks relevance to the user's request for a sunscreen formulation, leading to a low score."
+    },
+    {
+      "id": "q02",
+      "question": "Compare the emulsifiers used in the Anti-Acne Cream and the Moisturizing Facial Lotion. What are their respective functions?",
+      "pass": false,
+      "score": 2.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "incomplete comparison",
+        "missing functions of emulsifiers",
+        "incorrect ingredient mentions",
+        "expected one of ['Polawax GP200', 'Glyceryl Stearate']"
+      ],
+      "reasoning": "The assistant's answer fails to provide a clear comparison of the emulsifiers used in the Anti-Acne Cream and the Moisturizing Facial Lotion, neglecting to mention their specific functions. Additionally, it incorrectly lists ingredients and does not adhere to the expected format, leading to a lack of clarity and grounding in the provided sources."
+    },
+    {
+      "id": "q03",
+      "question": "Why is Octyl Methoxycinnamate included in the formulation of the Solar Protection Lotion, and what trade-offs does it present compared to other UV filters?",
+      "pass": false,
+      "score": 1.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "ignores sources",
+        "no information on trade-offs",
+        "incorrect focus on unrelated ingredients"
+      ],
+      "reasoning": "The assistant fails to provide any relevant information about Octyl Methoxycinnamate or its role in the Solar Protection Lotion, despite it being mentioned in the retrieved sources. The answer does not address the user's question about the trade-offs of using this UV filter compared to others, and instead focuses on unrelated ingredients. This indicates a lack of understanding of the question and the sources provided."
+    },
+    {
+      "id": "q04",
+      "question": "What is the role of Propylene Glycol in the formulation of the Moisturizing Facial Lotion, and at what percentage is it typically used?",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented percentages",
+        "ignores sources",
+        "forbidden phrase 'sunscreen' in answer"
+      ],
+      "reasoning": "The assistant's answer provides a formula that is unrelated to the user's question about the role and percentage of Propylene Glycol in a Moisturizing Facial Lotion. It incorrectly includes a variety of ingredients and percentages that do not match the retrieved sources, particularly ignoring the specific context of Propylene Glycol's use as a humectant at 5.0 wt% in the Moisturizins Facial Lotion. This indicates a lack of grounding in the provided sources and relevance to the question asked."
+    },
+    {
+      "id": "q05",
+      "question": "Identify a lotion formulation that contains both Octyl Salicylate and Benzophenone-3. What are the functions of these ingredients?",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong ingredients",
+        "missing required ingredients",
+        "incorrect product type",
+        "expected one of ['Octyl Salicylate', 'Benzophenone-3']"
+      ],
+      "reasoning": "The assistant's answer does not include the required ingredients Octyl Salicylate and Benzophenone-3, which were explicitly requested in the question. Instead, it provides a completely unrelated formulation with different ingredients, indicating a misunderstanding of the user's request. Additionally, the formulation presented is not relevant to the user's inquiry about a lotion formulation containing the specified ingredients."
+    },
+    {
+      "id": "q06",
+      "question": "Compare the oil phases used in the Cocoa Butter Skin Cream and the Cleansing Cream. How do they differ in terms of composition and intended effect?",
+      "pass": false,
+      "score": 1.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "irrelevant product information",
+        "missing comparison of oil phases",
+        "ignores user question"
+      ],
+      "reasoning": "The assistant's answer does not address the user's question about comparing the oil phases of the Cocoa Butter Skin Cream and the Cleansing Cream. Instead, it provides information about the Anti-Aqina Cream, which is unrelated. Additionally, it fails to mention any specific oil phases or their intended effects, leading to a lack of relevance and grounding in the provided sources."
+    },
+    {
+      "id": "q07",
+      "question": "What is the significance of using Glyceryl Stearate and PEG-100 Stearate in the formulation of the Velvet Body Lotion?",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources"
+      ],
+      "reasoning": "The assistant's answer does not address the user's question about the significance of Glyceryl Stearate and PEG-100 Stearate in the Velvet Body Lotion. Instead, it provides an unrelated formula for a different type of lotion and includes invented ingredients that are not found in the retrieved sources. Additionally, it fails to mention the specific ingredients requested by the user, making it irrelevant and ungrounded."
+    },
+    {
+      "id": "q08",
+      "question": "In the formulation of the AHA High Viscosity Lotion, what is the purpose of including Xanthan Gum, and at what percentage is it used?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect product type",
+        "missing purpose of Xanthan Gum",
+        "forbidden phrase 'sunscreen' in answer"
+      ],
+      "reasoning": "The assistant provided a structured formula but incorrectly included unrelated ingredients and did not address the specific purpose of Xanthan Gum in the AHA High Viscosity Lotion. While it correctly identified the percentage of Xanthan Gum as 2.0%, it failed to explain its role in the formulation, which is essential for a complete answer."
+    },
+    {
+      "id": "q09",
+      "question": "What are the key differences in the emulsifying agents used in the Barrier Cream and the Anti-Acne Cream formulations?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incomplete comparison",
+        "missing key emulsifying agents",
+        "incorrectly structured response"
+      ],
+      "reasoning": "The assistant provided a detailed breakdown of the Anti-Acne Cream but failed to adequately compare it with the Barrier Cream, particularly regarding the emulsifying agents. While it mentioned some ingredients, it did not highlight the key differences in emulsifying agents between the two formulations, which was the core of the user's question. Additionally, the response was overly focused on one formulation without a balanced comparison."
+    },
+    {
+      "id": "q10",
+      "question": "Explain the role of Disodium EDTA in the formulation of the conditioner. Why is it important in cosmetic formulations?",
+      "pass": true,
+      "score": 5.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [],
+      "reasoning": "The assistant provided a comprehensive explanation of the role of Disodium EDTA in cosmetic formulations, specifically in conditioners. It accurately described its function as a chelating agent that stabilizes the formulation by binding metal ions, preventing degradation and discoloration. The structured formula included relevant ingredients and their percentages, aligning with the user's request for information about the formulation. The answer is well-grounded in the retrieved sources and directly addresses the question without any major issues."
+    },
+    {
+      "id": "q11",
+      "question": "Identify a lotion that uses Octyl Methoxy Cinnamate and discuss its role in UV protection.",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect ingredient percentages",
+        "irrelevant ingredients",
+        "missing UV protection discussion",
+        "expected one of ['Octyl Methoxy Cinnamate', 'UV protection']"
+      ],
+      "reasoning": "The assistant provided a structured formula that includes Octyl Methoxy Cinnamate, which is relevant to the question. However, the formula contains incorrect ingredient percentages and irrelevant ingredients that do not align with the retrieved sources. Additionally, the assistant failed to discuss the role of Octyl Methoxy Cinnamate in UV protection, which was a key part of the user's request."
+    },
+    {
+      "id": "q12",
+      "question": "Compare the use of preservatives in the Moisturizing Facial Lotion and the Solar Protection Lotion. What are the specific preservatives used?",
+      "pass": false,
+      "score": 2.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "missing specific preservatives",
+        "incorrect product type mentioned",
+        "expected one of ['Methyl Paraben', 'Propyl Paraben']"
+      ],
+      "reasoning": "The assistant's answer provides a structured formula but fails to specifically compare the preservatives used in the Moisturizing Facial Lotion and the Solar Protection Lotion. It also incorrectly presents a formula for a lotion that is not directly related to the user's question about preservatives, leading to a lack of focus on the specific comparison requested."
+    },
+    {
+      "id": "q13",
+      "question": "What is the function of Cetearyl Alcohol in the formulation of the Anti-Acne Cream, and how does it contribute to the overall texture?",
+      "pass": false,
+      "score": 2.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "lacks specific information",
+        "does not address texture",
+        "incorrectly cites ingredient percentages",
+        "forbidden phrase 'lotion' in answer"
+      ],
+      "reasoning": "The assistant fails to provide any specific information regarding the function of Cetearyl Alcohol in the Anti-Acne Cream or its contribution to texture, which is the core of the user's question. While it acknowledges the lack of information from the sources, it does not attempt to infer or summarize the known functions of Cetearyl Alcohol based on its general properties. Additionally, the structured formulas presented contain inaccuracies in ingredient percentages and do not align with the context of the question."
+    },
+    {
+      "id": "q14",
+      "question": "Discuss the emulsification process in the formulation of the Cleansing Cream. What steps are critical for achieving stability?",
+      "pass": false,
+      "score": 4.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "lacks detailed explanation of emulsification process",
+        "expected one of ['emulsification', 'stability']"
+      ],
+      "reasoning": "The assistant provides a structured formula for the Anti-Aqina Cream, which is relevant to the question about emulsification in cream formulations. It includes a detailed ingredient list and some procedural steps, but it lacks a comprehensive explanation of the emulsification process and critical steps for stability, which would enhance the answer's quality."
+    },
+    {
+      "id": "q15",
+      "question": "Identify the key ingredients in the formulation of the Solar Protection Lotion and their respective roles in providing sun protection.",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect ingredient list",
+        "missing key ingredients",
+        "wrong product type"
+      ],
+      "reasoning": "The assistant provided a structured formula that does not correspond to the Solar Protection Lotion, instead listing ingredients from a different formulation. While the answer is grounded in the sense that it references ingredients, it fails to accurately identify the key ingredients from the specified Solar Protection Lotion and their roles in sun protection. Additionally, it incorrectly includes ingredients not present in the retrieved sources and does not mention critical components like Titanium Dioxide or Octyl Salicylate, which are essential for sun protection."
+    },
+    {
+      "id": "q16",
+      "question": "What are the differences in the oil content between the Cocoa Butter Skin Cream and the Skin-Whitening Cream, and how do these differences affect their properties?",
+      "pass": false,
+      "score": 3.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "incomplete comparison",
+        "unverified percentages",
+        "no details on Skin-Whitening Cream"
+      ],
+      "reasoning": "The assistant provides some information about the oil content in the Cocoa Butter Skin Cream but fails to compare it with the Skin-Whitening Cream due to lack of data. The percentages mentioned for the Cocoa Butter Skin Cream are also marked as unverified, which undermines the grounding of the answer. While the response is relevant, it does not fully address the user's question about differences in oil content and their effects, leading to a lower score."
+    },
+    {
+      "id": "q17",
+      "question": "Explain the role of Sodium Laureth Sulfate in the formulation of the conditioner. What are its benefits and potential drawbacks?",
+      "pass": false,
+      "score": 2.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "ignores specific role of Sodium Laureth Sulfate",
+        "does not address benefits or drawbacks"
+      ],
+      "reasoning": "The assistant fails to provide any information regarding the role, benefits, or drawbacks of Sodium Laureth Sulfate in conditioner formulations, despite the sources containing relevant data. While the answer is somewhat structured, it does not address the user's question directly, leading to a low score."
+    },
+    {
+      "id": "q18",
+      "question": "What is the significance of using a combination of Octyl Methoxycinnamate and Benzophenone-3 in sunscreen formulations?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "ignores sources",
+        "wrong product type",
+        "no explanation of significance",
+        "forbidden phrase 'cream' in answer",
+        "forbidden phrase 'conditioner' in answer"
+      ],
+      "reasoning": "The assistant fails to address the user's question about the significance of Octyl Methoxycinnamate and Benzophenone-3 in sunscreen formulations, instead providing unrelated product types and structured formulations that do not pertain to the question. The answer does not reference the retrieved sources effectively, nor does it explain the importance of the ingredients in question."
+    },
+    {
+      "id": "q19",
+      "question": "Identify the key ingredients in the formulation of the Velvet Body Lotion and discuss their functions.",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources"
+      ],
+      "reasoning": "The assistant's answer provides a formula that is not relevant to the Velvet Body Lotion, including ingredients that are not mentioned in the retrieved sources. It fails to address the key ingredients and their functions as requested, and the product type mentioned is incorrect. The answer does not utilize any of the relevant information from the sources."
+    },
+    {
+      "id": "q20",
+      "question": "Compare the thickening agents used in the AHA High Viscosity Lotion and the Moisturizing Facial Lotion. What are their respective roles?",
+      "pass": false,
+      "score": 1.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources",
+        "expected one of ['Xanthan Gum', 'Carbopol 941']"
+      ],
+      "reasoning": "The assistant's answer does not address the user's question about comparing thickening agents in the specified lotions. Instead, it provides an unrelated formula with invented ingredients and percentages, which are not found in the retrieved sources. The answer fails to mention any of the relevant thickening agents like Xanthan Gum or Carbopol, and it does not reference the actual formulations from the sources provided."
+    },
+    {
+      "id": "q21",
+      "question": "What is the role of Glycerin in the formulation of the Cleansing Cream, and at what percentage is it typically used?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect percentage",
+        "irrelevant product type",
+        "missing specific role of Glycerin"
+      ],
+      "reasoning": "The assistant provided a detailed formulation but incorrectly specified the percentage of Glycerin as 4.0 wt%, while the relevant sources indicate it is typically used at 1.0 wt% or 5.0 wt%. Additionally, the formulation presented is for a cream that does not directly address the user's question about the role of Glycerin in a Cleansing Cream specifically. The response lacks clarity on Glycerin's function as a humectant, which is essential information for the user."
+    },
+    {
+      "id": "q22",
+      "question": "Discuss the emulsification process in the formulation of the Barrier Cream. What ingredients are critical for achieving a stable emulsion?",
+      "pass": false,
+      "score": 3.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect product type",
+        "irrelevant details about Anti-Aqina Cream"
+      ],
+      "reasoning": "The assistant provided a detailed answer about the Anti-Aqina Cream instead of focusing on the Barrier Cream as requested. While the information about emulsification and ingredients is relevant, it does not directly address the user's question about the Barrier Cream. The assistant should have focused on the critical ingredients for emulsification in the Barrier Cream specifically."
+    },
+    {
+      "id": "q23",
+      "question": "Identify a lotion that contains both Propylene Glycol and Octyl Methoxy Cinnamate. What are the functions of these ingredients?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "missing ingredient functions",
+        "expected one of ['Propylene Glycol', 'Octyl Methoxy Cinnamate']"
+      ],
+      "reasoning": "The assistant provided a structured formula but included ingredients that were not mentioned in the retrieved sources, such as Titanium Dioxide and various waxes. The formula does contain Octyl Methoxy Cinnamate and Propylene Glycol, but it does not accurately reflect a lotion that is grounded in the provided sources. Additionally, the functions of the requested ingredients were not addressed, which is a significant oversight."
+    },
+    {
+      "id": "q24",
+      "question": "Compare the surfactants used in the conditioner and the cleansing cream. What are their respective roles?",
+      "pass": false,
+      "score": 2.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "incomplete comparison",
+        "missing roles of surfactants",
+        "incorrect ingredient details",
+        "expected one of ['Sodium Laureth Sulfate', 'Polysorbate-20']"
+      ],
+      "reasoning": "The assistant's answer fails to provide a proper comparison of the surfactants used in the conditioner and cleansing cream, as it does not mention specific surfactants or their roles. Additionally, the structured formulas presented are incomplete and do not accurately reflect the ingredients from the retrieved sources. The answer lacks depth and clarity, which is essential for a thorough comparison."
+    },
+    {
+      "id": "q25",
+      "question": "What is the significance of using a combination of Dimethicone and Glycerin in the formulation of the conditioner?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect product type",
+        "invented percentages",
+        "lack of explanation for ingredient significance"
+      ],
+      "reasoning": "The assistant provided a structured formula that includes Glycerin and Dimethicone, which is relevant to the question. However, the answer lacks a clear explanation of the significance of using these ingredients in a conditioner formulation. Additionally, the percentages for some ingredients appear to be invented or not grounded in the retrieved sources, and the product type is incorrectly categorized as a cream rather than a conditioner."
+    },
+    {
+      "id": "q26",
+      "question": "Identify the key ingredients in the formulation of the Skin-Whitening Cream and discuss their functions.",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources"
+      ],
+      "reasoning": "The assistant incorrectly provided a formulation for 'Anti-Aqina Cream' instead of the requested 'Skin-Whitening Cream'. The ingredients listed do not match the retrieved sources for the Skin-Whitening Cream, which includes specific ingredients like mineral oil and polawax. Additionally, the assistant's answer includes invented ingredients and percentages that are not found in the sources, leading to a lack of grounding and relevance to the user's question."
+    },
+    {
+      "id": "q27",
+      "question": "What are the differences in the emulsifying agents used in the Cocoa Butter Skin Cream and the Skin-Whitening Cream formulations?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "ignores specific emulsifying agents",
+        "does not compare formulations"
+      ],
+      "reasoning": "The assistant's answer does not directly address the user's question about the differences in emulsifying agents used in the Cocoa Butter Skin Cream and the Skin-Whitening Cream formulations. Instead, it provides a detailed breakdown of the Anti-Aqina Cream formulation without comparing it to the other creams mentioned. Additionally, it fails to mention the specific emulsifying agents from the Cocoa Butter Skin Cream, which are crucial for the comparison. This results in a lack of grounding and relevance to the specific question asked."
+    },
+    {
+      "id": "q28",
+      "question": "Explain the role of Butylene Glycol in the formulation of the Solar Protection Lotion. What benefits does it provide?",
+      "pass": false,
+      "score": 1.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "ignores sources",
+        "no mention of Butylene Glycol",
+        "incorrect product type"
+      ],
+      "reasoning": "The assistant fails to provide any information about Butylene Glycol, which is the main focus of the question. It also incorrectly states that it cannot answer due to a lack of sources, despite the presence of relevant passages. Additionally, the assistant's structured response includes unrelated formulations and does not address the user's inquiry about the Solar Protection Lotion specifically."
+    },
+    {
+      "id": "q29",
+      "question": "Discuss the emulsification process in the formulation of the Moisturizing Facial Lotion. What steps are critical for achieving stability?",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources",
+        "expected one of ['emulsification', 'stability']"
+      ],
+      "reasoning": "The assistant's answer provides a formula that is not relevant to a moisturizing facial lotion, as it includes ingredients typically found in sunscreens and other products. Additionally, the answer does not address the emulsification process or critical steps for achieving stability, which were the main points of the user's question. The ingredients listed are not sourced from the provided passages, indicating a lack of grounding in the retrieved information."
+    },
+    {
+      "id": "q30",
+      "question": "Identify a lotion that uses both Methylparaben and Propylparaben as preservatives. What are their functions?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "missing functions of preservatives"
+      ],
+      "reasoning": "The assistant provided a lengthy formula that does not include Methylparaben and Propylparaben, which were specifically requested. Instead, it included unrelated ingredients and a product type that does not match the user's request for a lotion containing both preservatives. Additionally, the functions of Methylparaben and Propylparaben were not addressed, which is a critical part of the user's question."
+    },
+    {
+      "id": "q31",
+      "question": "Compare the thickening agents used in the Velvet Body Lotion and the AHA High Viscosity Lotion. What are their respective roles?",
+      "pass": false,
+      "score": 1.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources",
+        "expected one of ['Crosspolymer', 'Xanthan Gum']"
+      ],
+      "reasoning": "The assistant's answer does not address the user's question about the thickening agents in the Velvet Body Lotion and the AHA High Viscosity Lotion. Instead, it provides an unrelated formula with invented ingredients and percentages, which are not found in the retrieved sources. Additionally, the assistant fails to mention any of the relevant thickening agents like 'Crosspolymer' or 'Xanthan Gum' that were expected in the response."
+    },
+    {
+      "id": "q32",
+      "question": "What is the role of Squalane in the formulation of the Moisturizing Facial Lotion, and how does it contribute to skin feel?",
+      "pass": false,
+      "score": 2.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "not addressing the role of Squalane",
+        "incorrectly claims Squalane is not mentioned"
+      ],
+      "reasoning": "The assistant fails to address the user's question about Squalane's role in the Moisturizing Facial Lotion, incorrectly stating that it is not mentioned in the sources. This indicates a lack of grounding in the provided information. While the answer is relevant to the topic of cosmetic formulations, it does not provide any useful information regarding Squalane or its contribution to skin feel, leading to a low score."
+    },
+    {
+      "id": "q33",
+      "question": "Discuss the emulsification process in the formulation of the Barrier Cream. What ingredients are critical for achieving a stable emulsion?",
+      "pass": false,
+      "score": 3.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect product type",
+        "missing critical emulsifiers"
+      ],
+      "reasoning": "The assistant's answer provides a detailed structured formula for the Anti-Aqina Cream, which is not the requested Barrier Cream. While it includes relevant ingredients and a procedure, it fails to mention critical emulsifiers necessary for a stable emulsion in the context of the Barrier Cream. This misalignment with the specific product requested affects the overall quality of the response."
+    },
+    {
+      "id": "q34",
+      "question": "Identify a lotion that contains both Octyl Salicylate and Titanium Dioxide. What are the functions of these ingredients?",
+      "pass": true,
+      "score": 4.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "missing functions of ingredients"
+      ],
+      "reasoning": "The assistant provided a structured formula for a lotion that includes Titanium Dioxide, but it did not include Octyl Salicylate, which was specifically requested. The answer is grounded in the sources, and the formula is relevant to the question. However, it lacks the explanation of the functions of the ingredients, which is a significant omission."
+    },
+    {
+      "id": "q35",
+      "question": "What are the differences in the oil content between the Cocoa Butter Skin Cream and the Skin-Whitening Cream, and how do these differences affect their properties?",
+      "pass": false,
+      "score": 3.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "incomplete comparison",
+        "missing Skin-Whitening Cream details"
+      ],
+      "reasoning": "The assistant correctly identifies the oil content in the Cocoa Butter Skin Cream and provides a structured formula. However, it fails to provide any information about the Skin-Whitening Cream, which is essential for a proper comparison. This lack of information limits the answer's usefulness, resulting in a score of 3."
+    },
+    {
+      "id": "q36",
+      "question": "Explain the role of Dimethicone in the formulation of the conditioner. What benefits does it provide?",
+      "pass": false,
+      "score": 1.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "ignores sources",
+        "lacks specific information about Dimethicone"
+      ],
+      "reasoning": "The assistant fails to provide any information about Dimethicone, which is the main focus of the question. It incorrectly states that the sources do not mention Dimethicone, despite the presence of related ingredients like Trimethylsilylamodimethicone in the sources. The answer does not address the user's request for the role and benefits of Dimethicone in conditioner formulations, leading to a low score."
+    },
+    {
+      "id": "q37",
+      "question": "Discuss the emulsification process in the formulation of the Cleansing Cream. What steps are critical for achieving stability?",
+      "pass": false,
+      "score": 4.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "missing detailed emulsification steps",
+        "lack of emphasis on stability factors",
+        "expected one of ['emulsification', 'stability']"
+      ],
+      "reasoning": "The assistant provided a structured formula for the Anti-Aqina Cream, which is relevant to the question about emulsification in cream formulations. However, while it included some procedural steps, it did not explicitly detail the emulsification process or critical steps for achieving stability, which are essential to fully address the user's inquiry."
+    },
+    {
+      "id": "q38",
+      "question": "Identify a lotion that uses both Propylene Glycol and Octyl Methoxy Cinnamate. What are the functions of these ingredients?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect product type",
+        "invented ingredients",
+        "missing ingredient functions",
+        "expected one of ['Propylene Glycol', 'Octyl Methoxy Cinnamate']"
+      ],
+      "reasoning": "The assistant provided a formula that includes Octyl Methoxy Cinnamate but does not mention Propylene Glycol, which is a key ingredient requested in the question. Additionally, the formula includes ingredients that are not relevant to the user's request, and it fails to explain the functions of the specified ingredients. The answer is partially grounded but does not meet the requirements for a lotion that uses both ingredients correctly."
+    },
+    {
+      "id": "q39",
+      "question": "Compare the surfactants used in the conditioner and the cleansing cream. What are their respective roles?",
+      "pass": false,
+      "score": 2.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "lacks comparison of surfactants",
+        "does not address roles of surfactants",
+        "expected one of ['Sodium Laureth Sulfate', 'Polysorbate-20']"
+      ],
+      "reasoning": "The assistant's answer provides some information about the ingredients in the conditioner and cleansing cream, but it fails to specifically compare the surfactants used in both products or explain their respective roles. The answer lacks the necessary depth and focus on the surfactants, which is the core of the user's question."
+    },
+    {
+      "id": "q40",
+      "question": "What is the significance of using a combination of Dimethicone and Glycerin in the formulation of the conditioner?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect ingredient percentages",
+        "lack of explanation for ingredient significance"
+      ],
+      "reasoning": "The assistant provided a structured formula with ingredients, which is a positive aspect. However, the answer did not address the significance of using Dimethicone and Glycerin in the formulation, which was the core of the user's question. Additionally, the percentages for some ingredients appear to be invented or inconsistent with typical formulations, leading to a lower score."
+    },
+    {
+      "id": "q41",
+      "question": "Identify the key ingredients in the formulation of the Skin-Whitening Cream and discuss their functions.",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented percentages",
+        "ignores sources"
+      ],
+      "reasoning": "The assistant incorrectly provided the formulation for Anti-Aqina Cream instead of the requested Skin-Whitening Cream. The ingredients listed do not match the retrieved sources for the Skin-Whitening Cream, which includes specific ingredients like mineral oil and polawax. Additionally, the assistant's response includes irrelevant details and fails to discuss the functions of the key ingredients, leading to a low score."
+    },
+    {
+      "id": "q42",
+      "question": "What are the differences in the emulsifying agents used in the Cocoa Butter Skin Cream and the Skin-Whitening Cream formulations?",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "incorrect product type",
+        "missing relevant emulsifying agents",
+        "no comparison made"
+      ],
+      "reasoning": "The assistant's answer does not address the user's question about the differences in emulsifying agents between the Cocoa Butter Skin Cream and the Skin-Whitening Cream formulations. Instead, it provides details about the Anti-Aqina Cream, which is not relevant to the question. Additionally, it fails to mention any emulsifying agents from the Cocoa Butter Skin Cream or the Skin-Whitening Cream, leading to a lack of grounding in the provided sources."
+    },
+    {
+      "id": "q43",
+      "question": "Explain the role of Butylene Glycol in the formulation of the Solar Protection Lotion. What benefits does it provide?",
+      "pass": false,
+      "score": 1.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "ignores sources",
+        "does not address the question"
+      ],
+      "reasoning": "The assistant fails to provide any information about Butylene Glycol, which was the focus of the question. It incorrectly states that it cannot answer due to a lack of mention in the sources, but it should have at least acknowledged the absence of the ingredient and discussed its general role as a humectant in cosmetic formulations. This results in a low score."
+    },
+    {
+      "id": "q44",
+      "question": "Discuss the emulsification process in the formulation of the Moisturizing Facial Lotion. What steps are critical for achieving stability?",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources",
+        "expected one of ['emulsification', 'stability']"
+      ],
+      "reasoning": "The assistant's answer provides a formula that is unrelated to the user's question about the emulsification process in a Moisturizing Facial Lotion. The ingredients listed are not relevant to the formulation of a facial lotion and include invented components that do not appear in the retrieved sources. Additionally, the answer fails to address the critical steps for achieving stability in emulsification, which were explicitly requested in the question."
+    },
+    {
+      "id": "q45",
+      "question": "Identify a lotion that contains both Methylparaben and Propylparaben as preservatives. What are their functions?",
+      "pass": false,
+      "score": 1.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "missing functions of preservatives"
+      ],
+      "reasoning": "The assistant provided a lotion formula that does not include both Methylparaben and Propylparaben, which were specifically requested. Additionally, the answer included irrelevant ingredients and failed to explain the functions of the preservatives, which is a critical part of the user's question. The presence of invented ingredients further detracts from the quality of the response."
+    },
+    {
+      "id": "q46",
+      "question": "Compare the thickening agents used in the Velvet Body Lotion and the AHA High Viscosity Lotion. What are their respective roles?",
+      "pass": false,
+      "score": 1.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "ignores sources",
+        "expected one of ['Crosspolymer', 'Xanthan Gum']"
+      ],
+      "reasoning": "The assistant's answer does not address the user's question about the thickening agents in the Velvet Body Lotion and the AHA High Viscosity Lotion. Instead, it provides an unrelated formula with invented ingredients and percentages. Additionally, it fails to reference any of the retrieved sources, which contain relevant information about the actual formulations. This indicates a lack of grounding and relevance to the user's inquiry."
+    },
+    {
+      "id": "q47",
+      "question": "What is the role of Squalane in the formulation of the Moisturizing Facial Lotion, and how does it contribute to skin feel?",
+      "pass": false,
+      "score": 2.0,
+      "route": "reasoning",
+      "llm_used": true,
+      "issues": [
+        "not addressing the role of Squalane",
+        "no relevant information provided"
+      ],
+      "reasoning": "The assistant correctly identifies that Squalane is not mentioned in the provided sources, but it fails to provide any relevant information about the role of Squalane in moisturizing formulations or its contribution to skin feel, which is essential to answer the user's question. The answer lacks grounding in the context of the question and does not utilize the available sources effectively."
+    },
+    {
+      "id": "q48",
+      "question": "Discuss the emulsification process in the formulation of the Barrier Cream. What ingredients are critical for achieving a stable emulsion?",
+      "pass": false,
+      "score": 3.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "irrelevant product focus",
+        "missing critical emulsifiers"
+      ],
+      "reasoning": "The assistant provided a detailed formula for the Anti-Aqina Cream, which is not directly relevant to the user's question about the Barrier Cream. While the answer is grounded in the retrieved sources, it fails to adequately address the emulsification process specific to the Barrier Cream and does not mention critical emulsifiers like Sorbitan Monostearate or Cetanol that are essential for achieving a stable emulsion."
+    },
+    {
+      "id": "q49",
+      "question": "Identify a lotion that uses both Propylene Glycol and Octyl Methoxy Cinnamate. What are the functions of these ingredients?",
+      "pass": false,
+      "score": 2.0,
+      "route": "lookup",
+      "llm_used": false,
+      "issues": [
+        "wrong product type",
+        "invented ingredients",
+        "incorrect percentages",
+        "expected one of ['Propylene Glycol', 'Octyl Methoxy Cinnamate']"
+      ],
+      "reasoning": "The assistant provided a formula that includes Octyl Methoxy Cinnamate but does not include Propylene Glycol, which is a key ingredient requested in the question. Additionally, the formula presented contains several invented ingredients and percentages that do not match the retrieved sources. The assistant also failed to clearly explain the functions of the requested ingredients, which is a critical part of the user's question."
+    },
+    {
+      "id": "q50",
+      "question": "Compare the surfactants used in the conditioner and the cleansing cream. What are their respective roles?",
+      "pass": false,
+      "score": 2.0,
+      "route": "compare",
+      "llm_used": false,
+      "issues": [
+        "incomplete comparison",
+        "missing roles of surfactants",
+        "lack of structured formula for cleansing cream",
+        "expected one of ['Sodium Laureth Sulfate', 'Polysorbate-20']"
+      ],
+      "reasoning": "The assistant provided some relevant information about the ingredients in the conditioner but failed to adequately compare the surfactants used in both the conditioner and the cleansing cream. It did not mention the roles of the surfactants, which is crucial for the user's request. Additionally, the structured formula for the cleansing cream was not provided, which detracts from the overall quality of the response."
+    }
+  ]
+}

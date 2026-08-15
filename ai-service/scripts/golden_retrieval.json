@@ -16,7 +16,7 @@
     "min_formula_in_top_k": 1,
     "top_k": 5,
     "product_types_all": ["anti_dandruff"],
-    "min_ingredient_count": 6,
+    "min_ingredient_count": 4,
     "combined_text_must_match": "anti[-\\s]?dandruff|antidandruff",
     "combined_text_must_not_contain": ["regular sham", "baby shampoo", "baby cream"]
   },
@@ -24,7 +24,7 @@
     "min_formula_in_top_k": 1,
     "top_k": 5,
     "product_types_any": ["cream", "lotion"],
-    "min_ingredient_count": 6,
+    "min_ingredient_count": 5,
     "combined_text_must_match": "hand\\s+(and\\s+)?(nail\\s+)?cream|tube[- ]dispensed hand cream",
     "combined_text_must_not_contain": ["baby cream", "baby shampoo", "sunscreen", "shaving cream"]
   },
@@ -81,5 +81,165 @@
     "product_types_any": ["lotion", "sunscreen"],
     "combined_text_must_match": "sun|spf|uv",
     "combined_text_must_not_contain": ["baby shampoo", "hand cream"]
+  },
+  "Show me a hair conditioner formula with silicones.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["conditioner"],
+    "combined_text_must_match": "condition",
+    "combined_text_must_not_contain": ["hand cream", "sunscreen", "baby wipe"]
+  },
+  "Give me a facial cleanser formulation.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "cleanse|cleanser|facial\\s+wash|wash",
+    "combined_text_must_not_contain": ["baby shampoo", "lipstick"]
+  },
+  "I need a body soap or hand cleaner formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["soap"],
+    "combined_text_must_match": "soap|hand\\s+clean",
+    "combined_text_must_not_contain": ["sunscreen", "lipstick"]
+  },
+  "Show me a shower gel or shower bath formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "shower|gel",
+    "combined_text_must_not_contain": ["lipstick", "nail polish"]
+  },
+  "Give me a deodorant or antiperspirant formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "deodorant|antiperspirant",
+    "combined_text_must_not_contain": ["baby shampoo", "hand cream"]
+  },
+  "Show me a shaving cream formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cream"],
+    "combined_text_must_match": "shav",
+    "combined_text_must_not_contain": ["baby shampoo", "sunscreen lotion"]
+  },
+    "Give me a lipstick or creamy lipstick formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["makeup", "cream"],
+    "combined_text_must_match": "lipstick|make[\\-\\s]?up",
+    "combined_text_must_not_contain": ["shampoo", "baby"]
+  },
+  "What ingredients are used in sunscreen formulations?": {
+    "top_k": 5,
+    "min_top_score": 0.30,
+    "product_types_any": ["sunscreen", "lotion"],
+    "combined_text_must_match": "sun|spf|uv|filter"
+  },
+  "Show me a night cream or moisturizing cream formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cream"],
+    "combined_text_must_match": "cream|moistur",
+    "combined_text_must_not_contain": ["shampoo", "antidandruff"]
+  },
+  "Give me a lotion for dry skin with emollients.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["lotion", "cream"],
+    "combined_text_must_match": "lotion|cream|emollient|moistur",
+    "combined_text_must_not_contain": ["shampoo", "conditioner"]
+  },
+  "Find an anti-dandruff lotion shampoo formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["anti_dandruff", "shampoo"],
+    "combined_text_must_match": "dandruff|antidandruff",
+    "combined_text_must_not_contain": ["lipstick", "deodorant"]
+  },
+  "Show me a leave-in or rinse-off hair conditioner.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["conditioner"],
+    "combined_text_must_match": "condition|hair",
+    "combined_text_must_not_contain": ["sunscreen", "lipstick"]
+  },
+  "Give me a gel cream or light cream formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cream"],
+    "combined_text_must_match": "gel|cream",
+    "combined_text_must_not_contain": ["shampoo", "deodorant stick"]
+  },
+  "What preservatives appear in lotion formulas?": {
+    "top_k": 5,
+    "min_top_score": 0.28,
+    "product_types_any": ["lotion", "cream"],
+    "combined_text_must_match": "lotion|cream|paraben|preserv"
+  },
+  "Show me a baby lotion or baby cream formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["baby", "lotion", "cream"],
+    "combined_text_must_match": "baby",
+    "combined_text_must_not_contain": ["antidandruff", "lipstick"]
+  },
+  "Give me a facial toner formulation.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "combined_text_must_match": "toner",
+    "combined_text_must_not_contain": ["shampoo", "deodorant"]
+  },
+  "I need a sunscreen cream with titanium dioxide or zinc oxide.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["sunscreen", "cream", "lotion"],
+    "combined_text_must_match": "sun|spf|titanium|zinc|uv",
+    "combined_text_must_not_contain": ["baby shampoo"]
+  },
+  "Show me a hair shampoo for oily or normal hair.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["shampoo"],
+    "combined_text_must_match": "sham|shampoo|hair",
+    "combined_text_must_not_contain": ["lipstick", "deodorant"]
+  },
+  "Give me a massage cream or body cream formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cream"],
+    "combined_text_must_match": "cream|massage|body",
+    "combined_text_must_not_contain": ["shampoo", "antidandruff"]
+  },
+  "Compare lotion and cream moisturizers from the library.": {
+    "min_formula_in_top_k": 2,
+    "top_k": 5,
+    "product_types_any": ["lotion", "cream"],
+    "combined_text_must_match": "lotion|cream",
+    "combined_text_must_not_contain": ["shampoo"]
+  },
+  "What emulsifiers are used in cream formulations?": {
+    "top_k": 5,
+    "min_top_score": 0.28,
+    "product_types_any": ["cream", "lotion"],
+    "combined_text_must_match": "cream|lotion|emulsif|stearate|glyceryl"
+  },
+  "Show me a clear shampoo or transparent shampoo gel.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["shampoo"],
+    "combined_text_must_match": "sham|shampoo|gel",
+    "combined_text_must_not_contain": ["lipstick", "nail"]
+  },
+  "Give me a hand and nail cream formula.": {
+    "min_formula_in_top_k": 1,
+    "top_k": 5,
+    "product_types_any": ["cream"],
+    "combined_text_must_match": "hand|nail",
+    "combined_text_must_not_contain": ["baby shampoo", "antidandruff"]
+  },
+  "Find UV filter ingredients used in solar protection lotions.": {
+    "top_k": 5,
+    "min_top_score": 0.28,
+    "product_types_any": ["sunscreen", "lotion"],
+    "combined_text_must_match": "sun|solar|spf|uv|methoxy|salicylate|titanium"
   }
 }

@@ -7,13 +7,17 @@ import re
 _PRODUCT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("baby", re.compile(r"\bbaby\b", re.I)),
     ("anti_dandruff", re.compile(r"\banti[-\s]?dandruff\b|\bantidandruff\b", re.I)),
-    ("shampoo", re.compile(r"\bshampoo\b", re.I)),
-    ("conditioner", re.compile(r"\bcondition(er|ing)\b", re.I)),
-    ("cream", re.compile(r"\b(hand\s+)?cream\b|\bhand\s+cream\b", re.I)),
+    ("shampoo", re.compile(r"\bshampoo\b|\bsham[d]?oo\b", re.I)),
+    ("conditioner", re.compile(r"\bcondition(er|ing)\b|\bleave[-\s]?in\b", re.I)),
+    ("cream", re.compile(r"\b(hand\s+)?cream\b|\bhand\s+cream\b|\bgel\s+cream\b", re.I)),
     ("lotion", re.compile(r"\blotion\b", re.I)),
-    ("soap", re.compile(r"\b(soap|soaD)\b", re.I)),
-    ("sunscreen", re.compile(r"\bsunscreen\b", re.I)),
-    ("makeup", re.compile(r"\bmake[-\s]?up\b", re.I)),
+    ("soap", re.compile(r"\b(soap|soaD|hand\s+cleaner)\b", re.I)),
+    ("sunscreen", re.compile(r"\bsunscreen\b|\bsolar\s+protection\b|\bsuntan\b|\bspf\b", re.I)),
+    ("makeup", re.compile(r"\bmake[-\s]?up\b|\blipstick\b|\blip\s+balm\b", re.I)),
+    ("deodorant", re.compile(r"\bdeodorant\b|\bantiperspirant\b", re.I)),
+    ("cleanser", re.compile(r"\bcleanser\b|\bfacial\s+wash\b|\bcleansing\b", re.I)),
+    ("toner", re.compile(r"\btoner\b", re.I)),
+    ("gel", re.compile(r"\bgel\b|\bshower\s+(?:gel|bath)\b", re.I)),
 ]
 
 _SECTION_HEADING = re.compile(

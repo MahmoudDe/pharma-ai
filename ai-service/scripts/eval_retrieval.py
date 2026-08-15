@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.retrieval_eval import GOLDEN_QUESTIONS, run_retrieval_eval
+from scripts.retrieval_eval import load_golden_questions, run_retrieval_eval
 
 
 def main() -> int:
@@ -30,8 +30,10 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    qs = load_golden_questions(args.golden)
+    print(f"Retrieval golden set: {len(qs)} question(s)")
     results = run_retrieval_eval(
-        GOLDEN_QUESTIONS,
+        qs,
         top_k=args.top_k,
         score_floor=args.score_floor,
         golden_path=args.golden,

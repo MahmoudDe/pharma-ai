@@ -10,12 +10,17 @@ QueryRoute = Literal["lookup", "compare", "reasoning", "unknown"]
 _QUERY_PRODUCT_MAP: list[tuple[str, re.Pattern[str]]] = [
     ("baby", re.compile(r"\bbaby\b", re.I)),
     ("anti_dandruff", re.compile(r"\banti[-\s]?dandruff\b|\bantidandruff\b", re.I)),
-    ("shampoo", re.compile(r"\bshampoo\b", re.I)),
-    ("cream", re.compile(r"\b(hand\s+)?cream\b", re.I)),
+    ("shampoo", re.compile(r"\bshampoo\b|\bsham[d]?oo\b", re.I)),
+    ("cream", re.compile(r"\b(hand\s+)?cream\b|\bgel\s+cream\b|\bshaving\s+cream\b", re.I)),
     ("lotion", re.compile(r"\blotion\b", re.I)),
-    ("conditioner", re.compile(r"\bcondition(er|ing)\b", re.I)),
-    ("sunscreen", re.compile(r"\bsunscreen\b|\bspf\b|\bsolar\s+protection\b", re.I)),
-    ("soap", re.compile(r"\bsoap\b", re.I)),
+    ("conditioner", re.compile(r"\bcondition(er|ing)\b|\bleave[-\s]?in\b", re.I)),
+    ("sunscreen", re.compile(r"\bsunscreen\b|\bspf\b|\bsolar\s+protection\b|\bsuntan\b", re.I)),
+    ("soap", re.compile(r"\bsoap\b|\bhand\s+cleaner\b", re.I)),
+    ("makeup", re.compile(r"\blipstick\b|\bmake[-\s]?up\b|\blip\s+balm\b", re.I)),
+    ("deodorant", re.compile(r"\bdeodorant\b|\bantiperspirant\b", re.I)),
+    ("cleanser", re.compile(r"\bcleanser\b|\bfacial\s+wash\b|\bfacial\s+cleanser\b", re.I)),
+    ("toner", re.compile(r"\btoner\b", re.I)),
+    ("gel", re.compile(r"\bshower\s+(?:gel|bath)\b|\b(?:clear\s+)?shampoo\s+gel\b|(?<!cream\s)\bgel\b", re.I)),
 ]
 
 _REASONING = re.compile(

@@ -204,21 +204,35 @@ def _chunk_matches_product_types(
 ) -> bool:
     tags = set(chunk.product_types or [])
     combined = f"{chunk.section_title or ''}\n{chunk.text}".lower()
+    text_aliases: dict[str, re.Pattern[str]] = {
+        "anti_dandruff": re.compile(r"anti[-\s]?dandruff|antidandruff", re.I),
+        "baby": re.compile(r"\bbaby\b", re.I),
+        "shampoo": re.compile(r"\bshampoo\b|\bsham[d]?oo\b", re.I),
+        "cream": re.compile(r"\bcream\b", re.I),
+        "lotion": re.compile(r"\blotion\b", re.I),
+        "conditioner": re.compile(r"\bcondition", re.I),
+        "sunscreen": re.compile(r"\bsun|spf|uv|solar", re.I),
+        "soap": re.compile(r"\bsoap\b|hand\s+cleaner", re.I),
+        "makeup": re.compile(r"\blipstick\b|\bmake[-\s]?up\b|\blip\s+balm\b", re.I),
+        "deodorant": re.compile(r"\bdeodorant\b|\bantiperspirant\b", re.I),
+        "cleanser": re.compile(r"\bcleanse|\bfacial\s+wash\b", re.I),
+        "toner": re.compile(r"\btoner\b", re.I),
+        "gel": re.compile(r"\bgel\b|\bshower\s+(?:gel|bath)\b", re.I),
+    }
     if require_all:
         for t in types:
             if t in tags:
                 continue
-            if t == "anti_dandruff" and re.search(r"anti[-\s]?dandruff|antidandruff", combined, re.I):
-                continue
-            if t == "baby" and "baby" in combined:
-                continue
-            if t == "shampoo" and "shampoo" in combined:
-                continue
-            if t == "cream" and "cream" in combined:
+            pattern = text_aliases.get(t)
+            if pattern and pattern.search(combined):
                 continue
             return False
         return True
-    return bool(tags & set(types))
+    if tags & set(types):
+        return True
+    return any(
+        (text_aliases[t].search(combined) if t in text_aliases else False) for t in types
+    )
 
 
 def run_retrieval_eval(
