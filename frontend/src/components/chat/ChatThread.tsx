@@ -14,8 +14,11 @@ interface ChatThreadProps {
   isLoading: boolean;
   /** Id of the assistant message currently being streamed, if any. */
   streamingMessageId?: string | null;
+  /** Id of the assistant message whose panels are shown in the worksheet. */
+  activeWorksheetMessageId?: string | null;
   onSuggestionClick?: (suggestion: string) => void;
   onFeedback?: (messageId: string, rating: 1 | -1, userMessage?: string) => void;
+  onShowWorksheet?: (message: ChatMessage) => void;
 }
 
 const EMPTY_STATE_KEYS: TranslationKey[] = [
@@ -92,12 +95,28 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+function messageHasWorksheet(message: ChatMessage): boolean {
+  const formulations =
+    message.structuredFormulations && message.structuredFormulations.length > 0
+      ? message.structuredFormulations
+      : message.structuredFormulation
+        ? [message.structuredFormulation]
+        : [];
+  return (
+    formulations.length > 0 ||
+    (message.citedEvidence?.length ?? 0) > 0 ||
+    (message.suggestedActions?.length ?? 0) > 0
+  );
+}
+
 export function ChatThread({
   messages,
   isLoading,
   streamingMessageId = null,
+  activeWorksheetMessageId = null,
   onSuggestionClick,
   onFeedback,
+  onShowWorksheet,
 }: ChatThreadProps) {
   const { t } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -263,7 +282,23 @@ export function ChatThread({
                     </p>
                   ) : null}
                   {!isStreaming && onFeedback ? (
-                    <div className="mt-2 flex items-center gap-2">
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      {onShowWorksheet && messageHasWorksheet(message) ? (
+                        <button
+                          type="button"
+                          onClick={() => onShowWorksheet(message)}
+                          aria-pressed={activeWorksheetMessageId === message.id}
+                          className={`rounded-md border px-2 py-1 text-[10px] font-semibold transition ${
+                            activeWorksheetMessageId === message.id
+                              ? "border-secondary/40 bg-secondary/10 text-secondary"
+                              : "border-border text-text-secondary hover:bg-secondary/10 hover:text-secondary"
+                          }`}
+                        >
+                          {activeWorksheetMessageId === message.id
+                            ? t("chat.worksheetShowing")
+                            : t("chat.showWorksheet")}
+                        </button>
+                      ) : null}
                       <button
                         type="button"
                         aria-label={t("chat.feedbackUp")}

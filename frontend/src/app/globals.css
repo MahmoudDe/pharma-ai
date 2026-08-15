@@ -953,6 +953,7 @@ html[lang="ar"] body {
   grid-template-rows: 1fr;
 }
 .constraints-expand > div {
+  min-height: 0;
   overflow: hidden;
 }
 

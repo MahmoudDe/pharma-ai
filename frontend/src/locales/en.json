@@ -45,6 +45,8 @@
   "chat.copy": "Copy",
   "chat.copied": "Copied",
   "chat.jumpToLatest": "Jump to latest",
+  "chat.showWorksheet": "Show worksheet",
+  "chat.worksheetShowing": "In worksheet",
   "composer.placeholder": "Ask for a formula, ingredient comparison, or process step…",
   "composer.send": "Send",
   "composer.retry": "Retry",
