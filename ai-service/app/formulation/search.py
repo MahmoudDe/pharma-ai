@@ -21,6 +21,7 @@ from app.retrieval.query_signals import (
     extract_query_signals,
     fuzzy_name_match,
     record_has_ingredient,
+    record_matches_signals,
 )
 from app.schemas import StructuredBrief
 
@@ -57,16 +58,26 @@ class StructuredSearchResult:
 def _record_has_product_types(record: FormulationRecord, required: list[str]) -> bool:
     tags = set(record.product_types)
     combined = f"{record.name}\n{record.source_text}".lower()
+    aliases: dict[str, re.Pattern[str]] = {
+        "anti_dandruff": re.compile(r"anti[-\s]?dandruff|antidandruff", re.I),
+        "baby": re.compile(r"\bbaby\b", re.I),
+        "shampoo": re.compile(r"\bshampoo\b|\bshamdoo\b", re.I),
+        "cream": re.compile(r"\bcream\b", re.I),
+        "lotion": re.compile(r"\blotion\b", re.I),
+        "conditioner": re.compile(r"\bcondition", re.I),
+        "sunscreen": re.compile(r"\bsun|spf|solar|uv", re.I),
+        "soap": re.compile(r"\bsoap\b|hand\s+cleaner", re.I),
+        "makeup": re.compile(r"\blipstick\b|make[-\s]?up", re.I),
+        "deodorant": re.compile(r"\bdeodorant\b|antiperspirant", re.I),
+        "cleanser": re.compile(r"\bcleanse|facial\s+wash", re.I),
+        "toner": re.compile(r"\btoner\b", re.I),
+        "gel": re.compile(r"\bgel\b|shower\s+(?:gel|bath)", re.I),
+    }
     for t in required:
         if t in tags:
             continue
-        if t == "anti_dandruff" and re.search(r"anti[-\s]?dandruff|antidandruff", combined, re.I):
-            continue
-        if t == "baby" and "baby" in combined:
-            continue
-        if t == "shampoo" and ("shampoo" in combined or "shamdoo" in combined.replace(" ", "")):
-            continue
-        if t == "cream" and "cream" in combined:
+        pattern = aliases.get(t)
+        if pattern and pattern.search(combined):
             continue
         return False
     return True
@@ -119,24 +130,25 @@ def _ingredient_match_score(record: FormulationRecord, signals: QuerySignals) ->
     hits = sum(1 for ing in signals.required_ingredients if record_has_ingredient(record, ing))
     total = len(signals.required_ingredients)
     if hits == total:
-        return 35.0
+        return 45.0
     if hits > 0:
-        return 8.0 * hits - 15.0
-    return -25.0
+        return 12.0 * hits - 8.0
+    return -30.0
 
 
 def _named_formula_score(record: FormulationRecord, signals: QuerySignals) -> float:
-    if not signals.named_formulas:
+    titles = signals.named_formulas or signals.compare_targets
+    if not titles:
         return 0.0
     best = 0.0
-    combined = f"{record.name}\n{record.source_text[:400]}"
-    for name in signals.named_formulas:
+    combined = f"{record.name}\n{record.source_text[:500]}"
+    for name in titles:
         if fuzzy_name_match(name, record.name):
-            best = max(best, 30.0)
+            best = max(best, 48.0)
         elif fuzzy_name_match(name, combined):
-            best = max(best, 18.0)
+            best = max(best, 28.0)
         elif best <= 0:
-            best = -12.0
+            best = -18.0
     return best
 
 
@@ -151,6 +163,8 @@ def score_formulation(
     signals = signals or extract_query_signals(query)
     breakdown: dict[str, float] = {}
     required = intent.product_types
+    has_named = bool(signals.named_formulas or signals.compare_targets)
+    has_ings = bool(signals.required_ingredients)
 
     if required and _record_has_product_types(record, required):
         breakdown["product_type_match"] = 40.0
@@ -163,7 +177,10 @@ def score_formulation(
     breakdown["modifier_match"] = mod
 
     ing_count = len(record.ingredients)
-    breakdown["ingredient_completeness"] = min(ing_count, 15) / 15.0 * 20.0
+    # When hunting a named recipe or ingredient constraint, do not let a fat
+    # unrelated table outrank the correct thin match.
+    completeness_cap = 8.0 if (has_named or has_ings) else 20.0
+    breakdown["ingredient_completeness"] = min(ing_count, 15) / 15.0 * completeness_cap
 
     if any(record.doc_id.startswith(p) for p in TRUSTED_DOC_PREFIXES):
         breakdown["source_quality"] = 10.0
@@ -205,13 +222,25 @@ def _best_for_target(
     target: str,
     ranked: list[RankedFormulation],
 ) -> RankedFormulation | None:
+    exact: list[RankedFormulation] = []
     for r in ranked:
         if fuzzy_name_match(target, r.record.name):
-            return r
+            exact.append(r)
+    if exact:
+        # Prefer the tightest title match (shortest name / highest named score).
+        return sorted(
+            exact,
+            key=lambda r: (
+                -_named_formula_score(r.record, extract_query_signals(target)),
+                len(r.record.name),
+            ),
+        )[0]
     target_signals = extract_query_signals(target)
-    for r in ranked:
-        if _named_formula_score(r.record, target_signals) >= 18.0:
-            return r
+    fuzzy_hits = [
+        r for r in ranked if _named_formula_score(r.record, target_signals) >= 28.0
+    ]
+    if fuzzy_hits:
+        return max(fuzzy_hits, key=lambda r: r.score)
     return ranked[0] if ranked else None
 
 
@@ -274,15 +303,55 @@ def structured_search(
                 )
             )
 
-    if signals.required_ingredients and len(candidates) < limit * 4:
-        for ing in signals.required_ingredients[:3]:
+    if _query_hand_cream(query):
+        for needle in ("hand cream", "tube-dispensed", "hand and nail", "hand"):
             candidates.extend(
                 list_formulations(
-                    ingredient=ing.split()[0] if ing else None,
+                    name_contains=needle,
                     banned_ingredients=banned,
                     limit=limit * 4,
                 )
             )
+
+    # Pull named titles into the candidate pool even when product-type filters miss.
+    for title in (signals.named_formulas + signals.compare_targets)[:4]:
+        tokens = [
+            t
+            for t in re.findall(r"[A-Za-z]{4,}", title)
+            if t.lower() not in {"cream", "lotion", "shampoo", "formula"}
+        ]
+        needles = [title] + tokens[:2]
+        for needle in needles:
+            candidates.extend(
+                list_formulations(
+                    name_contains=needle[:40],
+                    banned_ingredients=banned,
+                    limit=limit * 4,
+                )
+            )
+
+    if signals.required_ingredients:
+        for ing in signals.required_ingredients[:4]:
+            token = ing.split()[0] if ing else None
+            if not token or len(token) < 3:
+                continue
+            candidates.extend(
+                list_formulations(
+                    ingredient=token,
+                    banned_ingredients=banned,
+                    limit=limit * 6,
+                )
+            )
+            # Also try a distinctive later token (e.g. Ultrez, Salicylate).
+            parts = [p for p in re.findall(r"[A-Za-z]{4,}", ing) if p.lower() != token.lower()]
+            for part in parts[:1]:
+                candidates.extend(
+                    list_formulations(
+                        ingredient=part,
+                        banned_ingredients=banned,
+                        limit=limit * 4,
+                    )
+                )
 
     ranked: list[RankedFormulation] = []
     seen_names: dict[str, RankedFormulation] = {}
@@ -292,7 +361,10 @@ def structured_search(
         r = score_formulation(rec, intent, query, brief=brief, signals=signals)
         key = rec.name.lower()[:80]
         prev = seen_names.get(key)
-        if prev is None or len(rec.ingredients) > len(prev.record.ingredients):
+        if prev is None or r.score > prev.score or (
+            abs(r.score - prev.score) < 0.5
+            and len(rec.ingredients) > len(prev.record.ingredients)
+        ):
             seen_names[key] = r
 
     ranked = sorted(seen_names.values(), key=lambda x: x.score, reverse=True)
@@ -332,12 +404,48 @@ def structured_search(
             ),
         )
 
+    # Prefer title / ingredient hits at the front when present.
+    if signals.named_formulas or signals.compare_targets or signals.required_ingredients:
+        def _constraint_tier(r: RankedFormulation) -> tuple[int, float]:
+            named_hit = any(
+                fuzzy_name_match(n, r.record.name)
+                for n in (signals.named_formulas + signals.compare_targets)
+            )
+            ing_hits = sum(
+                1 for ing in signals.required_ingredients if record_has_ingredient(r.record, ing)
+            )
+            need = len(signals.required_ingredients) or 0
+            if named_hit and (need == 0 or ing_hits == need):
+                tier = 0
+            elif named_hit or (need and ing_hits == need):
+                tier = 1
+            elif need and ing_hits > 0:
+                tier = 2
+            else:
+                tier = 3
+            return (tier, -r.score)
+
+        ranked = sorted(ranked, key=_constraint_tier)
+
     ranked = ranked[:limit]
 
     from app.config import get_settings
 
     settings = get_settings()
     top = ranked[0].score if ranked else 0.0
+    # Named / ingredient constraints must actually match before skip-LLM "direct".
+    if ranked and (signals.named_formulas or signals.required_ingredients):
+        top_rec = ranked[0].record
+        if not record_matches_signals(top_rec, signals):
+            # Keep hybrid so router can LLM-ground or refuse confidently.
+            if top >= settings.structured_hybrid_threshold:
+                return StructuredSearchResult(
+                    matches=ranked, top_confidence=top, route_hint="hybrid"
+                )
+            return StructuredSearchResult(
+                matches=ranked, top_confidence=top, route_hint="fallback"
+            )
+
     if top >= settings.structured_direct_threshold:
         hint: RouteHint = "direct"
     elif top >= settings.structured_hybrid_threshold:

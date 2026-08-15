@@ -302,10 +302,11 @@ def _direct_template_ok(
 
                 if not fuzzy_name_match(target, rec.name):
                     return False
-    if signals.named_formulas and len(signals.named_formulas) == 1:
+    titles = signals.named_formulas
+    if titles and len(titles) == 1:
         from app.retrieval.query_signals import fuzzy_name_match
 
-        if not fuzzy_name_match(signals.named_formulas[0], records[0].name):
+        if not fuzzy_name_match(titles[0], records[0].name):
             return False
     return True
 

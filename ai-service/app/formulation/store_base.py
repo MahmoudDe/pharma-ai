@@ -12,6 +12,7 @@ class FormulationSearchFilters:
     product_types: list[str] | None = None
     product_type: str | None = None
     ingredient: str | None = None
+    name_contains: str | None = None
     doc_id: str | None = None
     banned_ingredients: list[str] | None = None
     preferred_ingredients: list[str] | None = None

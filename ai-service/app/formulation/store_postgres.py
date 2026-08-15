@@ -192,6 +192,9 @@ class PostgresFormulationStore:
         if filters.doc_id:
             clauses.append("f.doc_id = %s")
             params.append(filters.doc_id)
+        if filters.name_contains:
+            clauses.append("lower(f.name) LIKE %s")
+            params.append(f"%{filters.name_contains.lower().strip()}%")
         if filters.ingredient:
             clauses.append(
                 "(lower(i.normalized_name) LIKE %s OR lower(i.raw_name) LIKE %s)"

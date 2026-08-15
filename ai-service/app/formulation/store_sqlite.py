@@ -170,6 +170,9 @@ class SQLiteFormulationStore:
         if filters.doc_id:
             clauses.append("f.doc_id = ?")
             params.append(filters.doc_id)
+        if filters.name_contains:
+            clauses.append("lower(f.name) LIKE ?")
+            params.append(f"%{filters.name_contains.lower().strip()}%")
         if filters.ingredient:
             clauses.append("(i.normalized_name LIKE ? OR i.raw_name LIKE ?)")
             needle = f"%{filters.ingredient.lower()}%"
